@@ -4,7 +4,9 @@
     <keep-alive>
       <router-view />
     </keep-alive>
-    <div class="nav" @click="changeNav">
+    <div class="nav" 
+      @click="changeNav"
+      v-if="$route.meta.keepAlive">
       <router-link class="nav-list" :to="{path:'/treehole'}" replace>
         <img :src="imgSrc[0]">
         <span>许愿墙</span>
@@ -52,14 +54,13 @@ export default {
 
 <style>
 * {
-  margin: 0;
+  margin: 0;       
   padding: 0;
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   width:100vw;
   height: 100vh;
