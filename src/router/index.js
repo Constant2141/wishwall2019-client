@@ -9,8 +9,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'treehole',
-      component: TreeHole      
+      redirect:'/treehole'
     },{
       path: '/treehole',
       name: 'treehole',
