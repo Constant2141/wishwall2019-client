@@ -7,7 +7,7 @@
     <div class="nav" @click="changeNav">
       <router-link class="nav-list" :to="{path:'/treehole'}" replace>
         <img :src="imgSrc[0]">
-        <span>树洞</span>
+        <span>许愿墙</span>
       </router-link>
       <router-link class="nav-list" :to="{path:'/treehole'}" replace>
         <img :src="imgSrc[0]">
@@ -18,11 +18,11 @@
 
       <router-link class="nav-list" :to="{path:'/treehole'}" replace >
         <img :src="imgSrc[0]">
-        <span>树洞</span>
+        <span>星球</span>
       </router-link>
       <router-link class="nav-list" :to="{path:'/treehole'}" replace >
         <img :src="img">
-        <span>树洞</span>
+        <span>我的</span>
       </router-link>
 
     </div>
@@ -44,7 +44,7 @@ export default {
   },
   methods:{
     changeNav(e){
-      alert(e.currentTarget)
+      // alert(e.currentTarget)
     }
   }
 };
@@ -61,7 +61,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  width:100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 .nav {
   width: 100vw;
