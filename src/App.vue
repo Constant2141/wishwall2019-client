@@ -35,7 +35,8 @@ export default {
   data() {
     return {
       imgSrc:[require('./assets/logo.png')],
-      img:require('./assets/logo.png')
+      img:require('./assets/logo.png'),
+      
     };
   },
   mounted() {
