@@ -3,6 +3,7 @@ import Router from "vue-router";
 import TreeHole from "@/components/treehole";
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
+import WishWall from "@/components/WishWall";
 
 Vue.use(Router);
 
@@ -10,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/treehole"
+      redirect: "/wishwall"
     },
     {
       path: "/treehole",
@@ -34,6 +35,14 @@ export default new Router({
       component: Mine,
       meta:{
         keepAlive:true  //底部栏显示
+      }
+    },
+    {
+      path: '/wishwall',
+      name:'wishwall',
+      component:WishWall,
+      meta:{
+        keepAlive:true
       }
     }
   ]

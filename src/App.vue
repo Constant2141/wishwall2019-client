@@ -9,7 +9,7 @@
     <div class="nav" 
       @click="changeNav($event)"
       v-if="$route.meta.keepAlive">
-      <router-link id="wishwall" class="nav-list" :to="{path:'/treehole'}" replace>
+      <router-link id="wishwall" class="nav-list" :to="{path:'/wishwall'}" replace>
         <img :src="imgSrc[0]">
         <span>许愿墙</span>
       </router-link>
