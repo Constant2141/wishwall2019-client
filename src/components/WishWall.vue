@@ -128,7 +128,9 @@ export default {
     changeCampus(){
       let campus = event.currentTarget.innerHTML;
       console.log(campus);
-      if(campus == '全部');
+      if(campus == '全部'){
+        this.wishes = this.wishData;
+      }
       else{
         this.wishes = this.wishData.filter(wish => wish.campus == campus +'校区');
       }
