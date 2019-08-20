@@ -3,6 +3,8 @@ import Router from "vue-router";
 import TreeHole from "@/components/treehole";
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
+import WishRelease from '@/components/wishRelease'
+
 
 Vue.use(Router);
 
@@ -34,6 +36,14 @@ export default new Router({
       component: Mine,
       meta:{
         keepAlive:true  //底部栏显示
+      }      
+    },
+    {
+      path: '/wishRelease',
+      name: 'wishRelease',
+      component: WishRelease,
+      meta:{
+        keepAlive:false  //底部栏不显示
       }
     }
   ]
