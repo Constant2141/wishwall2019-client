@@ -50,6 +50,9 @@ export default {
     }
   },
   methods:{
+    wordsMove(){
+      
+    },
     selectBoy(){
       this.boy = true;
       this.girl = false;
@@ -80,7 +83,7 @@ export default {
 }
 @keyframes wordsmove {
   to{
-    margin-top:16vh;
+    margin-top:18vh;
     opacity: 1;
   }
 }

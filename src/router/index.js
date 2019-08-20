@@ -5,6 +5,7 @@ import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
 
+import WishWall from "@/components/WishWall";
 
 Vue.use(Router);
 
@@ -12,7 +13,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/treehole"
+      redirect: "/wishwall"
     },
     {
       path: "/treehole",
@@ -44,6 +45,14 @@ export default new Router({
       component: WishRelease,
       meta:{
         keepAlive:false  //底部栏不显示
+      }
+    },
+    {
+      path: '/wishwall',
+      name:'wishwall',
+      component:WishWall,
+      meta:{
+        keepAlive:true
       }
     }
   ]
