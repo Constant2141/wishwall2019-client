@@ -1,12 +1,12 @@
 <template>
   <div class="wish-wall">
-    
       <div class="header">
         <ul>
           <li
             v-for="(school,index) in schools"
             :key="index"
-            @click="changeCampus()">{{school}}</li>
+            :class="{'toggle-bg':index == isActive}"
+            @click="changeCampus(index)">{{school}}</li>
         </ul>  
       </div>
       <div class="banner">
@@ -23,7 +23,10 @@
       <div class="wish-body">
         <div class="take-button"
           @click="takeWish(index)"
-          :class="{'taken-button':wishes[index].ifTake}">领取心愿</div>
+          :class="{'taken-button':wishes[index].ifTake}">
+          <span v-show="!wishes[index].ifTake">领取心愿</span>
+          <span v-show="wishes[index].ifTake">您已领取</span>
+        </div>
         <div class="wish-content">
           <div class="wish-avatar">
             <div class="yellow-left"></div>
@@ -36,7 +39,10 @@
             <div class="wish-tag">
               <span class="tag">#{{wish.wishType}}</span>
               <span class="tag">#{{wish.campus}}</span>
-              <span class="tag take">已被{{wish.take}}人领取</span>
+              <span class="tag take">
+                <span v-show="wish.take > 0">已被{{wish.take}}人领取</span>
+                <span v-show="wish.take == 0">未被领取</span>
+              </span>
               <span class="tag time">{{wish.time}}</span>
             </div>
           </div>
@@ -66,6 +72,7 @@ export default {
         "龙洞",
         "东风路"
       ],
+      isActive:0,
       //数据结构，备用备用
       // wish:{
       //   ifTake:'',//是否领取
@@ -96,7 +103,7 @@ export default {
           avatar:'',
           name:'jio',
           content:'富婆快包养我',
-          wishType:'事件',
+          wishType:'委托',
           campus:'大学城校区',
           take:7,
           time:'17:20',
@@ -107,7 +114,7 @@ export default {
           avatar:'',
           name:'jio',
           content:'艹竣sb',
-          wishType:'事件',
+          wishType:'其他',
           campus:'东风路校区',
           take:7,
           time:'17:20',
@@ -125,20 +132,17 @@ export default {
     getData(){
       this.wishes = this.wishData;
     },
-    changeCampus(){
+    changeCampus(index){
+      this.isActive = index;
       let campus = event.currentTarget.innerHTML;
-      console.log(campus);
+      // console.log(campus);
       if(campus == '全部'){
         this.wishes = this.wishData;
-      }
-      else{
+      }else{
         this.wishes = this.wishData.filter(wish => wish.campus == campus +'校区');
       }
     }
   },
-  
-  
-  
   mounted(){
     this.getData();
   }
@@ -159,16 +163,24 @@ export default {
   margin-bottom: 60px;
   z-index: 10;
 }
-
 ul{
   position: relative;
   display: flex;
   color: #fff;
   justify-content: space-around;
   top: 30px;
+  z-index: 2;
 }
 li{
   list-style-type: none;
+  text-align: center;
+  width:60px;
+  height: 28px;
+  border-radius: 15px;
+  line-height: 28px;
+}
+.toggle-bg{
+  background-color: #FF9D9D;
 }
 .banner{
   position: fixed;
@@ -209,7 +221,7 @@ li{
   color: #ffffff;
 }
 .taken-button{
-  background-color: #989898 !important; 
+  background: #D2D2D2 !important; 
 }
 .wish-content,
 .wish-avatar,

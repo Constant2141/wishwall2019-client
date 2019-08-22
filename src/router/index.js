@@ -18,7 +18,8 @@ export default new Router({
       name: "treehole",
       component: TreeHole,
       meta: {
-        keepAlive: true //底部栏显示
+        keepAlive: true, //底部栏显示
+        title:'树洞'
       }
     },
     {
@@ -26,7 +27,8 @@ export default new Router({
       name: "welcome",
       component: Welcome,
       meta: {
-        keepAlive: false //底部栏不显示
+        keepAlive: false, //底部栏不显示
+        title:'许愿墙'
       }
     },
     {
@@ -34,7 +36,8 @@ export default new Router({
       name: 'mine',
       component: Mine,
       meta:{
-        keepAlive:true  //底部栏显示
+        keepAlive:true,  //底部栏显示
+        title:'我的'
       }
     },
     {
@@ -42,7 +45,8 @@ export default new Router({
       name:'wishwall',
       component:WishWall,
       meta:{
-        keepAlive:true
+        keepAlive:true,
+        title:'许愿墙'
       }
     }
   ]

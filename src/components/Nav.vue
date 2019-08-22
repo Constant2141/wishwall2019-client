@@ -16,7 +16,7 @@
       </div>
     </div>
     <!-- （声明导航） -->
-    <router-link id="wishwall" class="nav-list" :to="{path:'/treehole'}" replace>
+    <router-link id="wishwall" class="nav-list" :to="{path:'/wishwall'}" replace>
       <img :src="imgSrc[0]" />
       <span>许愿墙</span>
     </router-link>
