@@ -137,7 +137,6 @@ export default {
   position: absolute;
   width: 100vw;
   height: 25vw;
-  background-color: red;
   display: flex;
   justify-content: center;
   align-items: center;
