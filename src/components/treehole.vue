@@ -1,33 +1,6 @@
 <template>
   <div class="tree-hole">
-      {{msg}}
-      <pre id="id">
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-          123
-      </pre>
+    <div id="title">树洞</div>
   </div>
 </template>
 
@@ -42,11 +15,12 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#id{
-    background-color: pink;
-    height: 200px;
-    overflow: scroll;
+#title{
+  background-color: #E7E7E7;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  padding-left: 23px;
 }
 </style>
