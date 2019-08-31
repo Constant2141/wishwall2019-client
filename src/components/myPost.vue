@@ -1,0 +1,291 @@
+<template>
+  <div id="my-post">
+    <div class="top-bar">
+      <div class="first">
+        <div class="left-arrow"></div>
+        <p class="top-text">我的心愿</p>
+      </div>
+      <div class="second">
+        <div class="top-select" :class="{active:isActive}" @click="GetToPost">
+          <p>我发布的</p>
+        </div>
+        <div class="top-select" :class="{active:!isActive}" @click="PostToGet">
+          <p>我领取的</p>
+        </div>
+      </div>
+    </div>
+    <div class="middle">
+      <div class="total" v-for="(wish,index) in wishes " :key="index">
+        <div class="single-wish">
+          <div class="top-wish">
+            <p class="method">{{methods[index]}}</p>
+            <div class="delete"></div>
+          </div>
+          <div class="middle-wish">
+            <p>{{theWish[index]}}</p>
+            <div class="more-info">
+              <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
+              <p :style="pMargin">{{time[index]}}</p>
+              <p>联系方式:</p>
+              <p :style="pWidth">{{tel[index]}}</p>
+            </div>
+          </div>
+        </div>
+          <div class="wish-info">
+            <div class="little-info">
+              <div class="icon" @click="showMore(index)"></div>
+              <p class="getted">{{getInfo[index]}}</p>
+              <div class="isGetted" v-if="isGetted[index]" @click="finished">
+                <p>{{finish}}</p>
+              </div>
+            </div>
+            <div class="much-info">
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+              <div class="single-icon"></div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data(){
+    return{
+      isActive:true,
+      wishes:[1,2],
+      methods:["实名发布","匿名发布"],
+      theWish:["我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕","我想要一个牛肉抱枕我想要一个牛肉抱枕"],
+      level:["实物","实物"],
+      school:["大学城校区","大学城校区"],
+      pMargin:"marginLeft:37vw",
+      pWidth:"maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
+      time:["17:20","17:20"],
+      tel:["加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817319863819697898798798797979878","加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817"],
+      getInfo:["已被7人领取","未被领取"],
+      isGetted:[true,false],
+      clientHeight:43,
+      show:[],
+      finish:"确认完成"
+    }
+  },
+  methods:{
+    GetToPost(){
+      this.isActive = true;
+    },
+    PostToGet(){
+      this.isActive = false;
+    },
+    showMore(index){
+      if(this.show[index] == false){
+        document.getElementsByClassName("wish-info")[index].style.overflow = "hidden";
+        document.getElementsByClassName("wish-info")[index].style.height = this.clientHeight + 'px';
+        this.show[index] = true;
+      }
+      else if(this.isGetted[index] == true){
+        document.getElementsByClassName("wish-info")[index].style.overflow = "scroll";
+        console.log(document.getElementsByClassName("wish-info")[index].style.overflow)
+        this.clientHeight = document.getElementsByClassName("wish-info")[index].clientHeight + 25*7;
+        document.getElementsByClassName("wish-info")[index].style.height = this.clientHeight + 'px';
+        this.show[index] = false;
+        this.clientHeight = 43;
+      }
+    },
+    finished(){
+      this.finish = "已完成";
+      document.getElementsByClassName("isGetted")[0].style.background = "#cbcbcb";
+    }
+  },
+  mounted(){
+    this.show = [...this.isGetted];
+  }
+};
+</script>
+
+<style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);/*解决点击出现的黑块*/
+}
+#my-post{
+  height: 100vh;
+}
+.top-bar{
+	width: 375px;
+	height: 82px;
+	background-image: linear-gradient(357deg, 
+		 #fff8c9 0%, 
+		 #fd9cbf 100%);
+}
+.first,.second,.top-wish,.more-info,.little-info{
+  display: flex;
+}
+.left-arrow{
+	width: 19px;
+	height: 19px;
+  background: url("../assets/back_white.png");
+  background-size: 100% 100%;
+  margin-top: 15px;
+  margin-left: 4px;
+}
+.top-text{
+	/* width: 72px;
+	height: 52px; */
+	font-family: Microsoft YaHei;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 22px;
+	letter-spacing: 0px;
+	color: #ffffff;
+  margin-top: 15px;
+  margin-left: 129px;
+}
+.top-select{
+  height: 25px;
+  width: 58px;
+  margin-left: 66px;
+  margin-top: 15px;
+}
+.active{
+  border-bottom: 3px solid #ffffff;
+}
+.top-select:nth-child(2){
+  margin-left: 132px;
+}
+.top-select p{
+	font-family: Microsoft YaHei;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 17px;
+	letter-spacing: 0px;
+	color: #ffffff;
+}
+.middle{
+  height: 516px;
+  width: 100%;
+}
+.single-wish{
+	width: 329px;
+	min-height: 100px;
+	background-color: #ffffff;
+	box-shadow: 0px 3px 6px 0px 
+		rgba(0, 0, 0, 0.16);
+  border-radius: 15px 15px 0px 0px;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+.wish-info{
+	width: 329px;
+	height: 39px;
+	background-color: #ffebeb;
+	box-shadow: 0px 3px 6px 0px 
+		rgba(0, 0, 0, 0.16);
+	border-radius: 0px 0px 15px 15px;
+  margin: 0 auto;
+  transition: height 0.5s;
+  overflow: hidden;
+}
+.method{
+  width: 15vw;
+  /* height: 14px; */
+	font-family: Microsoft YaHei;
+	font-size: 10px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 12px;
+	letter-spacing: 0px;
+	color: #989898;
+  margin-left: 146px;
+  margin-right: 98px;
+  margin-top: 12px;
+}
+.delete{
+	width: 24px;
+	height: 24px;
+  background: url("../assets/Remove.png");
+  background-size: 100% 100%;
+  margin-top: 5px;
+  margin-right: 16px;
+}
+.middle-wish>p{
+	max-width: 216px;
+	min-height: 14px;
+	font-family: Microsoft YaHei;
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 14px;
+	letter-spacing: 0px;
+	color: #000000;
+  word-wrap: break-word;
+  margin: 0 auto;
+  margin-top: 13px;
+}
+.more-info{
+  flex-wrap: wrap;
+}
+.more-info p{
+	font-family: Microsoft YaHei;
+	font-size: 10px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 12px;
+	letter-spacing: 0px;
+	color: #989898;
+  margin-top: 14px;
+  margin-left: 34px;
+}
+.wish-info p{
+	font-family: Microsoft YaHei;
+	font-size: 10px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 12px;
+	letter-spacing: 0px;
+}
+.icon{
+  min-width: 22px;
+  max-width: 75px;
+  margin-right: 8px;
+  margin-left: 14px;
+  margin-top: 6px;
+}
+.getted{
+  width: 70px;
+  color:black;
+  margin-top: 13px;
+}
+.isGetted{
+	width: 13vw;
+	height: 20px;
+	background-image: linear-gradient(325deg, 
+		#fd9bbf 0%, 
+		#fde8b7 100%);
+	border-radius: 15px;
+  margin-left: 40vw;
+  margin-top: 9px;
+}
+.isGetted p{
+  text-align: center;
+  margin-top: 5px;
+  color:white;
+}
+.single-icon{
+	width: 22px;
+	height: 22px;
+  border-radius: 50%;
+  background: #000000;
+  margin-left: 14px;
+  margin-top: 15px;
+}
+</style>

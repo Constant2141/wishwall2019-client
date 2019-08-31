@@ -8,20 +8,20 @@
       </div>
     </div>
     <div class="myWish">
-      <div class="wishNum">
+      <div class="wishNum" @click="toMyPost">
         <div class="img1"></div>
-        <p>我发布的心愿</p>
-        <p>{{num1}}条</p>
+        <p class="text">我发布的心愿</p>
+        <p class="nums">{{num1}}条</p>
       </div>
-      <div class="wishNum" style="margin-top:18px">
+      <div class="wishNum">
         <div class="img2"></div>
-        <p>我的树洞</p>
-        <p>{{num2}}条</p>
+        <p class="text">我的树洞</p>
+        <p class="nums">{{num2}}条</p>
       </div>
-      <div class="wishNum" style="margin-top:18px">
+      <div class="wishNum">
         <div class="img3"></div>
-        <p>我的星球</p>
-        <p>{{num3}}条</p>
+        <p class="text">我的星球</p>
+        <p class="nums">{{num3}}条</p>
       </div>
     </div>
   </div>
@@ -37,6 +37,11 @@ export default {
       num1:2,
       num2:2,
       num3:2
+    }
+  },
+  methods:{
+    toMyPost(){
+      this.$router.replace("/mypost")
     }
   }
 };
@@ -98,9 +103,6 @@ export default {
 .myWish{
   height: 428px;
   width: 375px;
-  /* background: url("../assets/banner/no.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat; */
 }
 .wishNum{
   padding-top: 0.1px;
@@ -110,13 +112,14 @@ export default {
 	box-shadow: 0px 3px 6px 0px 
 		rgba(0, 0, 0, 0.16);
 	border-radius: 5px;
-  margin-top: 33px;
+  margin-top: 18px;
   margin-left: 29px;
   display: flex;
-  justify-content: space-between;
+}
+.wishNum:nth-child(1){
+  margin-top: 33px;
 }
 .wishNum p {
-  width: 84px;
 	font-family: Segoe UI;
 	font-size: 14px;
 	font-weight: normal;
@@ -124,13 +127,21 @@ export default {
 	line-height: 17px;
 	letter-spacing: 0px;
 	color: #707070;
+}
+.text{
+  width: 100px;
   margin-top: 17px;
+  margin-left: 8px;
+}
+.nums{
+  margin-top: 17px;
+  margin-left: 120px;
 }
 .img1{
 	width: 30px;
-	height: 26px;
-  margin-top: 13px;
-  background: url("../assets/nav/2.png");
+	height: 20px;
+  margin-top: 16px;
+  background: url("../assets/nav/9.png");
   background-size: 100% 100%;
   margin-left: 20px;
 }

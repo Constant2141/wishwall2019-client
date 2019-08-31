@@ -4,6 +4,7 @@ import TreeHole from "@/components/treehole";
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishWall from "@/components/WishWall";
+import Mypost from "@/components/myPost";
 
 Vue.use(Router);
 
@@ -33,6 +34,14 @@ export default new Router({
       path: '/mine',
       name: 'mine',
       component: Mine,
+      meta:{
+        keepAlive:true  //底部栏显示
+      }
+    },,
+    {
+      path: '/mypost',
+      name: 'mypost',
+      component: Mypost,
       meta:{
         keepAlive:true  //底部栏显示
       }
