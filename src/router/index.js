@@ -6,6 +6,7 @@ import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
 
 import WishWall from "@/components/WishWall";
+import Mypost from "@/components/myPost";
 
 Vue.use(Router);
 
@@ -47,6 +48,14 @@ export default new Router({
       component: WishRelease,
       meta:{
         keepAlive:false  //底部栏不显示
+      }
+    },,
+    {
+      path: '/mypost',
+      name: 'mypost',
+      component: Mypost,
+      meta:{
+        keepAlive:true  //底部栏显示
       }
     },
     {
