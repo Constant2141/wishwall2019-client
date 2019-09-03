@@ -33,7 +33,7 @@
       <img :src="imgSrc[2]" />
       <span>星球</span>
     </router-link>
-    <router-link id="mine" class="nav-list" :to="{path:'/treehole'}" replace>
+    <router-link id="mine" class="nav-list" :to="{path:'/mine'}" replace>
       <img :src="imgSrc[3]" />
       <span>我的</span>
     </router-link>
@@ -137,7 +137,6 @@ export default {
   position: absolute;
   width: 100vw;
   height: 25vw;
-  background-color: red;
   display: flex;
   justify-content: center;
   align-items: center;
