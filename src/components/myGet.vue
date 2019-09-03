@@ -2,10 +2,10 @@
   <div id="my-post">
     <div class="top-bar">
       <div class="left-arrow"></div>
-      <div class="top-select" :class="{active:isActive}">
+      <div class="top-select" :class="{active:isActive}" @click="GetToPost">
         <p>我发布的</p>
       </div>
-      <div class="top-select" :class="{active:!isActive}" @click="PostToGet">
+      <div class="top-select" :class="{active:!isActive}">
         <p>我领取的</p>
       </div>
     </div>
@@ -53,7 +53,7 @@
 export default {
   data() {
     return {
-      isActive: true,
+      isActive: false,
       wishes: [1, 2],
       methods: ["实名发布", "匿名发布"],
       theWish: [
@@ -77,9 +77,8 @@ export default {
     };
   },
   methods: {
-    PostToGet() {
-      // this.isActive = false;
-      this.$router.replace({ path: "/myget" });
+    GetToPost() {
+      this.$router.replace({ path: "/mypost" });
     },
     showMore(index) {
       if (this.show[index] == false) {

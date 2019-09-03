@@ -7,12 +7,17 @@
       <router-view />
     </keep-alive>
     <!-- 导航 -->
-    <navi @cover="cover" @removeCover="removeCover" :toggleBool="toggleBool" v-if="$route.meta.keepAlive"></navi>
+    <navi
+      @cover="cover"
+      @removeCover="removeCover"
+      :toggleBool="toggleBool"
+      v-if="$route.meta.keepAlive"
+    ></navi>
   </div>
 </template>
 
 <script>
-import navi from "./components/Nav.vue"
+import navi from "./components/Nav.vue";
 
 //阻止默认行为函数
 function preventDefault(e) {
@@ -21,13 +26,13 @@ function preventDefault(e) {
 
 export default {
   name: "App",
-  components:{navi},
+  components: { navi },
   data() {
-    return{
-      toggleBool : true,
-    }
+    return {
+      toggleBool: true
+    };
   },
-  methods:{
+  methods: {
     // 盖锅盖
     cover() {
       document.addEventListener("touchmove", preventDefault, {

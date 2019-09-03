@@ -7,6 +7,8 @@ import WishRelease from '@/components/wishRelease'
 
 import WishWall from "@/components/WishWall";
 import Mypost from "@/components/myPost";
+import Myget from "@/components/myGet";
+import Mytopic from "@/components/myTopic";
 
 Vue.use(Router);
 
@@ -22,7 +24,7 @@ export default new Router({
       component: TreeHole,
       meta: {
         keepAlive: true, //底部栏显示
-        title:'树洞'
+        title: '树洞'
       }
     },
     {
@@ -31,40 +33,56 @@ export default new Router({
       component: Welcome,
       meta: {
         keepAlive: false, //底部栏不显示
-        title:'许愿墙'
+        title: '许愿墙'
       }
     },
     {
       path: '/mine',
       name: 'mine',
       component: Mine,
-      meta:{
-        keepAlive:true  //底部栏显示
-      }      
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
     },
     {
       path: '/wishRelease',
       name: 'wishRelease',
       component: WishRelease,
-      meta:{
-        keepAlive:false  //底部栏不显示
+      meta: {
+        keepAlive: false  //底部栏不显示
       }
-    },,
+    },
     {
       path: '/mypost',
       name: 'mypost',
       component: Mypost,
-      meta:{
-        keepAlive:true  //底部栏显示
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
+    },
+    {
+      path: '/myget',
+      name: 'myget',
+      component: Myget,
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
+    },
+    {
+      path: '/mytopic',
+      name: 'mytopic',
+      component: Mytopic,
+      meta: {
+        keepAlive: true  //底部栏显示
       }
     },
     {
       path: '/wishwall',
-      name:'wishwall',
-      component:WishWall,
-      meta:{
-        keepAlive:true,
-        title:'许愿墙'
+      name: 'wishwall',
+      component: WishWall,
+      meta: {
+        keepAlive: true,
+        title: '许愿墙'
       }
     }
   ]
