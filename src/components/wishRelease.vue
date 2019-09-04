@@ -9,18 +9,33 @@
         </div>
         <div class="edit-area">
             <div class="wish-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.text"></textarea>
             </div>
         </div>
         <div class="more-choose">
-            <div class="campus">
+            <div class="campus" @click="showCampus">
                 <img :src="icon.campus" alt="">
                 <span>{{chooseText[0]}}</span>
             </div>
-            <div class="wish-type">
+            <van-popup v-model="showCampusPicker" position="bottom">
+                 <van-picker 
+                 :columns="campus" 
+                 @change="changeCampus" 
+                 style="width:100%"
+                 />
+            </van-popup>
+           
+            <div class="wish-type" @click="showType">
                 <img :src="icon.wishType" alt="">
                 <span>{{chooseText[1]}}</span>
             </div>
+            <van-popup v-model="showTypePicker" position="bottom">
+                 <van-picker 
+                 :columns="wishType" 
+                 @change="changeType" 
+                 style="width:100%"
+                 />
+            </van-popup>
             <div class="anonymous">
                 <div class="check-box" @click="checkclick" ref="check"></div>
                 <span>{{chooseText[2]}}</span>
@@ -62,6 +77,11 @@ export default {
                 "匿名（可选）"
             ],
             checked:false,//判断是否匿名发布  
+            showCampusPicker:false,//是否显示校区选项
+            campus:["大学城","龙洞","东风路"],//选择校区的选项
+            showTypePicker:false,//是否显示心愿类型选项
+            wishType:["事务","委托","其他"],//选择心愿类型的选项
+
 
             //联系栏
             contactText:[
@@ -70,7 +90,18 @@ export default {
                 "2. 只有领取愿望的人才能看到你的联系方式，你的",
                 "联系方式并不会出现在首页"
 
-            ]
+            ],
+            show:false,
+
+            //要发送的数据
+            sendData:{
+                text:"",//心愿内容
+                campus:"",//校区
+                type:"",//心愿内容
+                anonymous:false,//是否匿名
+                address:"",//地址
+
+            }
         }
     },
     methods:{
@@ -79,8 +110,21 @@ export default {
         },
         checkclick(){//checkbox切换状态
             this.checked = !this.checked;
+            this.sendData.anonymous = this.checked;
             console.log(1)
-        }
+        },
+        showCampus(){//显示校区选项
+            this.showCampusPicker = true;
+        },
+        changeCampus(picker, value, index){//更改校区选项
+            this.sendData.campus = this.chooseText[0] = value;
+        },
+        showType(){//显示心愿类型选项
+            this.showTypePicker = true;
+        },
+        changeType(picker, value, index){//更改校区选项
+            this.sendData.type = this.chooseText[1] = value;
+        },
     },
     watch:{
         checked(val){

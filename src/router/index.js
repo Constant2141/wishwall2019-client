@@ -4,6 +4,7 @@ import TreeHole from "@/components/treehole";
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
+import Planet from '@/components/planet'
 
 import WishWall from "@/components/WishWall";
 import Mypost from "@/components/myPost";
@@ -43,6 +44,14 @@ export default new Router({
       meta: {
         keepAlive: true  //底部栏显示
       }
+    },
+    {
+      path: '/planet',
+      name: 'planet',
+      component: Planet,
+      meta:{
+        keepAlive:true  //底部栏显示
+      }      
     },
     {
       path: '/wishRelease',

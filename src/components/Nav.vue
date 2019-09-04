@@ -29,7 +29,7 @@
       <div id="main-box"></div>
     </div>
 
-    <router-link id="starball" class="nav-list" :to="{path:'/treehole'}" replace>
+    <router-link id="starball" class="nav-list" :to="{path:'/planet'}" replace>
       <img :src="imgSrc[2]" />
       <span>星球</span>
     </router-link>
