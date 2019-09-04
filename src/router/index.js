@@ -4,8 +4,8 @@ import TreeHole from "@/components/treehole";
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
-
 import WishWall from "@/components/WishWall";
+import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
 import Mytopic from "@/components/myTopic";
@@ -83,6 +83,14 @@ export default new Router({
       meta: {
         keepAlive: true,
         title: '许愿墙'
+      }
+    },
+    {
+      path:'/PlanetComment',
+      name:'planetcomment',
+      component:PlanetComment,
+      meta:{
+        keepAlive:false
       }
     }
   ]

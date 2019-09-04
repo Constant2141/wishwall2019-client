@@ -119,7 +119,7 @@ export default {
           take:7,
           time:'17:20',
           anonymous:false,
-          contact:null
+          contact:'5454584948646546415616513165165415161651684561641658148561465411568168132481328646513254856161465165146516513384615812824895124832482348848684654651651651651561864512134515481463124831241234312412341'
         },
       ],
       wishes:[]
@@ -150,6 +150,10 @@ export default {
 </script>
 
 <style scoped>
+.wish-wall{
+  height: 90vh;
+  overflow: auto;
+}
 *{
   margin:0;
   padding:0;
@@ -229,8 +233,10 @@ li{
 .wish-tag{
   display: flex;
 }
-.wish-tag{
+.wish-tag {
   justify-content: space-between;
+  align-items: center;
+  width: 238px;
 }
 .yellow-left{
   position: relative;
