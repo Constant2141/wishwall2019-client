@@ -9,6 +9,7 @@ import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
 import Mytopic from "@/components/myTopic";
+import Login from '@/components/Login';
 
 Vue.use(Router);
 
@@ -89,6 +90,14 @@ export default new Router({
       path:'/PlanetComment',
       name:'planetcomment',
       component:PlanetComment,
+      meta:{
+        keepAlive:false
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
       meta:{
         keepAlive:false
       }

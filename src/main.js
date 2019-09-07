@@ -10,7 +10,7 @@ import 'swiper/dist/css/swiper.css'
 
 Vue.use(VueAwesomeSwiper);
 Vue.prototype.$axios = Axios;
-Axios.defaults.baseURL = '';
+Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
 Vue.config.productionTip = false
 
 

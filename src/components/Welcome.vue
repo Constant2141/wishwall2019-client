@@ -43,10 +43,11 @@
 export default {
   data(){
     return{
-      choose:false,
+      choose:true,
       boy:false,
       girl:false,
-      sex:''
+      sex:'',
+      trueSex:''
     }
   },
   methods:{
@@ -66,6 +67,7 @@ export default {
     },
     confirmSex(){
       console.log(this.sex);
+
     }
   }
 }
