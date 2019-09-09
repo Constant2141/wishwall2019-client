@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">      
     <!-- 我需要一张屏障 -->
     <div :class="[{'cover-active':toggleBool},'black-cover']"></div>
     <!-- 路由 -->
@@ -70,7 +71,7 @@ export default {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   transition: all 0.2s;
 }
 .cover-active {
