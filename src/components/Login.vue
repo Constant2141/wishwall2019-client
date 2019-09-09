@@ -14,7 +14,7 @@ export default {
   },
   methods:{
     getUserInfo(){
-      this.$axios.get('/login/getUserInfo?userID=12')
+      this.$axios.get('/login/getUserInfo?userID=11')
       .then(res => {
         if(res.status == 200){
           console.log(res);

@@ -7,6 +7,7 @@ import Axios from 'axios'
 /*使用的时候注意版本*/ 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import store from './vuex/store'
 
 Vue.use(VueAwesomeSwiper);
 Vue.prototype.$axios = Axios;
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
