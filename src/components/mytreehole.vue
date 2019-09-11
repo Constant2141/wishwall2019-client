@@ -24,7 +24,7 @@
         </transition>
       </div>
     </div>
-    <div class="nomore" v-if="this.holesData.length > 3?true:false">都被你扯完了...</div>
+    <div class="nomore" v-if="this.holesData.length > 3?true:false">再脱就没了...</div>
   </div>
 </template>
 <script>
@@ -52,7 +52,7 @@ export default {
           count: 110,
           comments: [
             { isBoy: true, text: "我等你" },
-            { isBoy: false, text: "我爱你" },
+            { isBoy: false, text: "我爱你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你" },
             { isBoy: true, text: "我气你" }
           ]
         },
