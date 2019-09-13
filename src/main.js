@@ -7,10 +7,28 @@ import Axios from 'axios'
 /*使用的时候注意版本*/ 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import store from './vuex/store'
+import Dialog from 'vant/lib/dialog';
+import 'vant/lib/dialog/style';
+// import 'vant/lib/vant-css/index.css'
 
 Vue.use(VueAwesomeSwiper);
+Vue.use(Dialog);
+
+Axios.interceptors.request.use(
+  config=>{
+    if(localStorage.token){
+      config.headers.Authorization = `token${localStorage.token}`;
+      return config;
+    }
+    err=>{
+      return Promise.reject(err);
+    }
+    
+})
 Vue.prototype.$axios = Axios;
-Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
+// Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
+Axios.defaults.baseURL = 'http://192.168.0.106:3000/';
 Vue.config.productionTip = false
 
 
@@ -18,6 +36,8 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+ 
 })

@@ -143,6 +143,13 @@ export default {
       }
     }
   },
+  created(){
+    if(localStorage.userInfo.isNewUser){
+      this.$router.push({path:'/login'})
+    }else{
+      ;
+    }
+  },
   mounted(){
     this.getData();
   }

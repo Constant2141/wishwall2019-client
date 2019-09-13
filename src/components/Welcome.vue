@@ -47,7 +47,7 @@ export default {
       boy:false,
       girl:false,
       sex:'',
-      trueSex:''
+      trueSex:1
     }
   },
   methods:{
@@ -57,20 +57,34 @@ export default {
     selectBoy(){
       this.boy = true;
       this.girl = false;
-      this.sex = 'boy';
+      this.sex = 1;
     },
     selectGirl(){
       this.boy = false;
       this.girl = true;
-      this.sex = 'girl';
-
+      this.sex = 2;
     },
     confirmSex(){
-      console.log(this.sex);
+      if(this.sex){
+        if(this.sex!=this.trueSex){
+          this.$dialog.confirm({
+            message:'您选择的性别和微信性别不匹配，是否继续'
+          })
+          .then(()=> this.$router.push({path:'/wishwall'}))
+          .catch(()=>{})
+        }else{
+          this.$router.push({path:'/wishwall'})
+        }
+      }else{
+        this.$dialog.alert({
+          message:'请您先选择自己的性别'
+        })
+      }
+    }
+        
 
     }
   }
-}
 </script>
 
 <style scoped>
