@@ -1,15 +1,18 @@
 import Vue from "vue";
 import Router from "vue-router";
 import TreeHole from "@/components/treehole";
+import MyTreeHole from '@/components/mytreehole';
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
 import Planet from '@/components/planet'
 
 import WishWall from "@/components/WishWall";
+import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
 import Mytopic from "@/components/myTopic";
+import Login from '@/components/Login';
 
 Vue.use(Router);
 
@@ -26,6 +29,15 @@ export default new Router({
       meta: {
         keepAlive: true, //底部栏显示
         title: '树洞'
+      }
+    },
+    {
+      path: "/mytreehole",
+      name: "mytreehole",
+      component: MyTreeHole,
+      meta: {
+        keepAlive: false, //底部栏显示
+        title:'我的树洞'
       }
     },
     {
@@ -92,6 +104,22 @@ export default new Router({
       meta: {
         keepAlive: true,
         title: '许愿墙'
+      }
+    },
+    {
+      path:'/PlanetComment',
+      name:'planetcomment',
+      component:PlanetComment,
+      meta:{
+        keepAlive:false
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta:{
+        keepAlive:false
       }
     }
   ]

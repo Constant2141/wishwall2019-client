@@ -10,14 +10,31 @@ import 'swiper/dist/css/swiper.css'
 import { Picker } from 'vant';
 import { Popup } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
+import store from './vuex/store'
+import Dialog from 'vant/lib/dialog';
+import 'vant/lib/dialog/style';
+// import 'vant/lib/vant-css/index.css'
 
 Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
 Vue.use(Picker);
-
 Vue.use(VueAwesomeSwiper);
+Vue.use(Dialog);
+
+Axios.interceptors.request.use(
+  config=>{
+    if(localStorage.token){
+      config.headers.Authorization = `token${localStorage.token}`;
+      return config;
+    }
+    err=>{
+      return Promise.reject(err);
+    }
+    
+})
 Vue.prototype.$axios = Axios;
-Axios.defaults.baseURL = '';
+// Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
+Axios.defaults.baseURL = 'http://192.168.0.106:3000/';
 Vue.config.productionTip = false
 
 
@@ -25,6 +42,8 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+ 
 })
