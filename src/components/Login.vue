@@ -5,7 +5,11 @@
 </template>
 
 <script>
+const axios = require('axios');
+
+
 export default {
+
   data(){
     return{
       firstLogin:''
@@ -13,7 +17,8 @@ export default {
   },
   methods:{
     getUserInfo(){
-      this.$axios.get('/login/getUserInfo?userID=11')
+      // console.log(1)
+      axios.get('/login/getUserInfo?userID=11')
       .then(res => {
         if(res.status == 200){
           console.log(res.data)
@@ -24,7 +29,11 @@ export default {
           console.log('获取失败')
           }
         })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        console.log('获取失败')
+      })
+      
     },
     ifFirst(){
       if(this.firstLogin){

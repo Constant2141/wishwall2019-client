@@ -9,7 +9,7 @@
         </div>
         <div class="edit-area">
             <div class="wish-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.text"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content"></textarea>
             </div>
         </div>
         <div class="more-choose">
@@ -19,9 +19,12 @@
             </div>
             <van-popup v-model="showCampusPicker" position="bottom">
                  <van-picker 
+                 show-toolbar
                  :columns="campus" 
                  @change="changeCampus" 
                  style="width:100%"
+                 @cancel="CancelPickCampus"
+                @confirm="ConfirmPickCampus"
                  />
             </van-popup>
            
@@ -31,9 +34,12 @@
             </div>
             <van-popup v-model="showTypePicker" position="bottom">
                  <van-picker 
+                 show-toolbar
                  :columns="wishType" 
                  @change="changeType" 
                  style="width:100%"
+                 @cancel="CancelPickType"
+                @confirm="ConfirmPickType"
                  />
             </van-popup>
             <div class="anonymous">
@@ -41,14 +47,22 @@
                 <span>{{chooseText[2]}}</span>
             </div>
         </div>
-        <div class="contact">
-            <div class="contact-edit">{{contactText[0]}}</div>
+        <div class="contact" >
+            <div class="contact-edit" @click="editContact">{{contactText[0]}}</div>
             <div class="tips">
                 <p>TIPS: {{contactText[1]}}</p>
                 <p class="p2">{{contactText[2]}}</p>
                 <p class="p3">{{contactText[3]}}</p>
             </div>
         </div>
+        <van-dialog
+        v-model="showContact"
+        title="填写联系方式"
+        show-cancel-button
+        @confirm="confirm"
+        >
+            <textarea name="" id="" cols="30" rows="10" class="contact-content" placeholder="请填写联系方式~" v-model="sendData.contact"></textarea>
+        </van-dialog>
     </div>
 </template>
 
@@ -91,48 +105,126 @@ export default {
                 "联系方式并不会出现在首页"
 
             ],
-            show:false,
+            showContact:false,
 
             //要发送的数据
             sendData:{
-                text:"",//心愿内容
-                campus:"",//校区
-                type:"",//心愿内容
+                wish_content:"",//心愿内容
+                wish_where:"",//校区
+                wish_type:"",//心愿类型
                 anonymous:false,//是否匿名
-                address:"",//地址
-
+                contact:"",//地址
             }
         }
     },
     methods:{
+        handleData(){
+            // 发送给后台的数据
+        },
+
+        editContact(){
+            // 触发联系方式填写框
+            // console.log(1)
+            this.showContact = true;
+        },
+
         release(){
+            // 向后台发送数据
+            // console.log(localStorage.getItem('token'))
+            if(this.sendData.wish_content == ''){
+                this.$dialog.alert({
+                    message:"愿望内容不可为空"
+                })
+            }
+            else if(this.sendData.wish_where == ''){
+                this.$dialog.alert({
+                    message:"校区不可为空"
+                })
+            }
+            else if(this.sendData.wish_type == ''){
+                this.$dialog.alert({
+                    message:"心愿类型不可为空"
+                })
+            }
+            else{
+                this.$axios.post('wish/create',this.sendData).then(res =>{
+                    console.log(res)
+                    this.$dialog.alert({
+                        message:'发布成功！'
+                    })
+                }).catch(err =>{
+                    console.log(err)
+                    this.$dialog.alert({
+                        message:'发布失败喔'
+                    })
+                })
+            }
             
+        },
+        confirm(){
+            // 确认联系方式
+            if(this.sendData.contact != ''){
+                this.contactText[0] = "联系方式："+ this.sendData.contact;
+            }
+            else{
+                this.$dialog.alert({
+                    message:"联系方式为空！"
+                })
+            }
         },
         checkclick(){//checkbox切换状态
             this.checked = !this.checked;
             this.sendData.anonymous = this.checked;
-            console.log(1)
+            // console.log(1)
         },
+        
+
+
         showCampus(){//显示校区选项
             this.showCampusPicker = true;
         },
         changeCampus(picker, value, index){//更改校区选项
-            this.sendData.campus = this.chooseText[0] = value;
+            this.sendData.wish_where = this.chooseText[0] = value;
         },
+        ConfirmPickCampus(val,index){
+            this.sendData.wish_where = this.chooseText[0] = val;
+            this.showCampusPicker = false;
+        },
+        CancelPickCampus(){
+            this.sendData.wish_where  = '';
+            this.chooseText[0] = '选择校区'
+            this.showCampusPicker = false;
+        },
+
+
+
         showType(){//显示心愿类型选项
             this.showTypePicker = true;
         },
-        changeType(picker, value, index){//更改校区选项
-            this.sendData.type = this.chooseText[1] = value;
+        changeType(picker, value, index){//更改心愿类型选项
+            this.sendData.wish_type = this.chooseText[1] = value;
         },
+        ConfirmPickType(val,index){
+            this.sendData.wish_type = this.chooseText[1] = val;
+            this.showTypePicker = false;
+        },
+        CancelPickType(){
+            this.sendData.wish_type = '';
+            this.chooseText[1] = '选择心愿类型'
+            this.showTypePicker = false;
+        }
     },
     watch:{
         checked(val){
             if(val){
+                // 选择匿名选项
                 this.$refs.check.classList.add("checked-box");
+                this.sendData.anonymous = true;
             }
             else{
+                // 取消匿名选项
                 this.$refs.check.classList.remove("checked-box");
+                this.sendData.anonymous = false;
             }
         }
     }
@@ -216,7 +308,9 @@ export default {
         float:right;
         position: relative;
         right:15px;
-        min-width: 80px;
+        min-width: 90px;
+        min-height: 20px;
+        padding-top: 1.4px;
     }
     .check-box{
         width:13px;
@@ -235,17 +329,28 @@ export default {
     }
     .anonymous span{
         /* display: inline-block; */
-        position: absolute;
-        top:3px;
-        right:0;
+        margin-left: 18px;
     }
 
 
     /* 联系栏 */
+
     .contact-edit{
         font-size:12px;
         color:#B8B8B8;
         margin-left:15px;
+        width: 80vw;
+        word-wrap:break-word;
+    }
+    .contact-content{
+        border:none;
+        width:80%;
+        height:40vw;
+        padding:7vw 8vw 3vw 8vw;
+        outline: none;
+    }
+    .contact-content::placeholder{
+        font-size: 13px;
     }
     .tips{
         margin-top: 10px;

@@ -144,7 +144,7 @@ export default {
     }
   },
   created(){
-    if(localStorage.userInfo.isNewUser){
+    if(localStorage.getItem(userInfo)){
       this.$router.push({path:'/login'})
     }else{
       ;
