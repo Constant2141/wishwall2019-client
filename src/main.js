@@ -8,12 +8,10 @@ import Axios from 'axios'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import store from './vuex/store'
-import Dialog from 'vant/lib/dialog';
-import 'vant/lib/dialog/style';
-// import 'vant/lib/vant-css/index.css'
+// import {Dialog} from 'vant'
 
 Vue.use(VueAwesomeSwiper);
-Vue.use(Dialog);
+// Vue.use(Dialog);
 
 Axios.interceptors.request.use(
   config=>{
@@ -27,7 +25,7 @@ Axios.interceptors.request.use(
     
 })
 Vue.prototype.$axios = Axios;
-// Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
+
 Axios.defaults.baseURL = 'http://192.168.0.106:3000/';
 Vue.config.productionTip = false
 
