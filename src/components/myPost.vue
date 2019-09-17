@@ -54,11 +54,14 @@ export default {
   data() {
     return {
       isActive: true,
-      wishes: [1, 2],
+      // wishes: [1, 2],
+      wishes:[],
       methods: ["实名发布", "匿名发布"],
       theWish: [
         "我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕",
         "我想要一个牛肉抱枕我想要一个牛肉抱枕"
+      ],
+      theWish: [
       ],
       level: ["实物", "实物"],
       school: ["大学城校区", "大学城校区"],
@@ -91,9 +94,6 @@ export default {
       } else if (this.isGetted[index] == true) {
         document.getElementsByClassName("wish-info")[index].style.overflow =
           "scroll";
-        console.log(
-          document.getElementsByClassName("wish-info")[index].style.overflow
-        );
         this.clientHeight =
           document.getElementsByClassName("wish-info")[index].clientHeight +
           25 * 7;
@@ -107,10 +107,20 @@ export default {
       this.finish = "已完成";
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
+    },
+    getData(){
+      const url = "/wish/Created";
+      this.$axios
+        .get(url)
+        .then(res => {
+          // console.log(res)
+          this.wishes = res.data.result;
+        })
     }
   },
   mounted() {
     this.show = [...this.isGetted];
+    this.getData();
   }
 };
 </script>

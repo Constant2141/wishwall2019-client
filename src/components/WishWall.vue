@@ -144,7 +144,7 @@ export default {
     }
   },
   created(){
-    if(localStorage.getItem(userInfo)){
+    if(localStorage.getItem('userInfo')){
       this.$router.push({path:'/login'})
     }else{
       ;
