@@ -39,7 +39,7 @@ Axios.interceptors.request.use(
 Vue.prototype.$axios = Axios;
 // Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
 // Axios.defaults.baseURL = 'http://192.168.0.106:3000/';
-Axios.defaults.baseURL = 'http://192.168.43.30:3000';//庆义的本地测试口
+Axios.defaults.baseURL = 'http://192.168.1.28:3000';//庆义的本地测试口
 Vue.config.productionTip = false
 
 
