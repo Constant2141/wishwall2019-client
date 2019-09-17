@@ -18,7 +18,7 @@ export default {
   methods:{
     getUserInfo(){
       // console.log(1)
-      axios.get('/login/getUserInfo?userID=11')
+      axios.get('http://192.168.1.28:3000/login/getUserInfo?userID=11')
       .then(res => {
         console.log(res);
         
@@ -27,7 +27,9 @@ export default {
           localStorage.setItem('token',res.data.token);
           localStorage.setItem('token_exp',new Date().getTime());
           localStorage.setItem('userInfo',res.data);
-        }
+        }else{
+          console.log('响应失败')
+          }
         })
       .catch(err => {
         console.log(err)
