@@ -18,7 +18,7 @@ export default {
   methods:{
     getUserInfo(){
       // console.log(1)
-      axios.get('/login/getUserInfo?userID=12')
+      axios.get('http://192.168.1.28:3000/login/getUserInfo?userID=11')
       .then(res => {
         if(res.status == 200){
           console.log(res.data)

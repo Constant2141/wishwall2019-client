@@ -28,8 +28,6 @@ Axios.interceptors.request.use(
       config.headers.common['Authorization']=`Bearer ${localStorage.getItem('token')}`
       return config;
     }
-
-
 },
     err=>{
       return Promise.reject(err);
