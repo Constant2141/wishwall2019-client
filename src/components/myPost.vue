@@ -118,7 +118,7 @@ export default {
             this.level[index] = value.wish_type;
             this.school[index] = value.wish_where;
             this.tel[index] = value.contact;
-            this.time[index] = value.createdAt.slice(0,10) + " " + value.createdAt.slice(11,16);
+            this.time[index] = value.createdAt;
             method[index] = value.anonymous;
             method.forEach((value,index) => {
               if(value == true){
