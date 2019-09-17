@@ -130,7 +130,14 @@ export default {
       this.wishes[index].ifTake = true;  
     },
     getData(){
-      this.wishes = this.wishData;
+      // this.wishes = this.wishData;
+      this.$axios.get("/wish/list？wish_where='大学城校区'")
+      .then(res=>{
+        if(res.status == 200){
+          console.log(res.data)
+        }
+      })
+      .catch(err =>console.log(err))
     },
     changeCampus(index){
       this.isActive = index;

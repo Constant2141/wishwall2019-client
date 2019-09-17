@@ -46,8 +46,7 @@ export default {
       choose:true,
       boy:false,
       girl:false,
-      sex:'',
-      trueSex:1
+      sex:''
     }
   },
   methods:{
@@ -65,12 +64,17 @@ export default {
       this.sex = 2;
     },
     confirmSex(){
+      let trueSex = localStorage.userInfo.sex;
       if(this.sex){
-        if(this.sex!=this.trueSex){
+        if(this.sex!=trueSex){
           this.$dialog.confirm({
             message:'您选择的性别和微信性别不匹配，是否继续'
           })
-          .then(()=> this.$router.push({path:'/wishwall'}))
+          .then(()=>{
+            
+            localStorage.setItem('userInfo.sex',trueSex)
+            this.$router.push({path:'/wishwall'});
+            })
           .catch(()=>{})
         }else{
           this.$router.push({path:'/wishwall'})
@@ -81,8 +85,6 @@ export default {
         })
       }
     }
-        
-
     }
   }
 </script>

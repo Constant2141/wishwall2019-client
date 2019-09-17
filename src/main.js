@@ -20,7 +20,7 @@ Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
-Vue.use(Dialog);
+// Vue.use(Dialog);
 
 Axios.interceptors.request.use(
   config=>{
