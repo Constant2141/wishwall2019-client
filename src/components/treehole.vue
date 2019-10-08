@@ -1,10 +1,10 @@
 <template>
   <div class="tree-hole" ref="treeHole">
-    <div class="title">树洞</div>
+    <!-- <div class="title">树洞</div> -->
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item,index) in cards" :key="index">
         <div class="holes">
-          <img src="../assets/Avatar/GirlAvatar.png" alt />
+          <img :src="item.isBoy?boyImgUrl:girlImgUrl" alt="">
           <p>{{item.words}}</p>
           <div class="love-cover">
             <div class="love-cover-left">
@@ -44,7 +44,6 @@ export default {
     return {
       realIndex:0,//对后台返回的那一条进行评论
       postWord:"",//要评论的话
-      msg: "Welcome to Your Vue.js App",
       boyImgUrl:require('../assets/Avatar/BoyAvatar.png'),
       girlImgUrl:require('../assets/Avatar/GirlAvatar.png'),
       cards: [
@@ -61,6 +60,7 @@ export default {
             "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
           likeCount: 123,
           isLike:false,
+          isBoy:true,
           comments: [{isBoy:true,text:'1是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天23'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
         },
         {
@@ -68,6 +68,7 @@ export default {
             "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
           likeCount: 120,
           isLike:false,
+          isBoy:false,
           comments: ["123", "321", "322"]
         }
       ],
@@ -101,9 +102,6 @@ export default {
       //   var container = this.$el.querySelector("#new_message");
       //   container.scrollTop = container.scrollHeight;
       // });
-    },
-    a() {
-      alert("123");
     },
     changeLove(index) {
       //要补后台
@@ -140,13 +138,13 @@ export default {
   background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
   /* overflow: scroll; */
 }
-.title {
+/* .title {
   background-color: #e7e7e7;
   height: 45px;
   display: flex;
   align-items: center;
   padding-left: 23px;
-}
+} */
 .comment {
   background-color: rgba(255, 255, 255, 0.6);
   position: fixed;
@@ -241,7 +239,7 @@ export default {
   font-size: 10px;
   margin:0 26px;
   /* background-color:yellow; */
-  height:180px;
+  height:225px;
   overflow: scroll;
 }
 
@@ -280,6 +278,5 @@ export default {
 }
 .swiper-pagination {
   z-index: 100 !important;
-  background-color: red;
 }
 </style>

@@ -13,7 +13,7 @@
         <p class="text">我发布的心愿</p>
         <p class="nums">{{num1}}条</p>
       </div>
-      <div class="wishNum">
+      <div class="wishNum" @click="toMyTreeHole">
         <div class="img2"></div>
         <p class="text">我的树洞</p>
         <p class="nums">{{num2}}条</p>
@@ -35,13 +35,17 @@ export default {
       sex:"男",
       school:"大学城",
       num1:2,
-      num2:2,
+      num2:0,
       num3:2
     }
   },
   methods:{
     toMyPost(){
       this.$router.replace("/mypost")
+    },
+    toMyTreeHole(){
+      //根据条数看看是不是需要更新
+      this.$router.replace(`/mytreehole?count=${this.num2}`)
     }
   }
 };
