@@ -66,7 +66,7 @@ export default {
         require("../assets/nav/7.png")
       ],
       // 三个发布路由
-      routerLink: ["/welcome", "/welcome", "/welcome"]
+      routerLink: ["/wishRelease", "/welcome", "/welcome"]
     };
   },
   methods: {
@@ -123,7 +123,7 @@ export default {
     },
     postNav(index) {
       //根据index跳不同的组件（编程导航）
-      this.$router.replace(this.routerLink[index]);
+      this.$router.push(this.routerLink[index]);
       this.activeBool = false;
       this.$emit("removeCover");
     }

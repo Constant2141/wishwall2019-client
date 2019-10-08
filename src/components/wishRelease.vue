@@ -1,7 +1,7 @@
 <template>
     <div class="wish-release">
         <div class="top">
-            <div class="left">
+            <div class="left" @click="back">
                 <img :src="backImg" alt="" class="back">
                 <span class="title">{{title}}</span>
             </div>
@@ -48,7 +48,9 @@
             </div>
         </div>
         <div class="contact" >
-            <div class="contact-edit" @click="editContact">{{contactText[0]}}</div>
+            <div>
+                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"></textarea>
+            </div>
             <div class="tips">
                 <p>TIPS: {{contactText[1]}}</p>
                 <p class="p2">{{contactText[2]}}</p>
@@ -61,7 +63,7 @@
         show-cancel-button
         @confirm="confirm"
         >
-            <textarea name="" id="" cols="30" rows="10" class="contact-content" placeholder="请填写联系方式~" v-model="sendData.contact"></textarea>
+        <textarea name="" id="" cols="30" rows="10" class="contact-content" placeholder="请填写联系方式~" v-model="sendData.contact"></textarea>
         </van-dialog>
     </div>
 </template>
@@ -125,9 +127,11 @@ export default {
         editContact(){
             // 触发联系方式填写框
             // console.log(1)
-            this.showContact = true;
+            // this.showContact = true;
         },
-
+        back(){//退回上一页
+            this.$router.go(-1);
+        },
         release(){
             // 向后台发送数据
             // console.log(localStorage.getItem('token'))
@@ -150,8 +154,9 @@ export default {
                 this.$axios.post('wish/create',this.sendData).then(res =>{
                     console.log(res)
                     this.$dialog.alert({
-                        message:'发布成功！'
+                        message:'发布成功！'       
                     })
+                    this.$router.go(-1);
                 }).catch(err =>{
                     console.log(err)
                     this.$dialog.alert({
@@ -337,10 +342,17 @@ export default {
 
     .contact-edit{
         font-size:12px;
-        color:#B8B8B8;
         margin-left:15px;
         width: 80vw;
+        border:none;
+        font-size: 14px;
         word-wrap:break-word;
+        /* height: 20px; */
+        /* min-height: 20px; */
+        overflow: visible;
+    }
+    .contact-edit::placeholder{
+        color:#B8B8B8;
     }
     .contact-content{
         border:none;

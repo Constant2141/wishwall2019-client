@@ -5,8 +5,9 @@
     <div :class="[{'cover-active':toggleBool},'black-cover']"></div>
     <!-- 路由 -->
     <keep-alive>
-      <router-view />
+      <router-view  v-if="$route.meta.keepAlive"/>
     </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
     <!-- 导航 -->
     <navi
       @cover="cover"
