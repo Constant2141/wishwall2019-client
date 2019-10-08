@@ -1,6 +1,6 @@
 <template>
   <div class="mytreehole">
-    <div class="title">我的树洞</div>
+    <!-- <div class="title">我的树洞</div> -->
     <div class="left" @click="back"></div>
     <div class="holes-wrapper">
       <div v-for="(item,index) in holesData" :key="index" class="holes">
@@ -24,7 +24,7 @@
         </transition>
       </div>
     </div>
-    <div class="nomore" v-if="this.holesData.length > 3?true:false">再脱就没了...</div>
+    <div class="nomore" v-if="this.holesData.length > 4?true:false">再脱就没了...</div>
   </div>
 </template>
 <script>
@@ -91,13 +91,25 @@ export default {
   },
   methods: {
     back() {
-      alert("返回");
+      this.$router.replace("/mine")
     },
     toggle(index) {
       let obj = this.holesData[index];
       obj.hide = !obj.hide;
       this.$set(this.holesData, index, obj);
     }
+  },
+  beforeRouteEnter(to,from,next){
+    let count = to.query.count
+    next(vm=>{
+      if(count == vm.holesData.length){
+        console.log('不需要更新');
+      }else{
+        //更新        
+        console.log('需要更新');
+        // vm.holesData = [];
+      }
+    });
   }
 };
 </script>
@@ -105,7 +117,7 @@ export default {
 .mytreehole {
   position: relative;
 }
-.title {
+/* .title {
   z-index: 2;
   position: fixed;
   width: 100%;
@@ -115,10 +127,10 @@ export default {
   display: flex;
   align-items: center;
   padding-left: 23px;
-}
+} */
 .holes-wrapper {
   position: relative;
-  padding-top: 45px;
+  /* padding-top: 45px; */
   /* padding-bottom: 9px; */
   background-color: rgb(248, 248, 248);
 }
@@ -126,7 +138,7 @@ export default {
   z-index: 2;
   position: fixed;
   left: 10px;
-  top: 65px;
+  top: 20px;
   width: 19px;
   height: 19px;
   background: url("../assets/back.png") no-repeat center center;
