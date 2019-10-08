@@ -47,6 +47,9 @@ export default {
       //根据条数看看是不是需要更新
       this.$router.replace(`/mytreehole?count=${this.num2}`)
     }
+  },
+  mounted(){
+    console.log('mine mounted');
   }
 };
 </script>

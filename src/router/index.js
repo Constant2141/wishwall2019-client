@@ -29,7 +29,8 @@ export default new Router({
       component: TreeHole,
       meta: {
         keepAlive: true, //底部栏显示
-        title: '树洞'
+        title: '树洞',
+        trueKeepAlive:false //keepAlive字段不是这么用的吧亲
       }
     },
     {
@@ -47,7 +48,6 @@ export default new Router({
       component: treeholeRelease,
       meta: {
         keepAlive: false,  //底部栏不显示
-        trueKeepAlive:false //keepAlive字段不是这么用的吧亲
       }
     },
     {
