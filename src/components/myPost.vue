@@ -20,7 +20,7 @@
             <p>{{theWish[index]}}</p>
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
-              <p :style="pMargin">{{time[index]}}</p>
+              <p>{{time[index]}}</p>
               <p>联系方式:</p>
               <p :style="pWidth">{{tel[index]}}</p>
             </div>
@@ -54,15 +54,12 @@ export default {
   data() {
     return {
       isActive: true,
-      wishes: [1, 2],
-      methods: ["实名发布", "匿名发布"],
-      theWish: [
-        "我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕",
-        "我想要一个牛肉抱枕我想要一个牛肉抱枕"
-      ],
-      level: ["实物", "实物"],
-      school: ["大学城校区", "大学城校区"],
-      pMargin: "marginLeft:37vw",
+      wishes:[],
+      methods: [],
+      theWish: [],
+      level: [],
+      school: [],
+      many:[],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
       time: ["17:20", "17:20"],
       tel: [
@@ -70,7 +67,7 @@ export default {
         "加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817"
       ],
       getInfo: ["已被7人领取", "未被领取"],
-      isGetted: [true, false],
+      isGetted: [],
       clientHeight: 39,
       show: [],
       finish: "确认完成"
@@ -91,9 +88,6 @@ export default {
       } else if (this.isGetted[index] == true) {
         document.getElementsByClassName("wish-info")[index].style.overflow =
           "scroll";
-        console.log(
-          document.getElementsByClassName("wish-info")[index].style.overflow
-        );
         this.clientHeight =
           document.getElementsByClassName("wish-info")[index].clientHeight +
           25 * 7;
@@ -107,10 +101,58 @@ export default {
       this.finish = "已完成";
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
+    },
+    getData(){
+      const url = "/wish/iCreated	";
+      this.$axios
+        .get(url)
+        .then(res => {
+          console.log(res)
+          this.wishes = res.data.result;
+          let method = [];
+          let times = [];
+          let status = [];
+          let people = [];
+          this.wishes.forEach((value,index) => {
+            this.theWish[index] = value.wish_content;
+            this.level[index] = value.wish_type;
+            this.school[index] = value.wish_where;
+            this.tel[index] = value.contact;
+            this.time[index] = value.createdAt;
+            method[index] = value.anonymous;
+            method.forEach((value,index) => {
+              if(value == true){
+                this.methods[index] = "匿名发布";
+              }else{
+                this.methods[index] = "实名发布";
+              }
+            })
+            people[index] = value.wish_many;
+            people.forEach((value,index) => {
+              this.many[index] = value;
+            })
+            status[index] = value.wish_status;
+            status.forEach((value,index) => {
+              if(value == 0){
+                this.getInfo[index] = `未被领取`;
+                this.isGetted[index] = false;
+              }
+              else if(value == 1){
+                this.getInfo[index] = `已被${many[index]}人领取`;
+                this.isGetted[index] = true;
+              }
+              else if(value == 2){
+                this.getInfo[index] = `已完成`;
+                this.isGetted[index] = false;
+              }
+            })
+          })
+        })
     }
   },
   mounted() {
     this.show = [...this.isGetted];
+    this.getData();
   }
 };
 </script>
