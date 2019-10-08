@@ -66,7 +66,7 @@ export default {
         require("../assets/nav/7.png")
       ],
       // 三个发布路由
-      routerLink: ["/welcome", "/welcome", "/welcome"]
+      routerLink: ["/wishRelease", "/treeholeRelease", "/welcome"]
     };
   },
   methods: {

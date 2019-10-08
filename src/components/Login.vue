@@ -18,7 +18,7 @@ export default {
   methods:{
     getUserInfo(){
       // console.log(1)
-      axios.get('http://192.168.1.28:3000/login/getUserInfo?userID=12')
+      axios.get('http://47.100.12.168:3000/login/getUserInfo?userID=01')
       .then(res => {
         console.log(res);
         
