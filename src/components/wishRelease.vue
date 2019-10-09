@@ -49,7 +49,7 @@
         </div>
         <div class="contact" >
             <div>
-                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"></textarea>
+                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"  v-model="sendData.contact"></textarea>
             </div>
             <div class="tips">
                 <p>TIPS: {{contactText[1]}}</p>
@@ -57,14 +57,14 @@
                 <p class="p3">{{contactText[3]}}</p>
             </div>
         </div>
-        <van-dialog
+        <!-- <van-dialog
         v-model="showContact"
         title="填写联系方式"
         show-cancel-button
         @confirm="confirm"
         >
         <textarea name="" id="" cols="30" rows="10" class="contact-content" placeholder="请填写联系方式~" v-model="sendData.contact"></textarea>
-        </van-dialog>
+        </van-dialog> -->
     </div>
 </template>
 
