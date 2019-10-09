@@ -20,26 +20,22 @@ Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
-// Vue.use(Dialog);
+Vue.use(Dialog);
 
 Axios.interceptors.request.use(
   config=>{
     if(localStorage.getItem('token')){
       config.headers.common['Authorization']=`Bearer ${localStorage.getItem('token')}`
-      return config;
     }
-
-
-},
+    return config;
+  },
     err=>{
-      return Promise.reject(err);
-
-    
-})
+      return Promise.reject(err);  
+  })
 Vue.prototype.$axios = Axios;
-// Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
+Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
 // Axios.defaults.baseURL = 'http://192.168.0.106:3000/';
-Axios.defaults.baseURL = 'http://192.168.1.28:3000';//庆义的本地测试口
+// Axios.defaults.baseURL = 'http://192.168.0.106:3000';//庆义的本地测试口
 Vue.config.productionTip = false
 
 
