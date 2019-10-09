@@ -26,7 +26,7 @@ export default {
           console.log(res.data)
           localStorage.setItem('token',res.data.token);
           localStorage.setItem('token_exp',new Date().getTime());
-          localStorage.setItem('userInfo',res.data);
+          localStorage.setItem('userInfo',JSON.stringify(res.data));
         }else{
           console.log('响应失败')
           }
