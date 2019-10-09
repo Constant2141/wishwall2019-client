@@ -17,49 +17,55 @@
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
       </div>
-    <div class="wish"
-      v-for="(wish,index) in wishes" 
-      :key="index">
-      <div class="wish-body">
-        <div class="take-button"
-          @click="takeWish(index)"
-          :class="{'taken-button':wishes[index].gainOrNot}">
-          <span v-show="!wishes[index].gainOrNot">领取心愿</span>
-          <span v-show="wishes[index].gainOrNot">您已领取</span>
-        </div>
-        <div class="wish-content">
-          <div class="wish-avatar">
-            <div class="yellow-left"></div>
-            <div class="avatar-wrapper">
-              <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
-              <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
+      <div class="scrollerWrap">
+        <scroller 
+          :on-refresh="refresh"
+          :on-infinite="infinite" 
+          ref="scrollerBottom">
+            <div class="wish"
+              v-for="(wish,index) in wishes" 
+              :key="index">
+              <div class="wish-body">
+                <div class="take-button"
+                  @click="takeWish(index)"
+                  :class="{'taken-button':wishes[index].gainOrNot}">
+                  <span v-show="!wishes[index].gainOrNot">领取心愿</span>
+                  <span v-show="wishes[index].gainOrNot">您已领取</span>
+                </div>
+                <div class="wish-content">
+                  <div class="wish-avatar">
+                    <div class="yellow-left"></div>
+                    <div class="avatar-wrapper">
+                      <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
+                      <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
+                    </div>
+                    <div class="yellow-right"></div>
+                  </div>
+                  <div class="wish-txt">
+                    <b class="name">{{wish.nickname}}</b>
+                    <div class="content">{{wish.wish_content}}</div>
+                    <div class="wish-tag">
+                      <span class="tag">#{{wish.wish_type}}</span>
+                      <span class="tag">#{{wish.wish_where}}</span>
+                      <span class="tag take">
+                        <span v-show="wish.wish_many > 0">已被{{wish.wish_many}}人领取</span>
+                        <span v-show="wish.wish_many == 0">未被领取</span>
+                      </span>
+                      <span class="tag time">{{wish.time}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="contact-way"
+                  v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
+              </div>
+              <div class="separate"></div>  
             </div>
-            <div class="yellow-right"></div>
-          </div>
-          <div class="wish-txt">
-            <b class="name">{{wish.nickname}}</b>
-            <div class="content">{{wish.wish_content}}</div>
-            <div class="wish-tag">
-              <span class="tag">#{{wish.wish_type}}</span>
-              <span class="tag">#{{wish.wish_where}}</span>
-              <span class="tag take">
-                <span v-show="wish.wish_many > 0">已被{{wish.wish_many}}人领取</span>
-                <span v-show="wish.wish_many == 0">未被领取</span>
-              </span>
-              <span class="tag time">{{wish.time}}</span>
-            </div>
-          </div>
-        </div>
-        <div class="contact-way"
-          v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
-      </div>
-      <div class="separate"></div>  
-    </div>
+        </scroller>  
+      </div>  
   </div>
 </template>
 
 <script>
-
 export default {
   data(){
     return{
@@ -76,20 +82,33 @@ export default {
         "东风路"
       ],
       isActive:0,
-      wishes:[]
+      wishes:[],
+      page:1
+
     }
   },
   methods:{
+    //上拉加载。不直观,bottom
+    infinite(){
+      this.page++;
+
+    },
+    //下拉刷新，不直观，top
+    refresh(done){
+      this.page = 1;
+      this.getData();
+      done()
+    },
     getData(){
       this.$axios.get('/wish/list',{
         params:{
-          curPage:1
+          curPage:this.page
         }
       })
       .then(res=>{
         if(res.status == 200){
           console.log(res);
-          this.wishes =  res.data.result.wishList;
+          this.wishes = res.data.result.wishList;
         }
       })
       .catch(err =>console.log(err))
@@ -129,6 +148,7 @@ export default {
 </script>
 
 <style scoped>
+
 .wish-wall{
   height: 90vh;
   overflow: auto;
