@@ -97,6 +97,9 @@ export default {
       let obj = this.holesData[index];
       obj.hide = !obj.hide;
       this.$set(this.holesData, index, obj);
+    },
+    getData(){
+      // this.$axios.get('/treehole/getMyTreeHoles')
     }
   },
   beforeRouteEnter(to,from,next){

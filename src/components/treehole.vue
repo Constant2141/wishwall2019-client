@@ -125,6 +125,7 @@ export default {
     //     alert('事件触发了;');
     //   }
     // })
+    console.log('treehole mounted')
   }
 };
 </script>

@@ -23,32 +23,35 @@
       <div class="wish-body">
         <div class="take-button"
           @click="takeWish(index)"
-          :class="{'taken-button':wishes[index].ifTake}">
-          <span v-show="!wishes[index].ifTake">领取心愿</span>
-          <span v-show="wishes[index].ifTake">您已领取</span>
+          :class="{'taken-button':wishes[index].gainOrNot}">
+          <span v-show="!wishes[index].gainOrNot">领取心愿</span>
+          <span v-show="wishes[index].gainOrNot">您已领取</span>
         </div>
         <div class="wish-content">
           <div class="wish-avatar">
             <div class="yellow-left"></div>
-            <div class="avatar-wrapper"></div>
+            <div class="avatar-wrapper">
+              <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
+              <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
+            </div>
             <div class="yellow-right"></div>
           </div>
           <div class="wish-txt">
-            <b class="name">{{wish.name}}</b>
-            <div class="content">{{wish.content}}</div>
+            <b class="name">{{wish.nickname}}</b>
+            <div class="content">{{wish.wish_content}}</div>
             <div class="wish-tag">
-              <span class="tag">#{{wish.wishType}}</span>
-              <span class="tag">#{{wish.campus}}</span>
+              <span class="tag">#{{wish.wish_type}}</span>
+              <span class="tag">#{{wish.wish_where}}</span>
               <span class="tag take">
-                <span v-show="wish.take > 0">已被{{wish.take}}人领取</span>
-                <span v-show="wish.take == 0">未被领取</span>
+                <span v-show="wish.wish_many > 0">已被{{wish.wish_many}}人领取</span>
+                <span v-show="wish.wish_many == 0">未被领取</span>
               </span>
               <span class="tag time">{{wish.time}}</span>
             </div>
           </div>
         </div>
         <div class="contact-way"
-          v-show="wishes[index].ifTake">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
+          v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
       </div>
       <div class="separate"></div>  
     </div>
@@ -73,92 +76,54 @@ export default {
         "东风路"
       ],
       isActive:0,
-      //数据结构，备用备用
-      // wish:{
-      //   ifTake:'',//是否领取
-      //   avatar:'',//头像
-      //   name:'',//微信昵称
-      //   content:'',//心愿内容
-      //   wishType:'',//许愿类型
-      //   campus:'',//校区
-      //   take:'',//领取人数
-      //   time:'',//发布时间
-      //   anonymous:'',//是否匿名
-      //   contact:'',//填写的联系方式
-      // },
-      wishData:[
-        {
-          ifTake:'',
-          avatar:'',
-          name:'小甜甜',
-          content:'我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕',
-          wishType:'实物',
-          campus:'龙洞校区',
-          take:'0',
-          time:'15:30',
-          anonymous:false,
-          contact:'5454584948646546415616513165165415161651684561641658148561465411568168132481328646513254856161465165146516513384615812824895124832482348848684654651651651651561864512134515481463124831241234312412341'
-        }, {
-          ifTake:false,
-          avatar:'',
-          name:'jio',
-          content:'富婆快包养我',
-          wishType:'委托',
-          campus:'大学城校区',
-          take:7,
-          time:'17:20',
-          anonymous:false,
-          contact:null
-        }, {
-          ifTake:false,
-          avatar:'',
-          name:'jio',
-          content:'艹竣sb',
-          wishType:'其他',
-          campus:'东风路校区',
-          take:7,
-          time:'17:20',
-          anonymous:false,
-          contact:'5454584948646546415616513165165415161651684561641658148561465411568168132481328646513254856161465165146516513384615812824895124832482348848684654651651651651561864512134515481463124831241234312412341'
-        },
-      ],
       wishes:[]
     }
   },
   methods:{
-    takeWish(index){
-      this.wishes[index].ifTake = true;  
-    },
     getData(){
-      // this.wishes = this.wishData;
-      this.$axios.get("/wish/list?wish_where='大学城校区'")
+      this.$axios.get('/wish/list',{
+        params:{
+          curPage:1
+        }
+      })
       .then(res=>{
         if(res.status == 200){
-          console.log(res.data)
+          console.log(res);
+          this.wishes =  res.data.result.wishList;
         }
       })
       .catch(err =>console.log(err))
     },
+    takeWish(index){
+      this.wishes[index].gainOrNot = true; 
+      this.$axios.get('/wish/gain',{
+        params:{
+          uuid:this.wishes[index].uuid
+        }
+      })
+    },
     changeCampus(index){
       this.isActive = index;
       let campus = event.currentTarget.innerHTML;
-      // console.log(campus);
-      if(campus == '全部'){
-        this.wishes = this.wishData;
-      }else{
-        this.wishes = this.wishData.filter(wish => wish.campus == campus +'校区');
-      }
+      this.$axios.get('/wish/list',{
+        params:{
+          curPage:1,
+          wish_where:campus=='全部'?'':`${campus}校区`
+        }
+      })
+      .then(res=>{
+        if(res.status == 200){
+          this.wishes =  res.data.result.wishList;
+        }
+      })
+      .catch(err =>console.log(err))
     }
   },
   created(){
-    if(localStorage.getItem('userInfo')){
-      this.$router.push({path:'/login'})
-    }else{
-      ;
-    }
+   
   },
   mounted(){
-    this.getData();
+    this.getData();  
   }
 }
 </script>
@@ -227,7 +192,7 @@ li{
   padding: 0 24px 0 24px;
 }
 .take-button{
-  width: 49px;
+  width: 52px;
   font-size: 10px;
   height: 20px;
   position: absolute;
@@ -269,6 +234,10 @@ li{
   border: 3.4px solid #FEBCC2;
   border-radius: 50px;
   left: -12px;
+  overflow: hidden;
+}
+.avatar-wrapper img{
+  width: 50px;
 }
 .yellow-right{
   position: relative;

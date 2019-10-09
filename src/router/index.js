@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import TreeHole from "@/components/treehole";
 import MyTreeHole from '@/components/mytreehole';
+import treeholeRelease from '@/components/treeholeRelease'
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
 import WishRelease from '@/components/wishRelease'
@@ -28,7 +29,8 @@ export default new Router({
       component: TreeHole,
       meta: {
         keepAlive: true, //底部栏显示
-        title: '树洞'
+        title: '树洞',
+        trueKeepAlive:false //keepAlive字段不是这么用的吧亲
       }
     },
     {
@@ -38,6 +40,14 @@ export default new Router({
       meta: {
         keepAlive: false, //底部栏显示
         title:'我的树洞'
+      }
+    },
+    {
+      path: '/treeholeRelease',
+      name: 'treeholeRelease',
+      component: treeholeRelease,
+      meta: {
+        keepAlive: false,  //底部栏不显示
       }
     },
     {
@@ -54,7 +64,8 @@ export default new Router({
       name: 'mine',
       component: Mine,
       meta: {
-        keepAlive: true  //底部栏显示
+        keepAlive: true,  //底部栏显示
+        trueKeepAlive:false
       }
     },
     {
