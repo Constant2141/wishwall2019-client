@@ -13,17 +13,18 @@ import { Dialog } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
 import store from './vuex/store'
 import { userInfo } from 'os';
-import VueScroller from 'vue-scroller'
+import { PullRefresh } from 'vant';
+import { List } from 'vant';
 
-
-// import 'vant/lib/vant-css/index.css'
 
 Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
 Vue.use(Dialog);
-Vue.use(VueScroller);
+Vue.use(PullRefresh);
+Vue.use(List);
+
 
 Axios.interceptors.request.use(
   config=>{
