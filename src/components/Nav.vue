@@ -103,7 +103,7 @@ export default {
         target.id == "main-box"
       ) {
         //点中间区域
-        this.imgSrc = this.notActiveSrc;
+        // this.imgSrc = this.notActiveSrc;
         // 禁用触摸滚动页面
         if (this.toggleBool) {
           this.activeBool = true;

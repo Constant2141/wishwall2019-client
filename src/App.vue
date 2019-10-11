@@ -13,7 +13,7 @@
       @cover="cover"
       @removeCover="removeCover"
       :toggleBool="toggleBool"
-      v-if="$route.meta.keepAlive"
+      v-show="$route.meta.keepAlive"
     ></navi>
   </div>
 </template>

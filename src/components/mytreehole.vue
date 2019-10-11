@@ -9,7 +9,7 @@
         <div class="love-cover">
           <div class="love-cover-left">
             <div class="love"></div>
-            <span>{{item.count}}人觉得很赞</span>
+            <span>{{item.likes}}人觉得很赞</span>
           </div>
           <div class="love-cover-right" @click="toggle(index)"></div>
         </div>
@@ -34,59 +34,7 @@ export default {
     return {
       boyImgUrl: require("../assets/Avatar/BoyAvatar.png"),
       girlImgUrl: require("../assets/Avatar/GirlAvatar.png"),
-      holesData: [
-        {
-          isBoy: false,
-          text:
-            "阿斯顿据了解爱上邓丽君八九零四的爱死的爱死队列盎司伦敦爱丽丝的啦十六点爱死队列了",
-          count: 110,
-          comments: [
-            { isBoy: true, text: "我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你" },
-            { isBoy: false, text: "我爱你" },
-            { isBoy: true, text: "我气你" }
-          ]
-        },
-        {
-          isBoy: false,
-          text: "123123",
-          count: 110,
-          comments: [
-            { isBoy: true, text: "我等你" },
-            { isBoy: false, text: "我爱你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你我等你" },
-            { isBoy: true, text: "我气你" }
-          ]
-        },
-        {
-          isBoy: true,
-          text: "123123",
-          count: 110,
-          comments: [
-            { isBoy: true, text: "我等你" },
-            { isBoy: false, text: "我爱你" },
-            { isBoy: true, text: "我气你" }
-          ]
-        },
-        {
-          isBoy: false,
-          text: "123123",
-          count: 110,
-          comments: [
-            { isBoy: true, text: "我等你" },
-            { isBoy: false, text: "我爱你" },
-            { isBoy: true, text: "我气你" }
-          ]
-        },
-        {
-          isBoy: false,
-          text: "123123",
-          count: 110,
-          comments: [
-            { isBoy: true, text: "我等你" },
-            { isBoy: false, text: "我爱你" },
-            { isBoy: true, text: "我气你" }
-          ]
-        }
-      ]
+      holesData:[],
     };
   },
   methods: {
@@ -94,12 +42,10 @@ export default {
       this.$router.replace("/mine")
     },
     toggle(index) {
+      if(this.holesData[index].comments.length == 0)return ;
       let obj = this.holesData[index];
       obj.hide = !obj.hide;
       this.$set(this.holesData, index, obj);
-    },
-    getData(){
-      // this.$axios.get('/treehole/getMyTreeHoles')
     }
   },
   beforeRouteEnter(to,from,next){
@@ -110,7 +56,12 @@ export default {
       }else{
         //更新        
         console.log('需要更新');
-        // vm.holesData = [];
+        vm.$axios.get('/treehole/getMyTreeHoles').then(res=>{
+          console.log('获取我的树洞成功',res.data);
+          vm.holesData = res.data;
+        }).catch(err=>{
+          console.log('获取我的树洞错误',err);
+        })
       }
     });
   }

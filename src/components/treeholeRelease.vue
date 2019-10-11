@@ -42,7 +42,7 @@ export default {
       } else {
         console.log("要发请求了");
         this.$axios
-          .post("treehole/addTreeHole", this.content)
+          .post("treehole/addTreeHole", {text:this.content})
           .then(res => {
             console.log(res);
             this.$dialog.alert({
