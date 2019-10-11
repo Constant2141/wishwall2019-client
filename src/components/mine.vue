@@ -50,6 +50,9 @@ export default {
   },
   mounted(){
     console.log('mine mounted');
+    this.$axios.get('/treehole/countMyTreeHoles').then(res=>{
+      this.num2 = res.data;
+    })
   }
 };
 </script>

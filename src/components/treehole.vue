@@ -4,23 +4,23 @@
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item,index) in cards" :key="index">
         <div class="holes">
-          <img :src="item.isBoy?boyImgUrl:girlImgUrl" alt="">
-          <p>{{item.words}}</p>
+          <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="">
+          <p>{{item.text}}</p>
           <div class="love-cover">
             <div class="love-cover-left">
               <div
                 :class="['love',{'active-love':item.isLike}]"
                 @click="changeLove(index)"
               ></div>
-              <span>{{item.likeCount}}人觉得很赞</span>
+              <span>{{item.likes}}人觉得很赞</span>
             </div>
             <div class="next" @click="next">next</div>
           </div>
         </div>
-        <div class="comment-title">评论：</div>
+        <div class="comment-title" v-if="item.comments.length > 0">评论：</div>
         <div class="holes-comment">
           <div v-for="(item,index) in cards[index].comments" :key="index" class="commentList">
-            <div><img :src="item.isBoy?boyImgUrl:girlImgUrl" alt=""></div>
+            <div><img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt=""></div>
             <span>{{item.text}}</span>
           </div>
         </div>
@@ -42,35 +42,21 @@ export default {
   data() {
     const self = this;
     return {
+      currentPage:1,
+      lastSlide:false,
       realIndex:0,//对后台返回的那一条进行评论
       postWord:"",//要评论的话
       boyImgUrl:require('../assets/Avatar/BoyAvatar.png'),
       girlImgUrl:require('../assets/Avatar/GirlAvatar.png'),
       cards: [
-        {
-          words:
-            "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
-          likeCount: 110,
-          isLike:false,
-          isBoy:false,
-          comments: [{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'},{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
-        },
-        {
-          words:
-            "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
-          likeCount: 123,
-          isLike:false,
-          isBoy:true,
-          comments: [{isBoy:true,text:'1是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天23'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
-        },
-        {
-          words:
-            "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
-          likeCount: 120,
-          isLike:false,
-          isBoy:false,
-          comments: ["123", "321", "322"]
-        }
+        // {
+        //   text:
+        //     "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
+        //   likes: 110,
+        //   isLike:false,
+        //   isBoy:false,
+        //   comments: [{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'},{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
+        // }
       ],
       swiperOption: {
         slidesPerView: "auto",
@@ -80,12 +66,21 @@ export default {
           el: ".swiper-pagination",
           clickable: true
         },
-        navigation: {
-          nextEl: ".swiper-button-next"
-        },
+        // navigation: {
+        //   nextEl: ".swiper-button-next"
+        // },
         onSlideChangeEnd:(swiper)=>{
+          console.log('swiper',swiper);
           self.realIndex = swiper.activeIndex;//当前的活跃页索引
-          // this.removeSide(self.realIndex - 1);
+          console.log('当前是第'+ swiper.activeIndex + '页');
+          // console.log(self.swiperOption);
+          
+          // 删除？
+          // self.swiperOption.removeSlide(0);
+
+          // 如果是最后，就把最后一张拿过来？还是倒数两张？然后拼起来？
+          self.lastSlide = swiper.isEnd;
+          console.log(self.lastSlide);
         },
       }
     };
@@ -107,11 +102,11 @@ export default {
       //要补后台
       if (!this.cards[index].isLike) {
         //点赞了
-        this.cards[index].likeCount++;
+        this.cards[index].likes++;
         this.cards[index].isLike = true;
       } else {
         //取消了
-        this.cards[index].likeCount--;
+        this.cards[index].likes--;
         this.cards[index].isLike = false;
       }
     },
@@ -120,12 +115,33 @@ export default {
     }
   },
   mounted() {
-    // var mySwiper = new Swiper('.swiper-container',{
-    // onSlideChangeEnd: function(swiper){
-    //     alert('事件触发了;');
-    //   }
-    // })
     console.log('treehole mounted')
+    this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
+      console.log('获得所有树洞成功',res.data);
+      this.currentPage = this.currentPage + 1;
+      this.cards = res.data;
+    }).catch(err=>{
+      console.log('获得所有树洞错误',err);
+    })
+  },
+  watch:{
+    lastSlide(value){
+      if(value){
+        console.log('是最后一张了');
+        let cards = this.cards;
+        // 要push多点数据，慢慢push
+        this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
+          console.log('获得树洞成功',res.data);
+         if(res.data.length > 0){
+          this.currentPage = this.currentPage + 1;
+          this.cards = [...cards,...res.data];
+         }
+        }).catch(err=>{
+          console.log('获得树洞错误',err);
+        })
+        this.cards = cards;
+      }
+    }
   }
 };
 </script>
