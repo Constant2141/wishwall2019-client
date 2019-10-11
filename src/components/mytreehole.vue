@@ -4,7 +4,7 @@
     <div class="left" @click="back"></div>
     <div class="holes-wrapper">
       <div v-for="(item,index) in holesData" :key="index" class="holes">
-        <img :src="item.isBoy?boyImgUrl:girlImgUrl" alt />
+        <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt />
         <p>{{item.text}}</p>
         <div class="love-cover">
           <div class="love-cover-left">
@@ -17,8 +17,8 @@
           <div class="holes-comment" v-show="item.hide?true:false">
             <div class="comment-title">评论：</div>
             <div v-for="(item,index) in item.comments" :key="index" class="comment">
-              <img :src="item.isBoy?boyImgUrl:girlImgUrl" alt="性别头像">
-              <span>{{item.text}}</span>
+              <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="性别头像">
+              <span>{{item.comment}}</span>
             </div>
           </div>
         </transition>

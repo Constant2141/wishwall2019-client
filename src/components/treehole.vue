@@ -10,7 +10,7 @@
             <div class="love-cover-left">
               <div
                 :class="['love',{'active-love':item.isLike}]"
-                @click="changeLove(index)"
+                @click="changeLove()"
               ></div>
               <span>{{item.likes}}人觉得很赞</span>
             </div>
@@ -21,7 +21,7 @@
         <div class="holes-comment">
           <div v-for="(item,index) in cards[index].comments" :key="index" class="commentList">
             <div><img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt=""></div>
-            <span>{{item.text}}</span>
+            <span>{{item.comment}}</span>
           </div>
         </div>
       </swiper-slide>
@@ -90,25 +90,40 @@ export default {
       window.scrollTo(0, 0);
     },
     post() {
-      console.log('对'+ this.realIndex+'评论:'+this.postWord);
-      this.postWord = '';
+      let data = {
+        comment:this.postWord,
+        treeholeId:this.cards[this.realIndex].treeholeId,
+        text:this.cards[this.realIndex].text
+      };
+      this.$axios.post('/treehole/addTreeHoleComment',data)
+      .then(res=>{
+        console.log('评论树洞成功',res);
+        let user = JSON.parse(localStorage.getItem('userInfo'));
+        this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
+        this.postWord = '';
+      })
+      .catch(err=>{
+        console.log('评论树洞失败',err);
+      })
       // 跳到最底部
       // this.$nextTick(() => {
       //   var container = this.$el.querySelector("#new_message");
       //   container.scrollTop = container.scrollHeight;
       // });
     },
-    changeLove(index) {
-      //要补后台
-      if (!this.cards[index].isLike) {
-        //点赞了
-        this.cards[index].likes++;
-        this.cards[index].isLike = true;
-      } else {
-        //取消了
-        this.cards[index].likes--;
-        this.cards[index].isLike = false;
-      }
+    changeLove() {
+      if(this.cards[this.realIndex].isLike == true)return;
+      this.$axios.post('/treehole/addLikes',{
+        treeholeId:this.cards[this.realIndex].treeholeId,
+      }).then(res=>{
+        let obj = this.cards[this.realIndex];
+        obj.isLike = !obj.isLike;
+        this.$set(this.cards,this.realIndex,obj);
+        this.cards[this.realIndex].likes++;
+        console.log('点赞成功',res.data);
+      }).catch(err=>{
+        console.log('点赞失败',err);
+      })
     },
     next(){
       alert('next')
