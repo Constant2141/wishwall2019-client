@@ -1,7 +1,7 @@
 <template>
   <div id="my-post">
     <div class="top-bar">
-      <div class="left-arrow"></div>
+      <div class="left-arrow" @click="backTo"></div>
       <div class="top-select" :class="{active:isActive}">
         <p>我发布的</p>
       </div>
@@ -21,6 +21,8 @@
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
               <p>{{time[index]}}</p>
+            </div>
+            <div class="more-info">
               <p>联系方式:</p>
               <p :style="pWidth">{{tel[index]}}</p>
             </div>
@@ -61,22 +63,31 @@ export default {
       school: [],
       many:[],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
-      time: ["17:20", "17:20"],
-      tel: [
-        "加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817319863819697898798798797979878",
-        "加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817"
-      ],
-      getInfo: ["已被7人领取", "未被领取"],
+      time: [],
+      tel: [],
+      getInfo: [],
       isGetted: [],
       clientHeight: 39,
       show: [],
-      finish: "确认完成"
+      finish: "确认完成",
+      nums:0
     };
   },
   methods: {
     PostToGet() {
-      // this.isActive = false;
-      this.$router.replace({ path: "/myget" });
+      let judge = () => {
+        return new Promise((resolve,reject) => {
+          this.$axios.get("/wish/iGained").then(res => {
+            resolve(res.data.result.length)
+          })
+        })
+      }
+      let that = this
+      async function start(){
+        let nums = await judge();
+        that.$router.replace({ path: `/myget?count=${nums}` });
+      }
+      start()
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -101,6 +112,9 @@ export default {
       this.finish = "已完成";
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
+    },
+    backTo(){
+      this.$router.replace("/mine")
     },
     getData(){
       const url = "/wish/iCreated	";
@@ -138,7 +152,7 @@ export default {
                 this.isGetted[index] = false;
               }
               else if(value == 1){
-                this.getInfo[index] = `已被${many[index]}人领取`;
+                this.getInfo[index] = `已被${this.many[index]}人领取`;
                 this.isGetted[index] = true;
               }
               else if(value == 2){
@@ -148,11 +162,27 @@ export default {
             })
           })
         })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   mounted() {
-    this.show = [...this.isGetted];
-    this.getData();
+  },
+  beforeRouteEnter (to, from, next) {
+    let count = to.query.count
+    console.log(count)
+    next(vm=>{
+      console.log(vm.wishes.length)
+      if(vm.wishes.length == count){
+        console.log("不需要更新");
+      }else{
+        console.log("需要更新");
+        vm.show = [...vm.isGetted];
+        vm.getData();
+      }
+    }
+    )
   }
 };
 </script>
@@ -269,9 +299,6 @@ export default {
   margin: 0 auto;
   margin-top: 13px;
 }
-.more-info {
-  flex-wrap: wrap;
-}
 .more-info p {
   font-family: Microsoft YaHei;
   font-size: 10px;
@@ -281,7 +308,7 @@ export default {
   letter-spacing: 0px;
   color: #989898;
   margin-top: 14px;
-  margin-left: 34px;
+  margin-left: 40px;
 }
 .wish-info p {
   font-family: Microsoft YaHei;

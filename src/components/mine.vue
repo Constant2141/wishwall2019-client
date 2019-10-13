@@ -1,11 +1,8 @@
 <template>
   <div id="mine">
     <div class="myInfo">
-      <div class="Profile-Photo"></div>
-      <div class="infos">
-        <div class="myName">{{name}}&nbsp;&nbsp;&nbsp;{{sex}}</div>
-        <div class="school">{{school}}</div>
-      </div>
+      <div class="Profile-Photo" :style="{backgroundSize:`cover`,backgroundImage:`url(${this.photoUrl})`}"></div>
+      <div class="myName">{{name}}&nbsp;&nbsp;&nbsp;{{sex}}</div>
     </div>
     <div class="myWish">
       <div class="wishNum" @click="toMyPost">
@@ -31,17 +28,17 @@
 export default {
   data(){
     return{
-      name:"chikuan",
-      sex:"男",
-      school:"大学城",
-      num1:2,
+      name:"",
+      sex:"",
+      num1:0,
       num2:0,
-      num3:2
+      num3:2,
+      photoUrl:"",
     }
   },
   methods:{
     toMyPost(){
-      this.$router.replace("/mypost")
+      this.$router.replace(`/mypost?count=${this.num1}`)
     },
     toMyTreeHole(){
       //根据条数看看是不是需要更新
@@ -50,8 +47,20 @@ export default {
   },
   mounted(){
     console.log('mine mounted');
+    let userInfos = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(userInfos);
+    this.name = userInfos.nickname;
+    this.photoUrl = userInfos.headimgurl;
+    if(userInfos.sex == 1){
+      this.sex = "男"
+    }else if(userInfos.sex == 2){
+      this.sex = "女"
+    }
     this.$axios.get('/treehole/countMyTreeHoles').then(res=>{
       this.num2 = res.data;
+    });
+    this.$axios.get("/wish/iCreated").then(res => {
+      this.num1 = res.data.result.length;
     })
   }
 };
@@ -83,12 +92,10 @@ export default {
   margin-top: 75px;
   margin-left: 29px;
   border-radius: 50%;
-  background: url("../assets/Avatar/BoyAvatar.png");
-  background-size: cover;
 }
 .myName {
   height: 25px;
-  margin-top: 85px;
+  margin-top: 105px;
   margin-left: 23px;
   font-family: Segoe UI;
 	font-size: 18px;

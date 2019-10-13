@@ -1,7 +1,7 @@
 <template>
   <div id="my-post">
     <div class="top-bar">
-      <div class="left-arrow"></div>
+      <div class="left-arrow" @click="backTo"></div>
       <div class="top-select" :class="{active:isActive}" @click="GetToPost">
         <p>我发布的</p>
       </div>
@@ -20,7 +20,9 @@
             <p>{{theWish[index]}}</p>
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
-              <p :style="pMargin">{{time[index]}}</p>
+              <p>{{time[index]}}</p>
+            </div>
+            <div class="more-info">
               <p>联系方式:</p>
               <p :style="pWidth">{{tel[index]}}</p>
             </div>
@@ -50,35 +52,94 @@
 </template>
 
 <script>
+import { resolve, reject } from 'q';
 export default {
   data() {
     return {
       isActive: false,
-      wishes: [1, 2],
-      methods: ["实名发布", "匿名发布"],
-      theWish: [
-        "我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕我想要一个牛肉抱枕",
-        "我想要一个牛肉抱枕我想要一个牛肉抱枕"
-      ],
-      level: ["实物", "实物"],
-      school: ["大学城校区", "大学城校区"],
-      pMargin: "marginLeft:37vw",
+      wishes: [],
+      methods: [],
+      theWish: [],
+      level: [],
+      school: [],
+      many:[],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
-      time: ["17:20", "17:20"],
-      tel: [
-        "加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817319863819697898798798797979878",
-        "加我vx康美女98798687587575755776576598就水电费爽肤水90273891739817"
-      ],
-      getInfo: ["已被7人领取", "未被领取"],
-      isGetted: [true, false],
+      time: [],
+      tel: [],
+      getInfo: [],
+      isGetted: [],
       clientHeight: 39,
       show: [],
-      finish: "确认完成"
+      finish: "确认完成",
+      nums:0,
     };
   },
   methods: {
     GetToPost() {
-      this.$router.replace({ path: "/mypost" });
+      let judge = () => {
+        return new Promise((resolve,reject) => {
+          this.$axios.get("/wish/iCreated").then(res => {
+            resolve(res.data.result.length)
+          })
+        })
+      }
+      let that = this
+      async function start(){
+        let nums = await judge();
+        that.$router.replace({ path: `/mypost?count=${nums}` });
+      }
+      start()
+    },
+    getData(){
+      const url = "/wish/iGained"
+      this.$axios
+      .get(url)
+      .then(res => {
+        console.log(res)
+          this.wishes = res.data.result;
+          let method = [];
+          let times = [];
+          let status = [];
+          let people = [];
+          this.wishes.forEach((value,index) => {
+            this.theWish[index] = value.wish_content;
+            this.level[index] = value.wish_type;
+            this.school[index] = value.wish_where;
+            this.tel[index] = value.contact;
+            method[index] = value.anonymous;
+            // this.time[index] = value.createdAt;
+            times[index] = value.createdAt;
+            times.forEach((value,index) => {
+              this.time[index] = value.slice(0,10) + " " + value.slice(11,19)
+            })
+            method.forEach((value,index) => {
+              if(value == true){
+                this.methods[index] = "匿名发布";
+              }else{
+                this.methods[index] = "实名发布";
+              }
+            })
+            people[index] = value.wish_many;
+            people.forEach((value,index) => {
+              this.many[index] = value;
+            })
+            status[index] = value.wish_status;
+            status.forEach((value,index) => {
+              if(value == 0){
+                this.getInfo[index] = `未完成`;
+                this.isGetted[index] = false;
+              }
+              else if(value == 1){
+                this.getInfo[index] = `已被${this.many[index]}人领取`;
+                this.isGetted[index] = true;
+              }
+              else if(value == 2){
+                this.getInfo[index] = `已完成`;
+                this.isGetted[index] = false;
+              }
+            })
+          })
+      })
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -106,10 +167,27 @@ export default {
       this.finish = "已完成";
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
-    }
+    },
+    backTo(){
+      this.$router.replace("/mine")
+    },
   },
   mounted() {
-    this.show = [...this.isGetted];
+  },
+  beforeRouteEnter (to, from, next) {
+    let count = to.query.count
+    console.log(count)
+    next(vm=>{
+      console.log(vm.wishes.length)
+      if(vm.wishes.length == count){
+        console.log("不需要更新");
+      }else{
+        console.log("需要更新");
+        vm.show = [...vm.isGetted];
+        vm.getData();
+      }
+    }
+    )
   }
 };
 </script>
@@ -226,9 +304,6 @@ export default {
   margin: 0 auto;
   margin-top: 13px;
 }
-.more-info {
-  flex-wrap: wrap;
-}
 .more-info p {
   font-family: Microsoft YaHei;
   font-size: 10px;
@@ -238,7 +313,7 @@ export default {
   letter-spacing: 0px;
   color: #989898;
   margin-top: 14px;
-  margin-left: 34px;
+  margin-left: 40px;
 }
 .wish-info p {
   font-family: Microsoft YaHei;
