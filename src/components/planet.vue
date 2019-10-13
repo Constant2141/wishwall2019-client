@@ -2,9 +2,9 @@
   <div class="planet">
       <div class="background"></div>
       <div class="search">
-          <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage">
+          <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)">
       </div>
-      <div class="TopicArea" v-show="!showSearch">
+      <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
             <div class="message">
                 10条更新！
@@ -18,26 +18,50 @@
         </div>
         <div class="content">
             <div class="col">
-                <div class="item2"></div>
-                <div class="item1"></div>
-                <div class="item1"></div>
+                <div class="item2" @click="toTopic">
+                    <div class="TopicText">{{testTopic.topicName}}</div>
+                    <div class="heat">
+                        <img src="../assets/hot.png" alt="" width="20" height="20">
+                        <span>{{testTopic.hot}}</span>
+                    </div>
+                </div>
+                <div class="item1">
+                    <div class="TopicText">{{testTopic.topicName}}</div>
+                    <div class="heat">
+                        <img src="../assets/hot.png" alt="" width="20" height="20">
+                        <span>{{testTopic.hot}}</span>
+                    </div>
+                </div>
+                <div class="item1">
+                    <div class="TopicText">{{testTopic.topicName}}</div>
+                    <div class="heat">
+                        <img src="../assets/hot.png" alt="" width="20" height="20">
+                        <span>{{testTopic.hot}}</span>
+                    </div>
+                </div>
             </div>
             <div class="col">
-                <div class="item1"></div>
+                <div class="item1"  @click="toTopic">
+                    <div class="TopicText">{{testTopic.topicName}}</div>
+                    <div class="heat">
+                        <img src="../assets/hot.png" alt="" width="20" height="20">
+                        <span>{{testTopic.hot}}</span>
+                    </div>
+                </div>
                 <div class="item2"></div>
                 <div class="item2"></div>
             </div>
         </div>
       </div>
       
-      <div class="SearchArea" v-show="showSearch">
+      <div class="SearchArea" v-show="showSearch" ref="Search">
           <p>热门</p>
           <div class="HotSearch">
               <div class="SearchLabel" v-for="(item,index) in searchLabel" :key="index">
                 <span>{{item}}</span>
               </div>
           </div>
-
+        <div class="cancelSearch" @click="changePage(false)"></div>
       </div>
 
   </div>
@@ -56,13 +80,25 @@ export default {
                 { text: '最热', value: 1 }
             ],
 
-            showSearch:true,//是否显示搜索区域
+            showSearch:false,//是否显示搜索区域
             searchLabel:[
                 "#海底捞最喜欢什么火锅底料",
                 "#我想要不知火",
                 "#云顶之弈全新版本",
                 "#庆义肾透支真相",
                 "艹骏为何如此之骚"
+            ],
+
+
+            testTopic:{//仅测试用
+                    topicName:"今天吃什么呀，不如酸菜魚",
+                    hot:233
+            },
+            Topic:[
+                {
+                    topicName:"今天吃什么",
+                    hot:233
+                }
             ]
         }
     },
@@ -70,9 +106,23 @@ export default {
         search(){//搜索功能
 
         },
-
-        changePage(){
-            this.showSearch = true;
+        toTopic(){
+            this.$router.push("/planetTopic")
+        },
+        changePage(val){
+            // if(val){
+            //     this.$refs.Topic.style.opacity = 0;
+            //     this.$refs.Search.style.opacity = 1;
+            // }
+            // else{
+            //     this.$refs.Topic.style.opacity = 1;
+            //     this.$refs.Search.style.opacity = 0;
+            // }
+            // setTimeout(e=>{
+                 
+            // },500)
+            this.showSearch = val;
+            console.log(1)
         }
     }
 }
@@ -166,6 +216,11 @@ export default {
     
 
     /* 话题区 */
+    .TopicArea{
+        opacity: 1;
+         transition: opacity 1s;
+         overflow: hidden;
+    }
     .content{
         width :75%;
         margin-left:12.5%;
@@ -174,11 +229,11 @@ export default {
         font-size:0;
         /* display: table; */
     }
-    .col div{
+    .col > div{
         display: inline-flex;
         width:100%;
         margin-top:7%;
-        background:blue;
+        background:rgb(141, 219, 202);
         border-radius:5px;
         vertical-align: top;
     }
@@ -197,34 +252,71 @@ export default {
     .item2{
         height: 180px;
     }
+    .item1,.item2{
+        padding:14px;
+        box-sizing: border-box;
+        position: relative;
+    }
+    .TopicText{
+        width: 100%;
+        height:60px;
+        font-size: 14px;
+        color: white;
+    }
+    .heat{
+        /* background: url(../assets/hot.png) no-repeat; */
+        /* width: 100%; */
+        position: absolute;
+        height: 30px;
+        bottom:10px;
+        right:20px;
+        font-size: 14px;
+        color: white;
+    }
+    .heat span{
+        display: inline-block;
+    }
+    .heat img{
+        vertical-align: bottom;
+    }
 
     /* 搜索栏界面 */
     .SearchArea{
         font-size: 14px;
         margin-top:5px;
         color: white;
-        padding-left: 10vw; 
+        padding-left: 8vw; 
+        position: relative;
+        /* opacity: 0;
+        transition: opacity 1s;
+        overflow: hidden; */
     }
     .HotSearch{
         margin:5px auto 5px 0;
-        width: 80vw;
+        width: 84vw;
         height:30vw;
         /* background: blue; */
     }
     .SearchLabel{
-        line-height:20px;
+        line-height:18px;
         display: inline-block;
         border-radius: 14px;
         background-origin: border-box;
         background : linear-gradient(to left,rgba(255,255,255,0.2),rgba(255,255,255,0.2));
         box-sizing: border-box;
         padding: 3px 5px;
-        font-size: 12px;
+        font-size: 11px;
         margin-right: 6px;
         margin-top: 8px;
     }
     .SearchLabel span{
         display: block;
         margin: 0 8px;
+    }
+    .cancelSearch{
+        height: 65vh;
+        width:100vw;
+        position: relative;
+        left: -8vw;
     }
 </style>

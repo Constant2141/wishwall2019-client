@@ -13,6 +13,9 @@ import { Dialog } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
 import store from './vuex/store'
 import { userInfo } from 'os';
+import { Uploader } from 'vant';
+
+
 
 // import 'vant/lib/vant-css/index.css'
 
@@ -21,6 +24,7 @@ Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
 Vue.use(Dialog);
+Vue.use(Uploader);
 
 Axios.interceptors.request.use(
   config=>{

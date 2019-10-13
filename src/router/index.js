@@ -5,10 +5,11 @@ import MyTreeHole from '@/components/mytreehole';
 import treeholeRelease from '@/components/treeholeRelease'
 import Welcome from "@/components/Welcome";
 import Mine from "@/components/mine";
-import WishRelease from '@/components/wishRelease'
-import Planet from '@/components/planet'
-
 import WishWall from "@/components/WishWall";
+import WishRelease from '@/components/wishRelease'
+import Planet from '@/components/planet';
+import PlanetRelease from "@/components/PlanetRelease"
+import PlanetTopic from "@/components/PlanetTopic"
 import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
@@ -75,6 +76,23 @@ export default new Router({
       meta:{
         keepAlive:true  //底部栏显示
       }      
+    },
+    {
+      path: '/planetTopic',
+      name: 'planetTopic',
+      component: PlanetTopic,
+      meta:{
+        keepAlive:false //底部栏显示
+      }      
+    },
+    {
+      path: "/planetRelease",
+      name: "planetRelease",
+      component: PlanetRelease,
+      meta: {
+        keepAlive: false, //底部栏不显示
+        title: '星球'
+      }
     },
     {
       path: '/wishRelease',
