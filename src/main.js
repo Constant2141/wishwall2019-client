@@ -15,6 +15,9 @@ import store from './vuex/store'
 import { userInfo } from 'os';
 import { PullRefresh } from 'vant';
 import { List } from 'vant';
+import { Uploader } from 'vant';
+
+
 
 
 Vue.use(DropdownMenu).use(DropdownItem);
@@ -25,6 +28,7 @@ Vue.use(Dialog);
 Vue.use(PullRefresh);
 Vue.use(List);
 
+Vue.use(Uploader);
 
 Axios.interceptors.request.use(
   config=>{

@@ -120,10 +120,6 @@ export default {
         }
     },
     methods:{
-        handleData(){
-            // 发送给后台的数据
-        },
-
         editContact(){
             // 触发联系方式填写框
             // console.log(1)
