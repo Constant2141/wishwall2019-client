@@ -19,18 +19,24 @@
       </div>
       <div class="scroll-wrap">
         <van-pull-refresh
-          v-model="isLoading"
+          v-model="isDownLoading"
           @refresh="onRefresh">
-            <van-list>
-              <div class="wish"
+            <van-list
+              v-model="isUpLoading"
+              :immediate-check = false
+              :finished = "finished"
+              finished-text = "我是有底线的"
+              error-text = "请求失败，点击重新加载"
+              @load="onLoadList">
+                <div class="wish"
                   v-for="(wish,index) in wishes" 
                   :key="index">
                   <div class="wish-body">
                     <div class="take-button"
                       @click="takeWish(index)"
                       :class="{'taken-button':wishes[index].gainOrNot}">
-                      <span v-show="!wishes[index].gainOrNot">领取心愿</span>
-                      <span v-show="wishes[index].gainOrNot">您已领取</span>
+                      <span v-if="!wishes[index].gainOrNot">领取心愿</span>
+                      <span v-if="wishes[index].gainOrNot">您已领取</span>
                     </div>
                     <div class="wish-content">
                       <div class="wish-avatar">
@@ -48,8 +54,8 @@
                           <span class="tag">#{{wish.wish_type}}</span>
                           <span class="tag">#{{wish.wish_where}}</span>
                           <span class="tag take">
-                            <span v-show="wish.wish_many > 0">已被{{wish.wish_many}}人领取</span>
-                            <span v-show="wish.wish_many == 0">未被领取</span>
+                            <span v-show="wish.wish_many">已被{{wish.wish_many}}人领取</span>
+                            <span v-show="!wish.wish_many">未被领取</span>
                           </span>
                           <span class="tag time">{{wish.time}}</span>
                         </div>
@@ -85,26 +91,47 @@ export default {
       isActive:0,
       wishes:[],
       page:1,
-      isLoading:false
+      curCampus:'全部', //当前所在学校，默认为全部
+      isDownLoading:false, //是否处于刷新状态
+      isUpLoading:false, //是否处于加载状态
+      finished:false //数据是否全部加载完成
     }
   },
   methods:{
     onRefresh(){
+      this.page = 1;
       setTimeout(()=>{
-        this.getData();
-        this.isLoading = false; 
+        this.getData()
+        this.isDownLoading = false; 
       },600)
     },
+    onLoadList(){
+      let tempList = this.wishes;
+      setTimeout(()=>{
+        this.page++;
+        this.getData()
+        this.wishes = this.wishes.concat(tempList)
+        console.log(this.wishes)
+        this.isUpLoading = false;
+        if(this.wishes.length < this.page*10){
+          this.finished = true;
+      }
+      },3000)
+    
+      
+    },
     getData(){
+      let campus = this.curCampus;
       this.$axios.get('/wish/list',{
         params:{
           curPage:this.page,
+          wish_where:campus=='全部'?'':`${campus}校区`
         }
       })
       .then(res=>{
         if(res.status == 200){
           let temp = res.data.result.wishList;
-          
+          this.handleAnonymous(temp);
           this.wishes = temp;
         }
       })
@@ -120,27 +147,23 @@ export default {
     },
     changeCampus(index){
       this.isActive = index;
-      let campus = event.currentTarget.innerHTML;
-      this.$axios.get('/wish/list',{
-        params:{
-          curPage:1,
-          
-          wish_where:campus=='全部'?'':`${campus}校区`
-        }
-      })
-      .then(res=>{
-        if(res.status == 200){
-          this.wishes =  res.data.result.wishList;
-        }
-      })
-      .catch(err =>console.log(err))
+      this.curCampus = event.currentTarget.innerHTML;
+      this.getData();
     },
+    handleAnonymous(arr){
+      arr.map(item=>{
+        if(item.anonymous == true){
+          item.nickname = item.nickname.slice(0,1)+'**'
+        }
+        return arr;
+      })
+    }
   },
   created(){
-   
+    
   },
   mounted(){
-    this.getData();  
+    this.getData(); 
   }
 }
 </script>

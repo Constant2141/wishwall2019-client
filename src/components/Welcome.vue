@@ -1,14 +1,15 @@
 <template>
   <div class="first">
-    <div class="welcome" v-show="!choose">
-      <div class="welcome-words">
-        <p>欢迎使用</p>
-        <p>女生节许愿墙</p>
-        <p class="have-fun">Have fun here :P</p>
+    <div class="welcome" v-if="!choose">
+      <div 
+        :class="{'words-appear':welcome,'words-disappear':!welcome}" >
+          <p>欢迎使用</p>
+          <p>女生节许愿墙</p>
+          <p class="have-fun">Have fun here :P</p>
       </div>
     </div>
 
-    <div class="sex-select" v-show="choose">
+    <div class="sex-select" v-if="choose">
       <div class="tip">
         <h4>请选择您的性别</h4>
         <p>性别一经选择不能再度更改哟</p>
@@ -43,7 +44,8 @@
 export default {
   data(){
     return{
-      choose:true,
+      welcome:true,
+      choose:false,
       boy:false,
       girl:false,
       sex:''
@@ -64,14 +66,13 @@ export default {
       this.sex = 2;
     },
     confirmSex(){
-      let trueSex = localStorage.userInfo.sex;
+      let trueSex = JSON.parse((localStorage.getItem('userInfo'))).sex;
       if(this.sex){
         if(this.sex!=trueSex){
           this.$dialog.confirm({
             message:'您选择的性别和微信性别不匹配，是否继续'
           })
           .then(()=>{
-            
             localStorage.setItem('userInfo.sex',trueSex)
             this.$router.push({path:'/wishwall'});
             })
@@ -85,6 +86,15 @@ export default {
         })
       }
     }
+    },
+    mounted(){
+      setTimeout(()=>{
+        this.welcome = false;
+        setTimeout(() => {
+           this.choose = true;
+        }, 1000);
+      },2000)
+     
     }
   }
 </script>
@@ -93,22 +103,35 @@ export default {
 .first{
   padding: 0 1.875rem 0 1.875rem;
 }
-.welcome-words{
-  margin-top:14vh;
-  animation:wordsmove .5s 1 forwards;
+.words-appear{
+  position: relative;
+  top:14vh;
+  animation:wordsmove 1s 1 forwards;
   opacity: 0;
-  
 }
 @keyframes wordsmove {
   to{
-    margin-top:18vh;
+    top:18vh;
     opacity: 1;
+  }
+}
+.words-disappear{
+  position:relative;
+  top:18vh;
+  animation:wordsdisappear 1s 1 forwards;
+  opacity: 1;
+}
+@keyframes wordsdisappear {
+  to{
+    top:-10vh;
+    opacity: 0;
   }
 }
 .have-fun{
   margin-top:10vh;
 }
-.welcome-words p{
+.words-appear p,
+.words-disappear p{
   font-size: 2.25rem;
   margin-bottom: 2vh; 
 }
