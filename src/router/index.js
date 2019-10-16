@@ -9,7 +9,8 @@ import WishWall from "@/components/WishWall";
 import WishRelease from '@/components/wishRelease'
 import Planet from '@/components/planet';
 import PlanetRelease from "@/components/PlanetRelease"
-import PlanetTopic from "@/components/PlanetTopic"
+import PlanetTopic from "@/components/PlanetTopic";
+import PCommentRelease from "@/components/PCommentRelease";
 import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
@@ -89,6 +90,15 @@ export default new Router({
       path: "/planetRelease",
       name: "planetRelease",
       component: PlanetRelease,
+      meta: {
+        keepAlive: false, //底部栏不显示
+        title: '星球'
+      }
+    },
+    {
+      path: "/pCommentRelease",
+      name: "pCommentRelease",
+      component: PCommentRelease,
       meta: {
         keepAlive: false, //底部栏不显示
         title: '星球'

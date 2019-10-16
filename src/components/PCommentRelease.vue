@@ -9,15 +9,11 @@
         </div>
         <div class="edit-area">
             <div class="topic-area">
-                <input type="text" placeholder="#发布话题" maxlength="18">
+                <div class="topic">{{topic}}</div>
             </div>
             <div class="message-area">
                 <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content"></textarea>
             </div>    
-        </div>
-        <div class="upload">
-            <van-uploader :after-read="afterRead" />
-            <div class="upload-prompt">添加话题封面</div>
         </div>
   </div>
 </template>
@@ -28,8 +24,11 @@ export default {
         return {
             //顶部栏变量
             backImg: require("../assets/back.png"),//返回键
-            title: "发布话题",//页面标题
+            title: "参与讨论",//页面标题
             buttonText:'发布',//发布按钮
+
+            // 话题名
+            topic:"#海底捞最喜欢什么火锅底料",
 
 
             //编辑栏变量
@@ -55,7 +54,7 @@ export default {
             console.log(file);
         },
         release(){
-            
+
         }
     }
 }
@@ -67,8 +66,11 @@ export default {
     }
     .plantRelease{
         background: #F5F5F5;
+        height: 100vh;
     }
-    
+
+
+
     /* 顶部栏的样式 */
     .top{
         width:100%;
@@ -106,16 +108,19 @@ export default {
     .edit-area{
         width: 100vw;
         height:56vw;
+       
     }
-    .topic-area input{
-        border:none;
-        width: 92vw;
-        height: 21px;
-        padding:2vw 4vw 1vw 4vw;
+    .topic-area{
+        background: #ffffff;
     }
-    .topic-area input::placeholder{
+    .topic{
         color:#B8B8B8;
         letter-spacing: 1px;
+        width: 100%;
+        line-height: 52px;
+        font-size: 12px;
+        padding-left: 4vw;
+
     }
     .message-area textarea{
         border:none;
@@ -123,16 +128,14 @@ export default {
         height:40vw;
         padding:5vw 4vw 3vw 4vw;
         outline: none;
+        box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
     }
     .message-area textarea::placeholder{
         color:#B8B8B8;
+        font-size:12px;
     }
 
     /* 上传封面 */
-    .upload{
-        box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
-        background: #ffffff;
-    }
     .van-uploader{
         margin-left: 10px;
     }

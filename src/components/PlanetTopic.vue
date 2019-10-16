@@ -6,7 +6,7 @@
       </div>
       <div class="bottom-background"></div>
       <div class="comment-area">
-          <div class="comment" v-for="(item,index) in comment" :key="index">
+          <div class="comment" v-for="(item,index) in comment" :key="index" @click="toComment">
               <div class="content-area">
                   <div class="avator">
                       <img :src="item.image" alt="" width="43" height="43" >
@@ -31,7 +31,7 @@
               </div>
           </div>
       </div>
-      <div class="release"></div>
+      <div class="release" @click="release"></div>
   </div>
 </template>
 
@@ -102,6 +102,12 @@ export default {
     methods:{
         back(){
             this.$router.go(-1);
+        },
+        release(){
+            this.$router.push("/pCommentRelease");
+        },
+        toComment(){
+            this.$router.push("/planetComment")
         }
     }
 }
