@@ -2,10 +2,10 @@
   <div id="my-topic">
     <div class="top-bar">
       <div class="left-arrow"></div>
-      <div class="top-select" :class="{active:isActive1}" @click="ofMine">
+      <div class="top-select" :class="{active:isActive1}">
         <p>与我有关</p>
       </div>
-      <div class="top-select" :class="{active:isActive2}">
+      <div class="top-select" :class="{active:isActive2}" @click="myPost">
         <p>我的发布</p>
       </div>
       <div class="top-select" :class="{active:isActive3}" @click="myComment">
@@ -46,8 +46,8 @@
 export default {
   data() {
     return {
-      isActive1: false,
-      isActive2: true,
+      isActive1: true,
+      isActive2: false,
       isActive3: false,
       topics: [
         "海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料",
@@ -64,8 +64,8 @@ export default {
     };
   },
   methods: {
-    ofMine() {
-      this.$router.replace(`/ofmine`);
+    myPost() {
+      this.$router.replace(`/mytopic`);
     },
     myComment() {
       this.$router.replace(`/mycomment`);

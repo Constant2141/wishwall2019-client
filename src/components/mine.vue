@@ -1,7 +1,10 @@
 <template>
   <div id="mine">
     <div class="myInfo">
-      <div class="Profile-Photo" :style="{backgroundSize:`cover`,backgroundImage:`url(${this.photoUrl})`}"></div>
+      <div
+        class="Profile-Photo"
+        :style="{backgroundSize:`cover`,backgroundImage:`url(${this.photoUrl})`}"
+      ></div>
       <div class="myName">{{name}}&nbsp;&nbsp;&nbsp;{{sex}}</div>
     </div>
     <div class="myWish">
@@ -26,42 +29,44 @@
 
 <script>
 export default {
-  data(){
-    return{
-      name:"",
-      sex:"",
-      num1:0,
-      num2:0,
-      num3:2,
-      photoUrl:"",
-    }
+  data() {
+    return {
+      name: "",
+      sex: "",
+      num1: 0,
+      num2: 0,
+      num3: 2,
+      photoUrl: ""
+    };
   },
-  methods:{
-    toMyPost(){
-      this.$router.replace(`/mypost?count=${this.num1}`)
+  methods: {
+    toMyPost() {
+      this.$router.replace(`/mypost`);
+      //本来做了条数限制不请求的
+      //可是万一条数不变，可是其他数据变了也不刷新这样也不对的
     },
-    toMyTreeHole(){
+    toMyTreeHole() {
       //根据条数看看是不是需要更新
-      this.$router.replace(`/mytreehole?count=${this.num2}`)
+      this.$router.replace(`/mytreehole?count=${this.num2}`);
     }
   },
-  mounted(){
-    console.log('mine mounted');
+  mounted() {
+    console.log("mine mounted");
     let userInfos = JSON.parse(localStorage.getItem("userInfo"));
     console.log(userInfos);
     this.name = userInfos.nickname;
     this.photoUrl = userInfos.headimgurl;
-    if(userInfos.sex == 1){
-      this.sex = "男"
-    }else if(userInfos.sex == 2){
-      this.sex = "女"
+    if (userInfos.sex == 1) {
+      this.sex = "男";
+    } else if (userInfos.sex == 2) {
+      this.sex = "女";
     }
-    this.$axios.get('/treehole/countMyTreeHoles').then(res=>{
+    this.$axios.get("/treehole/countMyTreeHoles").then(res => {
       this.num2 = res.data;
     });
     this.$axios.get("/wish/iCreated").then(res => {
       this.num1 = res.data.result.length;
-    })
+    });
   }
 };
 </script>
@@ -72,7 +77,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-#mine{
+#mine {
   height: 100vh;
   background: url("../assets/banner/mine.png");
   background-size: cover;
@@ -98,81 +103,80 @@ export default {
   margin-top: 105px;
   margin-left: 23px;
   font-family: Segoe UI;
-	font-size: 18px;
-	font-weight: normal;
-	font-stretch: normal;
-	line-height: 22px;
-	letter-spacing: 0px;
-	color: #ffffff;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #ffffff;
 }
 .school {
   height: 25px;
   margin-top: 13px;
   margin-left: 23px;
   font-family: Segoe UI;
-	font-size: 16px;
-	font-weight: normal;
-	font-stretch: normal;
-	line-height: 19px;
-	letter-spacing: 0px;
-	color: #ffffff;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 19px;
+  letter-spacing: 0px;
+  color: #ffffff;
 }
-.myWish{
+.myWish {
   height: 428px;
   width: 375px;
 }
-.wishNum{
+.wishNum {
   padding-top: 0.1px;
-	width: 318px;
-	height: 52px;
-	background-color: #ffffff;
-	box-shadow: 0px 3px 6px 0px 
-		rgba(0, 0, 0, 0.16);
-	border-radius: 5px;
+  width: 318px;
+  height: 52px;
+  background-color: #ffffff;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 5px;
   margin-top: 18px;
   margin-left: 29px;
   display: flex;
 }
-.wishNum:nth-child(1){
+.wishNum:nth-child(1) {
   margin-top: 33px;
 }
 .wishNum p {
-	font-family: Segoe UI;
-	font-size: 14px;
-	font-weight: normal;
-	font-stretch: normal;
-	line-height: 17px;
-	letter-spacing: 0px;
-	color: #707070;
+  font-family: Segoe UI;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 17px;
+  letter-spacing: 0px;
+  color: #707070;
 }
-.text{
+.text {
   width: 100px;
   margin-top: 17px;
   margin-left: 8px;
 }
-.nums{
+.nums {
   margin-top: 17px;
   margin-left: 120px;
 }
-.img1{
-	width: 30px;
-	height: 20px;
+.img1 {
+  width: 30px;
+  height: 20px;
   margin-top: 16px;
   background: url("../assets/nav/9.png");
   background-size: 100% 100%;
   margin-left: 20px;
 }
-.img2{
-	width: 30px;
-	height: 20px;
+.img2 {
+  width: 30px;
+  height: 20px;
   margin-top: 16px;
   background: url("../assets/nav/4.png");
   background-size: 100% 100%;
   margin-left: 20px;
 }
-.img3{
-	width: 30px;
-	height: 20px;
+.img3 {
+  width: 30px;
+  height: 20px;
   margin-top: 16px;
   background: url("../assets/nav/6.png");
   background-size: 100% 100%;

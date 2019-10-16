@@ -56,12 +56,12 @@ export default {
   data() {
     return {
       isActive: true,
-      wishes:[],
+      wishes: [],
       methods: [],
       theWish: [],
       level: [],
       school: [],
-      many:[],
+      many: [],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
       time: [],
       tel: [],
@@ -70,24 +70,25 @@ export default {
       clientHeight: 39,
       show: [],
       finish: "确认完成",
-      nums:0
+      nums: 0
     };
   },
   methods: {
     PostToGet() {
-      let judge = () => {
-        return new Promise((resolve,reject) => {
-          this.$axios.get("/wish/iGained").then(res => {
-            resolve(res.data.result.length)
-          })
-        })
-      }
-      let that = this
-      async function start(){
-        let nums = await judge();
-        that.$router.replace({ path: `/myget?count=${nums}` });
-      }
-      start()
+      // let judge = () => {
+      //   return new Promise((resolve, reject) => {
+      //     this.$axios.get("/wish/iGained").then(res => {
+      //       resolve(res.data.result.length);
+      //     });
+      //   });
+      // };
+      // let that = this;
+      // async function start() {
+      //   let nums = await judge();
+      //   that.$router.replace({ path: `/myget?count=${nums}` });
+      // }
+      // start();
+      this.$router.replace({ path: `/myget` });
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -113,77 +114,62 @@ export default {
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
     },
-    backTo(){
-      this.$router.replace("/mine")
+    backTo() {
+      this.$router.replace("/mine");
     },
-    getData(){
+    getData() {
       const url = "/wish/iCreated	";
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res)
+          console.log(res);
           this.wishes = res.data.result;
           let method = [];
           let times = [];
           let status = [];
           let people = [];
-          this.wishes.forEach((value,index) => {
+          this.wishes.forEach((value, index) => {
             this.theWish[index] = value.wish_content;
             this.level[index] = value.wish_type;
             this.school[index] = value.wish_where;
             this.tel[index] = value.contact;
             this.time[index] = value.createdAt;
             method[index] = value.anonymous;
-            method.forEach((value,index) => {
-              if(value == true){
+            method.forEach((value, index) => {
+              if (value == true) {
                 this.methods[index] = "匿名发布";
-              }else{
+              } else {
                 this.methods[index] = "实名发布";
               }
-            })
+            });
             people[index] = value.wish_many;
-            people.forEach((value,index) => {
+            people.forEach((value, index) => {
               this.many[index] = value;
-            })
+              this.getInfo[index] = `已被${this.many[index]}人领取`;
+            });
             status[index] = value.wish_status;
-            status.forEach((value,index) => {
-              if(value == 0){
-                this.getInfo[index] = `未被领取`;
-                this.isGetted[index] = false;
-              }
-              else if(value == 1){
-                this.getInfo[index] = `已被${this.many[index]}人领取`;
+            status.forEach((value, index) => {
+              if (value == 0) {
                 this.isGetted[index] = true;
-              }
-              else if(value == 2){
-                this.getInfo[index] = `已完成`;
+              } else if (value == 1) {
                 this.isGetted[index] = false;
               }
-            })
-          })
+            });
+          });
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   },
-  mounted() {
-  },
-  beforeRouteEnter (to, from, next) {
-    let count = to.query.count
-    console.log(count)
-    next(vm=>{
-      console.log(vm.wishes.length)
-      if(vm.wishes.length == count){
-        console.log("不需要更新");
-      }else{
-        console.log("需要更新");
-        vm.show = [...vm.isGetted];
-        vm.getData();
-      }
-    }
-    )
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getData();
+    });
   }
+  //本来做了条数限制不请求的
+  //可是万一条数不变，可是其他数据变了也不刷新这样也不对的
 };
 </script>
 
