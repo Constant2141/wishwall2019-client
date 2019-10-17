@@ -32,7 +32,7 @@
           <div class="little-info">
             <div class="icon" @click="showMore(index)"></div>
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished">
+            <div class="isGetted" v-if="isGetted[index]" @click="finished(index)">
               <p>{{finish}}</p>
             </div>
           </div>
@@ -70,7 +70,8 @@ export default {
       clientHeight: 39,
       show: [],
       finish: "确认完成",
-      nums: 0
+      nums: 0,
+      wid:[]
     };
   },
   methods: {
@@ -109,10 +110,17 @@ export default {
         this.clientHeight = 39;
       }
     },
-    finished() {
+    finished(index) {
       this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background =
-        "#cbcbcb";
+      document.getElementsByClassName("isGetted")[0].style.background = "#cbcbcb";
+      this.$axios
+        .get(`/wish/finish?uuid=${this.wid[index]}` )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     backTo() {
       this.$router.replace("/mine");
@@ -134,6 +142,7 @@ export default {
             this.school[index] = value.wish_where;
             this.tel[index] = value.contact;
             this.time[index] = value.createdAt;
+            this.wid[index] = value.uuid;
             method[index] = value.anonymous;
             method.forEach((value, index) => {
               if (value == true) {

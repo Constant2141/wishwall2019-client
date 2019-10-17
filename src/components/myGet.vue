@@ -33,7 +33,7 @@
         <div class="wish-info">
           <div class="little-info">
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished">
+            <div class="isGetted" v-if="isGetted[index]" @click="finished(index)">
               <p>{{finish}}</p>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default {
       clientHeight: 39,
       finish: "确认完成",
       nums: 0,
-      wid: ""
+      wid: []
     };
   },
   methods: {
@@ -93,7 +93,7 @@ export default {
         let status = [];
         let people = [];
         this.wishes.forEach((value, index) => {
-          this.wid = value.uuid;
+          this.wid[index] = value.uuid;
           this.theWish[index] = value.wish_content;
           this.level[index] = value.wish_type;
           this.school[index] = value.wish_where;
@@ -127,22 +127,18 @@ export default {
         });
       });
     },
-    finished() {
+    finished(index) {
       this.finish = "已完成";
       document.getElementsByClassName("isGetted")[0].style.background =
         "#cbcbcb";
-      let data = {
-        uuid: this.wid
-      };
       this.$axios
-        .get(`/wish/finish`, data)
+        .get(`/wish/finish?uuid=${this.wid[index]}` )
         .then(res => {
           console.log(res);
         })
         .catch(err => {
           console.log(err);
         });
-      console.log(this.wid);
     },
     backTo() {
       this.$router.replace("/mine");
