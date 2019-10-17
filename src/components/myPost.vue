@@ -14,7 +14,7 @@
         <div class="single-wish">
           <div class="top-wish">
             <p class="method">{{methods[index]}}</p>
-            <div class="delete"></div>
+            <div class="delete" @click="deleteWish(index)"></div>
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>
@@ -37,13 +37,16 @@
             </div>
           </div>
           <div class="much-info">
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
+            <div class="which-person" v-for="(gainPerson,index) in gainPeople" :key="index">
+              <div
+                class="single-icon"
+                :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
+              ></div>
+              <div class="isWho">
+                <p>{{pickName[index]}}领取了您的心愿</p>
+              </div>
+              <div class="pickTime">{{pickTime[index]}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -71,7 +74,11 @@ export default {
       show: [],
       finish: "确认完成",
       nums: 0,
-      wid:[]
+      wid: [],
+      gainPeople: [],
+      photoUrl: [],
+      pickName: [],
+      pickTime: []
     };
   },
   methods: {
@@ -91,6 +98,17 @@ export default {
       // start();
       this.$router.replace({ path: `/myget` });
     },
+    deleteWish(index) {
+      this.$axios
+        .get(`/wish/remove?uuid=${this.wid[index]}`)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.getData();
+    },
     showMore(index) {
       if (this.show[index] == false) {
         document.getElementsByClassName("wish-info")[index].style.overflow =
@@ -98,12 +116,13 @@ export default {
         document.getElementsByClassName("wish-info")[index].style.height =
           this.clientHeight + "px";
         this.show[index] = true;
-      } else if (this.isGetted[index] == true) {
+      } else if (this.many[index] > 0) {
+        let length = this.gainPeople.length;
         document.getElementsByClassName("wish-info")[index].style.overflow =
           "scroll";
         this.clientHeight =
           document.getElementsByClassName("wish-info")[index].clientHeight +
-          25 * 7;
+          50 * length;
         document.getElementsByClassName("wish-info")[index].style.height =
           this.clientHeight + "px";
         this.show[index] = false;
@@ -112,9 +131,10 @@ export default {
     },
     finished(index) {
       this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background = "#cbcbcb";
+      document.getElementsByClassName("isGetted")[0].style.background =
+        "#cbcbcb";
       this.$axios
-        .get(`/wish/finish?uuid=${this.wid[index]}` )
+        .get(`/wish/finish?uuid=${this.wid[index]}`)
         .then(res => {
           console.log(res);
         })
@@ -130,12 +150,12 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res);
           this.wishes = res.data.result;
           let method = [];
           let times = [];
           let status = [];
           let people = [];
+          let pickTimes = [];
           this.wishes.forEach((value, index) => {
             this.theWish[index] = value.wish_content;
             this.level[index] = value.wish_type;
@@ -163,6 +183,20 @@ export default {
               } else if (value == 1) {
                 this.isGetted[index] = false;
               }
+            });
+            this.gainPeople = value.gains;
+            this.gainPeople.forEach((value, index) => {
+              this.photoUrl[index] = value.headimgurl;
+              this.pickName[index] = value.nickname;
+              pickTimes[index] = value.pick_time;
+              pickTimes.forEach((value, index) => {
+                let nowTime = `${new Date().getDate()}`;
+                if (nowTime == value.slice(8, 10)) {
+                  this.pickTime[index] = value.slice(11, 19);
+                } else {
+                  this.pickTime[index] = `${nowTime - value.slice(8, 10)}天前`;
+                }
+              });
             });
           });
         })
@@ -201,6 +235,7 @@ export default {
   background: white;
 }
 .top-wish,
+.which-person,
 .more-info,
 .little-info {
   display: flex;
@@ -338,12 +373,40 @@ export default {
   margin-top: 5px;
   color: white;
 }
+.which-person {
+  justify-content: space-around;
+  height: 40px;
+}
 .single-icon {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #000000;
-  margin-left: 14px;
   margin-top: 15px;
+}
+.isWho p {
+  width: 200px;
+  height: 14px;
+  font-family: Microsoft YaHei;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #000000;
+  margin-top: 22px;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.pickTime {
+  height: 14px;
+  font-family: Microsoft YaHei;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #989898;
+  margin-top: 22px;
 }
 </style>
