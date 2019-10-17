@@ -13,17 +13,21 @@
       </div>
     </div>
     <div class="middle">
-      <div class="total" v-for="(topic,index) in topics " :key="index">
+      <div class="total" v-for="(title,index) in titles " :key="index">
         <div class="single-topic">
           <div class="top-topic">
-            <p>#{{topic}}</p>
+            <p>#{{topics[index]}}</p>
             <div>···</div>
           </div>
           <div class="top-content">
-            <div class="icon"></div>
+            <div
+              class="icon"
+              :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
+            ></div>
             <div class="content">
               <div class="name-time">
                 <p>{{names[index]}}</p>
+                <div class="icons" :class="{girlIcon:isGirl}"></div>
                 <p>{{times[index]}}</p>
               </div>
               <div class="opinion">
@@ -49,18 +53,16 @@ export default {
       isActive1: false,
       isActive2: true,
       isActive3: false,
-      topics: [
-        "海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料",
-        "海底捞最喜欢什么火锅底料"
-      ],
-      names: ["chikuan", "chikuan"],
-      times: ["7/22 17:30", "7/22 17:30"],
-      opinions: [
-        "喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢",
-        "喜欢清汤锅呢，你们呢"
-      ],
-      likes: [115, 115],
-      comments: [115, 115]
+      isGirl: false,
+      titles: [],
+      topics: [],
+      names: [],
+      times: [],
+      opinions: [],
+      likes: [],
+      comments: [],
+      sex: [],
+      photoUrl: []
     };
   },
   methods: {
@@ -69,7 +71,44 @@ export default {
     },
     myComment() {
       this.$router.replace(`/mycomment`);
+    },
+    getData() {
+      let url = `/star/myCreated`;
+      this.$axios
+        .get(url)
+        .then(res => {
+          console.log(res.data.result);
+          this.titles = res.data.result;
+          let times = [];
+          this.titles.forEach((value, index) => {
+            this.topics[index] = value.title;
+            this.opinions[index] = value.comment;
+            this.names[index] = value.nickname;
+            this.likes[index] = value.likes;
+            this.comments[index] = value.many;
+            this.photoUrl[index] = value.headimgurl;
+            times[index] = value.createdAt;
+            times.forEach((value, index) => {
+              this.times[index] =
+                value.slice(0, 10) + " " + value.slice(11, 19);
+            });
+            this.sex[index] = value.sex;
+            if (this.sex[index] == "1") {
+              this.isGirl = false;
+            } else {
+              this.isGirl = true;
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getData();
+    });
   }
 };
 </script>
@@ -162,9 +201,21 @@ export default {
   height: 43px;
   width: 43px;
   border-radius: 50%;
-  background: url("../assets/Avatar/BoyAvatar.png");
-  background-size: 100% 100%;
   margin-left: 24px;
+}
+.icons {
+  height: 14px;
+  width: 10px;
+  background: url("../assets/Avatar/BoyAvatar.png");
+  background-size: cover;
+  margin-top: 3.5px;
+  margin-right: 13px;
+}
+.gileIcon {
+  height: 14px;
+  width: 10px;
+  background: url("../assets/Avatar/GirlAvatar.png");
+  background-size: cover;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;

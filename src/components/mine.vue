@@ -3,7 +3,7 @@
     <div class="myInfo">
       <div
         class="Profile-Photo"
-        :style="{backgroundSize:`cover`,backgroundImage:`url(${this.photoUrl})`}"
+        :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl})`}"
       ></div>
       <div class="myName">{{name}}&nbsp;&nbsp;&nbsp;{{sex}}</div>
     </div>

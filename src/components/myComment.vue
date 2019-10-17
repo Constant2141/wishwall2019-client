@@ -13,17 +13,21 @@
       </div>
     </div>
     <div class="middle">
-      <div class="total" v-for="(topic,index) in topics " :key="index">
+      <div class="total" v-for="(title,index) in titles " :key="index">
         <div class="single-topic">
           <div class="top-topic">
-            <p>#{{topic}}</p>
+            <p>#{{topics[index]}}</p>
             <div>···</div>
           </div>
           <div class="top-content">
-            <div class="icon"></div>
+            <div
+              class="icon"
+              :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
+            ></div>
             <div class="content">
               <div class="name-time">
                 <p>{{names[index]}}</p>
+                <div class="icons" :class="{girlIcon:isGirl}"></div>
                 <p>{{times[index]}}</p>
               </div>
               <div class="opinion">
@@ -32,9 +36,14 @@
               <div class="like">
                 <div class="like-icon"></div>
                 <p>{{likes[index]}}</p>
-                <div class="comment-icon"></div>
-                <p>{{comments[index]}}</p>
               </div>
+            </div>
+            <div class="whichComment">
+              <div class="name-sex">
+                <p>@{{toName[index]}}</p>
+                <div class="icons" :class="{girlIcon:isGirl}" :style="{marginTop:`9px`}"></div>
+              </div>
+              <p class="toContent">{{toCom[index]}}</p>
             </div>
           </div>
         </div>
@@ -49,18 +58,17 @@ export default {
       isActive1: false,
       isActive2: false,
       isActive3: true,
-      topics: [
-        "海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料海底捞最喜欢什么火锅底料",
-        "海底捞最喜欢什么火锅底料"
-      ],
-      names: ["chikuan", "chikuan"],
-      times: ["7/22 17:30", "7/22 17:30"],
-      opinions: [
-        "喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢喜欢清汤锅呢，你们呢",
-        "喜欢清汤锅呢，你们呢"
-      ],
-      likes: [115, 115],
-      comments: [115, 115]
+      isGirl: false,
+      toName: [],
+      topics: [],
+      titles: [],
+      names: [],
+      times: [],
+      opinions: [],
+      likes: [],
+      photoUrl: [],
+      sex: [],
+      toCom: []
     };
   },
   methods: {
@@ -69,7 +77,40 @@ export default {
     },
     myPost() {
       this.$router.replace(`/mytopic`);
+    },
+    getData() {
+      let url = `/star/myComment`;
+      this.$axios
+        .get(url)
+        .then(res => {
+          console.log(res);
+          this.titles = res.data.result;
+          this.title.forEach((value, index) => {
+            this.times[index] = value.createdAt;
+            this.photoUrl[index] = value.headimgurl;
+            this.names[index] = value.nickname;
+            this.topics[index] = value.fc.fs.title;
+            this.opinions[index] = value.comment;
+            this.sex[index] = value.sex;
+            if (this.sex[index] == "1") {
+              this.isGirl = false;
+            } else {
+              this.isGirl = true;
+            }
+            this.toName[index] = value.fc.nickname;
+            this.toCom[index] = value.fc.comment;
+            this.likes[index] = value.fc.likes;
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getData();
+    });
   }
 };
 </script>
@@ -88,6 +129,7 @@ export default {
 .top-topic,
 .top-content,
 .name-time,
+.name-sex,
 .like {
   display: flex;
 }
@@ -166,6 +208,49 @@ export default {
   background-size: 100% 100%;
   margin-left: 24px;
 }
+.name-sex p {
+  width: 29px;
+  height: 14px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #707070;
+  margin-left: 10px;
+  margin-top: 9px;
+}
+.toContent {
+  width: 70px;
+  height: 28px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 15px;
+  letter-spacing: 0px;
+  color: #707070;
+  overflow: scroll;
+  margin-left: 10px;
+  margin-top: 8px;
+}
+.icons {
+  height: 14px;
+  width: 10px;
+  background: url("../assets/Avatar/BoyAvatar.png");
+  background-size: cover;
+  margin-top: 3.5px;
+  margin-right: 13px;
+}
+.gileIcon {
+  height: 14px;
+  width: 10px;
+  background: url("../assets/Avatar/GirlAvatar.png");
+  background-size: cover;
+  margin-top: 3.5px;
+  margin-right: 13px;
+}
 .name-time p:nth-child(2) {
   font-family: Segoe UI;
   font-size: 8px;
@@ -188,7 +273,7 @@ export default {
 }
 .opinion {
   height: 32px;
-  width: 280px;
+  width: 170px;
   overflow: scroll;
   font-family: Segoe UI;
   font-size: 12px;
@@ -198,6 +283,14 @@ export default {
   letter-spacing: 0px;
   color: #707070;
   margin-top: 10px;
+  margin-right: 15px;
+}
+.whichComment {
+  width: 90px;
+  height: 71px;
+  background-color: #f2f2f2;
+  margin-top: 10px;
+  overflow: scroll;
 }
 .like {
   margin-top: 3px;
