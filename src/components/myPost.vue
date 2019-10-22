@@ -20,7 +20,9 @@
             <p>{{theWish[index]}}</p>
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
-              <p>{{time[index]}}</p>
+              <div class="timing">
+                <p>{{time[index]}}</p>
+              </div>
             </div>
             <div class="more-info">
               <p>联系方式:</p>
@@ -32,8 +34,8 @@
           <div class="little-info">
             <div class="icon" @click="showMore(index)"></div>
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished(index)">
-              <p>{{finish}}</p>
+            <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
+              <p>{{finish[index]}}</p>
             </div>
           </div>
           <div class="much-info">
@@ -72,42 +74,43 @@ export default {
       isGetted: [],
       clientHeight: 39,
       show: [],
-      finish: "确认完成",
+      finish: [],
       nums: 0,
       wid: [],
       gainPeople: [],
       photoUrl: [],
       pickName: [],
-      pickTime: []
+      pickTime: [],
+      hasGet:[],
     };
   },
   methods: {
     PostToGet() {
-      // let judge = () => {
-      //   return new Promise((resolve, reject) => {
-      //     this.$axios.get("/wish/iGained").then(res => {
-      //       resolve(res.data.result.length);
-      //     });
-      //   });
-      // };
-      // let that = this;
-      // async function start() {
-      //   let nums = await judge();
-      //   that.$router.replace({ path: `/myget?count=${nums}` });
-      // }
-      // start();
       this.$router.replace({ path: `/myget` });
     },
     deleteWish(index) {
-      this.$axios
-        .get(`/wish/remove?uuid=${this.wid[index]}`)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
+      let judge = (index) => {
+        console.log(this.wid[index])
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/remove?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
         });
-      this.getData();
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
+      }
+      this.$dialog.confirm({
+        message:"确认删除吗?"
+      })
+      .then(() => {
+        start(index);
+      })
+      .catch(() => {
+
+      })
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -130,17 +133,23 @@ export default {
       }
     },
     finished(index) {
-      this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background =
-        "#cbcbcb";
-      this.$axios
-        .get(`/wish/finish?uuid=${this.wid[index]}`)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
+      this.finish[index] = "已完成";
+      this.$set(this.finish,this.finish[index]);
+      this.hasGet[index] = true;
+      this.$set(this.hasGet,this.hasGet[index]);
+      let judge = (index) => {
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/finish?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
         });
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
+      }
+      start(index)
     },
     backTo() {
       this.$router.replace("/mine");
@@ -179,9 +188,11 @@ export default {
             status[index] = value.wish_status;
             status.forEach((value, index) => {
               if (value == 0) {
-                this.isGetted[index] = true;
+                this.finish[index] = "确认完成"
+                this.hasGet[index] = false;
               } else if (value == 1) {
-                this.isGetted[index] = false;
+                this.finish[index] = "已完成"
+                this.hasGet[index] = true
               }
             });
             this.gainPeople = value.gains;
@@ -327,6 +338,7 @@ export default {
   color: #000000;
   word-wrap: break-word;
   margin: 0 auto;
+  text-align: center;
   margin-top: 13px;
 }
 .more-info p {
@@ -337,8 +349,17 @@ export default {
   line-height: 12px;
   letter-spacing: 0px;
   color: #989898;
-  margin-top: 14px;
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 8px;
   margin-left: 40px;
+}
+.timing {
+  width: 50%;
+  height: 100%;
+}
+.timing p {
+  float: right;
 }
 .wish-info p {
   font-family: Microsoft YaHei;
@@ -364,6 +385,14 @@ export default {
   width: 13vw;
   height: 20px;
   background-image: linear-gradient(325deg, #fd9bbf 0%, #fde8b7 100%);
+  border-radius: 15px;
+  margin-left: 40vw;
+  margin-top: 9px;
+}
+.hasGetted {
+  width: 13vw;
+  height: 20px;
+  background: #cbcbcb;
   border-radius: 15px;
   margin-left: 40vw;
   margin-top: 9px;

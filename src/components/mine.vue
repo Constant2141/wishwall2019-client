@@ -18,7 +18,7 @@
         <p class="text">我的树洞</p>
         <p class="nums">{{num2}}条</p>
       </div>
-      <div class="wishNum">
+      <div class="wishNum" @click="toMyPlant">
         <div class="img3"></div>
         <p class="text">我的星球</p>
         <p class="nums">{{num3}}条</p>
@@ -48,6 +48,9 @@ export default {
     toMyTreeHole() {
       //根据条数看看是不是需要更新
       this.$router.replace(`/mytreehole?count=${this.num2}`);
+    },
+    toMyPlant(){
+      this.$router.replace(`/mytopic`);
     }
   },
   mounted() {
@@ -85,7 +88,7 @@ export default {
 .myInfo {
   width: 375px;
   height: 190px;
-  background-image: linear-gradient(317deg, #fff8c9 0%, #fd9cbf 100%);
+  background:#FFC4C4;
   border-bottom-left-radius: 100% 55%;
   padding-top: 0.1px;
   display: flex;

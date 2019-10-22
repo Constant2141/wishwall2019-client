@@ -14,7 +14,7 @@
         <div class="single-wish">
           <div class="top-wish">
             <p class="method">{{methods[index]}}</p>
-            <div class="delete"></div>
+            <div class="delete" @click="deleteWish(index)"></div>
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>
@@ -33,8 +33,8 @@
         <div class="wish-info">
           <div class="little-info">
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished(index)">
-              <p>{{finish}}</p>
+            <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
+              <p>{{finish[index]}}</p>
             </div>
           </div>
         </div>
@@ -61,26 +61,14 @@ export default {
       isGetted: [],
       getInfo: [],
       clientHeight: 39,
-      finish: "确认完成",
+      finish:[],
       nums: 0,
-      wid: []
+      wid: [],
+      hasGet:[],
     };
   },
   methods: {
     GetToPost() {
-      // let judge = () => {
-      //   return new Promise((resolve, reject) => {
-      //     this.$axios.get("/wish/iCreated").then(res => {
-      //       resolve(res.data.result.length);
-      //     });
-      //   });
-      // };
-      // let that = this;
-      // async function start() {
-      //   let nums = await judge();
-      //   that.$router.replace({ path: `/mypost?count=${nums}` });
-      // }
-      // start();
       this.$router.replace({ path: `/mypost` });
     },
     getData() {
@@ -93,6 +81,7 @@ export default {
         let status = [];
         let people = [];
         this.wishes.forEach((value, index) => {
+          this.hasGet[index] = false;
           this.wid[index] = value.uuid;
           this.theWish[index] = value.wish_content;
           this.level[index] = value.wish_type;
@@ -119,18 +108,21 @@ export default {
           status[index] = value.wish_status;
           status.forEach((value, index) => {
             if (value == 0) {
-              this.isGetted[index] = true;
+              this.finish[index] = "确认完成"
+              this.hasGet[index] = false;
             } else if (value == 1) {
-              this.isGetted[index] = false;
+              this.finish[index] = "已完成"
+              this.hasGet[index] = true
             }
           });
         });
       });
     },
     finished(index) {
-      this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background =
-        "#cbcbcb";
+      this.finish[index] = "已完成";
+      this.$set(this.finish,this.finish[index]);
+      this.hasGet[index] = true;
+      this.$set(this.hasGet,this.hasGet[index]);
       this.$axios
         .get(`/wish/finish?uuid=${this.wid[index]}` )
         .then(res => {
@@ -142,7 +134,31 @@ export default {
     },
     backTo() {
       this.$router.replace("/mine");
-    }
+    },
+    deleteWish(index) {
+      let judge = (index) => {
+        console.log(this.wid[index])
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/remove?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
+        });
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
+      }
+      this.$dialog.confirm({
+        message:"确认删除吗?"
+      })
+      .then(() => {
+        start(index);
+      })
+      .catch(() => {
+
+      })
+    },
   },
   mounted() {},
   beforeRouteEnter(to, from, next) {
@@ -265,6 +281,7 @@ export default {
   color: #000000;
   word-wrap: break-word;
   margin: 0 auto;
+  text-align: center;
   margin-top: 13px;
 }
 .more-info p {
@@ -275,7 +292,8 @@ export default {
   line-height: 12px;
   letter-spacing: 0px;
   color: #989898;
-  margin-top: 14px;
+  margin-top: 6px;
+  margin-bottom: 8px;
   margin-left: 40px;
 }
 .timing {
@@ -304,12 +322,20 @@ export default {
   width: 70px;
   color: black;
   margin-top: 13px;
-  margin-left: 32px;
+  margin-left: 44px;
 }
 .isGetted {
   width: 13vw;
   height: 20px;
   background-image: linear-gradient(325deg, #fd9bbf 0%, #fde8b7 100%);
+  border-radius: 15px;
+  margin-left: 40vw;
+  margin-top: 9px;
+}
+.hasGetted {
+  width: 13vw;
+  height: 20px;
+  background: #cbcbcb;
   border-radius: 15px;
   margin-left: 40vw;
   margin-top: 9px;
