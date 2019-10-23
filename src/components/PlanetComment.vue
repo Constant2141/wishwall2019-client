@@ -1,7 +1,7 @@
 <template>
   <div class="planet-comment">
     <div class="topic">
-      <div class="back"></div>
+      <div class="back" @click="back"></div>
       <div class="content-area">
           <div class="avator">
               <img :src="user.image" alt="" width="48" height="48" >
@@ -46,6 +46,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <div class="publish">
+      <input type="text" name="" id="" placeholder="你想对ta说些什么吗...">
+      <div class="publish-button">发表</div>
     </div>
   </div>
 </template>
@@ -96,6 +102,12 @@ export default {
         },
       ]
     }
+  },
+
+  methods:{
+    back(){
+      this.$router.go(-1);
+    }
   }
 }
 </script>
@@ -109,7 +121,7 @@ export default {
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: #F2F2F2;
+        background: #F8F8F8;
     }
 
     /* 话题 */
@@ -121,7 +133,19 @@ export default {
       border-radius: 7px;
       margin-left: 23px;
       margin-top: 29px;
+      position: relative;
         margin-bottom: 10px;
+    }
+    .back{
+      width: 27px;
+      height: 27px;
+      border-radius: 100%;
+      position: absolute;
+      background: #FFCBCB no-repeat;
+      box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
+      left: -13px;
+      top: -13px;
+      background-position: center;
     }
     .comment-area{
         width: 100%;
@@ -206,7 +230,7 @@ export default {
     }
     .comment-top{
       width:100%;
-      margin-bottom:5px;
+      margin-bottom:20px;
     }
     .comment-top div{
       display: inline-block;
@@ -228,7 +252,7 @@ export default {
       vertical-align: super;
     }
     .comment-list{
-      width:80%;
+      width:84%;
       min-height:20px;
       margin-left:7%;
       /* background: blue; */
@@ -265,7 +289,7 @@ export default {
     }
     .detail-top{
       height: 20%;
-      margin-bottom: 3px;
+      margin-bottom: 5px;
       width:100%;
     }
     .detail-top div{
@@ -275,6 +299,42 @@ export default {
       width: 100%;
       /* height: 80%; */
       word-break: break-all;
-      margin-bottom:10px;
+      margin-bottom:15px; 
+    }
+
+
+    .publish{
+      width: 100%;
+      height:40px;
+      background: #fafafa;
+      position:fixed;
+      bottom: 0;
+    }    
+    .publish input{
+      width:65%;
+      height:22px;
+      margin-top: 9px;
+      border:none;
+      margin-left:22px;
+      border-radius:4px;
+      padding-left:10px;
+      word-break: break-all;
+      display: inline-block;
+      font-size: 12px;
+    }
+    .publish input::placeholder{
+      font-size: 12px;
+      color:#A5A5A5;
+    }
+    .publish-button{
+      width:66px;
+      line-height:25px;
+      display: inline-block;
+      color:white;
+      border-radius:15px;
+      text-align: center;
+      font-size: 12px;
+      margin-left: 7px;
+      background: linear-gradient(to right bottom,#FD9BBF,#FDE8B7)
     }
 </style>
