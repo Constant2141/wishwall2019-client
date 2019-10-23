@@ -120,7 +120,7 @@ export default {
         obj.isLike = !obj.isLike;
         this.$set(this.cards,this.realIndex,obj);
         this.cards[this.realIndex].likes++;
-        console.log('点赞成功',res.data);
+        console.log('点赞成功',res.data.result);
       }).catch(err=>{
         console.log('点赞失败',err);
       })
@@ -132,9 +132,9 @@ export default {
   mounted() {
     console.log('treehole mounted')
     this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
-      console.log('获得所有树洞成功',res.data);
+      console.log('获得所有树洞成功',res.data.result);
       this.currentPage = this.currentPage + 1;
-      this.cards = res.data;
+      this.cards = res.data.result;
     }).catch(err=>{
       console.log('获得所有树洞错误',err);
     })
@@ -146,10 +146,10 @@ export default {
         let cards = this.cards;
         // 要push多点数据，慢慢push
         this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
-          console.log('获得树洞成功',res.data);
-         if(res.data.length > 0){
+          console.log('获得树洞成功',res.data.result);
+         if(res.data.result.length > 0){
           this.currentPage = this.currentPage + 1;
-          this.cards = [...cards,...res.data];
+          this.cards = [...cards,...res.data.result];
          }
         }).catch(err=>{
           console.log('获得树洞错误',err);

@@ -65,7 +65,7 @@ export default {
       this.sex = "女";
     }
     this.$axios.get("/treehole/countMyTreeHoles").then(res => {
-      this.num2 = res.data;
+      this.num2 = res.data.result;
     });
     this.$axios.get("/wish/iCreated").then(res => {
       this.num1 = res.data.result.length;

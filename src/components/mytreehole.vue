@@ -57,8 +57,8 @@ export default {
         //更新        
         console.log('需要更新');
         vm.$axios.get('/treehole/getMyTreeHoles').then(res=>{
-          console.log('获取我的树洞成功',res.data);
-          vm.holesData = res.data;
+          console.log('获取我的树洞成功',res.data.result);
+          vm.holesData = res.data.result;
         }).catch(err=>{
           console.log('获取我的树洞错误',err);
         })
