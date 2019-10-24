@@ -120,12 +120,14 @@ export default {
   text-align: center;
 }
 .holes p {
-  text-indent: 2em;
+  box-sizing: border-box;
+  padding:0 20px;
   width: 300px;
   text-align: left;
   font-size: 12px;
   font-family: "微软雅黑";
   line-height: 24px;
+  text-align: center;
 }
 
 /* 点赞 */

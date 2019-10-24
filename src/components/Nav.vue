@@ -60,7 +60,7 @@ export default {
         require("../assets/nav/7.png")
       ],
       imgSrc: [
-        require("../assets/nav/1.png"),
+        require("../assets/nav/2.png"),
         require("../assets/nav/3.png"),
         require("../assets/nav/5.png"),
         require("../assets/nav/7.png")
@@ -134,6 +134,7 @@ export default {
 <style scoped>
 /* 弹出层 */
 .three {
+  color:white;
   position: absolute;
   width: 100vw;
   height: 25vw;
@@ -170,8 +171,21 @@ export default {
   width: 13vw;
   height: 13vw;
   border-radius: 50%;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  /* background: linear-gradient(to bottom right, #fd9bbf, #fde8b7); */
+  background-size:100% 100%;
   margin-bottom: 1vw;
+}
+.three-route:nth-of-type(1) .three-item{
+  background:url('~@/assets/hole/postChat.png') no-repeat center center;
+  background-size: 100% 100%;
+}
+.three-route:nth-of-type(2) .three-item{
+  background:url('~@/assets/hole/postHole.png') no-repeat center center;
+  background-size: 100% 100%;
+}
+.three-route:nth-of-type(3) .three-item{
+  background:url('~@/assets/hole/postWish.png') no-repeat center center;
+  background-size: 100% 100%;
 }
 
 /* 导航条 */

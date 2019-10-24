@@ -187,6 +187,7 @@ export default {
   height: 25.72px;
   padding: 7.3px 13px 7.3px 22px;
   font-size: 12px;
+  z-index:10000;
 }
 .comment > input {
   outline: none;
@@ -224,10 +225,12 @@ export default {
 }
 .holes p {
   width: 216px;
-  text-align: left;
+  text-align: center;
   font-size: 12px;
   font-family: "微软雅黑";
   line-height: 24px;
+  box-sizing: border-box;
+  padding:0 20px;
 }
 
 /* 点赞 */
