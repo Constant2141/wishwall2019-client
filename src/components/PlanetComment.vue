@@ -145,6 +145,7 @@ export default {
       box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
       left: -13px;
       top: -13px;
+      background-image: url(../assets/backWhite.png);
       background-position: center;
     }
     .comment-area{
