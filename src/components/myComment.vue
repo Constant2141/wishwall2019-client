@@ -5,10 +5,10 @@
       <div class="top-select" :class="{active:isActive1}" @click="ofMine">
         <p>与我有关</p>
       </div>
-      <div class="top-select" :class="{active:isActive2}">
+      <div class="top-select" :class="{active:isActive2}" @click="myPost">
         <p>我的发布</p>
       </div>
-      <div class="top-select" :class="{active:isActive3}" @click="myComment">
+      <div class="top-select" :class="{active:isActive3}">
         <p>我的评论</p>
       </div>
     </div>
@@ -36,9 +36,14 @@
               <div class="like">
                 <div class="like-icon"></div>
                 <p>{{likes[index]}}</p>
-                <div class="comment-icon"></div>
-                <p>{{comments[index]}}</p>
               </div>
+            </div>
+            <div class="whichComment">
+              <div class="name-sex">
+                <p>@{{toName[index]}}</p>
+                <div class="icons" :class="{girlIcon:isGirl}" :style="{marginTop:`9px`}"></div>
+              </div>
+              <p class="toContent">{{toCom[index]}}</p>
             </div>
           </div>
         </div>
@@ -51,53 +56,50 @@ export default {
   data() {
     return {
       isActive1: false,
-      isActive2: true,
-      isActive3: false,
+      isActive2: false,
+      isActive3: true,
       isGirl: false,
-      titles: [],
+      toName: [],
       topics: [],
+      titles: [],
       names: [],
       times: [],
       opinions: [],
       likes: [],
-      comments: [],
+      photoUrl: [],
       sex: [],
-      photoUrl: []
+      toCom: []
     };
   },
   methods: {
     ofMine() {
       this.$router.replace(`/ofmine`);
     },
-    myComment() {
-      this.$router.replace(`/mycomment`);
+    myPost() {
+      this.$router.replace(`/mytopic`);
     },
     getData() {
-      let url = `/star/myCreated`;
+      let url = `/star/myComment`;
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res.data.result);
+          console.log(res);
           this.titles = res.data.result;
-          let times = [];
-          this.titles.forEach((value, index) => {
-            this.topics[index] = value.title;
-            this.opinions[index] = value.comment;
-            this.names[index] = value.nickname;
-            this.likes[index] = value.likes;
-            this.comments[index] = value.many;
+          this.title.forEach((value, index) => {
+            this.times[index] = value.createdAt;
             this.photoUrl[index] = value.headimgurl;
-            times[index] = value.createdAt;
-            times.forEach((value, index) => {
-              this.times[index] =
-                value.slice(0, 10) + " " + value.slice(11, 19);
-            });
+            this.names[index] = value.nickname;
+            this.topics[index] = value.fc.fs.title;
+            this.opinions[index] = value.comment;
             this.sex[index] = value.sex;
             if (this.sex[index] == "1") {
               this.isGirl = false;
             } else {
               this.isGirl = true;
             }
+            this.toName[index] = value.fc.nickname;
+            this.toCom[index] = value.fc.comment;
+            this.likes[index] = value.fc.likes;
           });
         })
         .catch(err => {
@@ -127,6 +129,7 @@ export default {
 .top-topic,
 .top-content,
 .name-time,
+.name-sex,
 .like {
   display: flex;
 }
@@ -201,7 +204,36 @@ export default {
   height: 43px;
   width: 43px;
   border-radius: 50%;
+  background: url("../assets/Avatar/BoyAvatar.png");
+  background-size: 100% 100%;
   margin-left: 24px;
+}
+.name-sex p {
+  width: 29px;
+  height: 14px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #707070;
+  margin-left: 10px;
+  margin-top: 9px;
+}
+.toContent {
+  width: 70px;
+  height: 28px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 15px;
+  letter-spacing: 0px;
+  color: #707070;
+  overflow: scroll;
+  margin-left: 10px;
+  margin-top: 8px;
 }
 .icons {
   height: 14px;
@@ -216,6 +248,8 @@ export default {
   width: 10px;
   background: url("../assets/Avatar/GirlAvatar.png");
   background-size: cover;
+  margin-top: 3.5px;
+  margin-right: 13px;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;
@@ -239,7 +273,7 @@ export default {
 }
 .opinion {
   height: 32px;
-  width: 280px;
+  width: 170px;
   overflow: scroll;
   font-family: Segoe UI;
   font-size: 12px;
@@ -249,6 +283,14 @@ export default {
   letter-spacing: 0px;
   color: #707070;
   margin-top: 10px;
+  margin-right: 15px;
+}
+.whichComment {
+  width: 90px;
+  height: 71px;
+  background-color: #f2f2f2;
+  margin-top: 10px;
+  overflow: scroll;
 }
 .like {
   margin-top: 3px;

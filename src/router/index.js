@@ -15,6 +15,8 @@ import PlanetComment from "@/components/PlanetComment";
 import Mypost from "@/components/myPost";
 import Myget from "@/components/myGet";
 import Mytopic from "@/components/myTopic";
+import Mycomment from "@/components/myComment";
+import ofMine from "@/components/ofMine";
 import Login from '@/components/Login';
 
 Vue.use(Router);
@@ -32,7 +34,7 @@ export default new Router({
       meta: {
         keepAlive: true, //底部栏显示
         title: '树洞',
-        trueKeepAlive:false //keepAlive字段不是这么用的吧亲
+        trueKeepAlive: false //keepAlive字段不是这么用的吧亲
       }
     },
     {
@@ -41,7 +43,7 @@ export default new Router({
       component: MyTreeHole,
       meta: {
         keepAlive: false, //底部栏显示
-        title:'我的树洞'
+        title: '我的树洞'
       }
     },
     {
@@ -67,24 +69,24 @@ export default new Router({
       component: Mine,
       meta: {
         keepAlive: true,  //底部栏显示
-        trueKeepAlive:false
+        trueKeepAlive: false
       }
     },
     {
       path: '/planet',
       name: 'planet',
       component: Planet,
-      meta:{
-        keepAlive:true  //底部栏显示
-      }      
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
     },
     {
       path: '/planetTopic',
       name: 'planetTopic',
       component: PlanetTopic,
-      meta:{
-        keepAlive:false //底部栏显示
-      }      
+      meta: {
+        keepAlive: false //底部栏显示
+      }
     },
     {
       path: "/planetRelease",
@@ -137,6 +139,22 @@ export default new Router({
       }
     },
     {
+      path: '/mycomment',
+      name: 'mycomment',
+      component: Mycomment,
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
+    },
+    {
+      path: '/ofmine',
+      name: 'ofmine',
+      component: ofMine,
+      meta: {
+        keepAlive: true  //底部栏显示
+      }
+    },
+    {
       path: '/wishwall',
       name: 'wishwall',
       component: WishWall,
@@ -146,19 +164,19 @@ export default new Router({
       }
     },
     {
-      path:'/PlanetComment',
-      name:'planetcomment',
-      component:PlanetComment,
-      meta:{
-        keepAlive:false
+      path: '/PlanetComment',
+      name: 'planetcomment',
+      component: PlanetComment,
+      meta: {
+        keepAlive: false
       }
     },
     {
       path: '/login',
       name: 'login',
       component: Login,
-      meta:{
-        keepAlive:false
+      meta: {
+        keepAlive: false
       }
     }
   ]

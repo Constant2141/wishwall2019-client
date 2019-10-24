@@ -14,13 +14,15 @@
         <div class="single-wish">
           <div class="top-wish">
             <p class="method">{{methods[index]}}</p>
-            <div class="delete"></div>
+            <div class="delete" @click="deleteWish(index)"></div>
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
-              <p>{{time[index]}}</p>
+              <div class="timing">
+                <p>{{time[index]}}</p>
+              </div>
             </div>
             <div class="more-info">
               <p>联系方式:</p>
@@ -32,18 +34,21 @@
           <div class="little-info">
             <div class="icon" @click="showMore(index)"></div>
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished">
-              <p>{{finish}}</p>
+            <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
+              <p>{{finish[index]}}</p>
             </div>
           </div>
           <div class="much-info">
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
+            <div class="which-person" v-for="(gainPerson,index) in gainPeople" :key="index">
+              <div
+                class="single-icon"
+                :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
+              ></div>
+              <div class="isWho">
+                <p>{{pickName[index]}}领取了您的心愿</p>
+              </div>
+              <div class="pickTime">{{pickTime[index]}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -56,12 +61,12 @@ export default {
   data() {
     return {
       isActive: true,
-      wishes:[],
+      wishes: [],
       methods: [],
       theWish: [],
       level: [],
       school: [],
-      many:[],
+      many: [],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
       time: [],
       tel: [],
@@ -69,25 +74,43 @@ export default {
       isGetted: [],
       clientHeight: 39,
       show: [],
-      finish: "确认完成",
-      nums:0
+      finish: [],
+      nums: 0,
+      wid: [],
+      gainPeople: [],
+      photoUrl: [],
+      pickName: [],
+      pickTime: [],
+      hasGet:[],
     };
   },
   methods: {
     PostToGet() {
-      let judge = () => {
-        return new Promise((resolve,reject) => {
-          this.$axios.get("/wish/iGained").then(res => {
-            resolve(res.data.result.length)
-          })
-        })
+      this.$router.replace({ path: `/myget` });
+    },
+    deleteWish(index) {
+      let judge = (index) => {
+        console.log(this.wid[index])
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/remove?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
+        });
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
       }
-      let that = this
-      async function start(){
-        let nums = await judge();
-        that.$router.replace({ path: `/myget?count=${nums}` });
-      }
-      start()
+      this.$dialog.confirm({
+        message:"确认删除吗?"
+      })
+      .then(() => {
+        start(index);
+      })
+      .catch(() => {
+
+      })
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -96,94 +119,111 @@ export default {
         document.getElementsByClassName("wish-info")[index].style.height =
           this.clientHeight + "px";
         this.show[index] = true;
-      } else if (this.isGetted[index] == true) {
+      } else if (this.many[index] > 0) {
+        let length = this.gainPeople.length;
         document.getElementsByClassName("wish-info")[index].style.overflow =
           "scroll";
         this.clientHeight =
           document.getElementsByClassName("wish-info")[index].clientHeight +
-          25 * 7;
+          50 * length;
         document.getElementsByClassName("wish-info")[index].style.height =
           this.clientHeight + "px";
         this.show[index] = false;
         this.clientHeight = 39;
       }
     },
-    finished() {
-      this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background =
-        "#cbcbcb";
+    finished(index) {
+      this.finish[index] = "已完成";
+      this.$set(this.finish,this.finish[index]);
+      this.hasGet[index] = true;
+      this.$set(this.hasGet,this.hasGet[index]);
+      let judge = (index) => {
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/finish?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
+        });
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
+      }
+      start(index)
     },
-    backTo(){
-      this.$router.replace("/mine")
+    backTo() {
+      this.$router.replace("/mine");
     },
-    getData(){
+    getData() {
       const url = "/wish/iCreated	";
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res)
           this.wishes = res.data.result;
           let method = [];
           let times = [];
           let status = [];
           let people = [];
-          this.wishes.forEach((value,index) => {
+          let pickTimes = [];
+          this.wishes.forEach((value, index) => {
             this.theWish[index] = value.wish_content;
             this.level[index] = value.wish_type;
             this.school[index] = value.wish_where;
             this.tel[index] = value.contact;
             this.time[index] = value.createdAt;
+            this.wid[index] = value.uuid;
             method[index] = value.anonymous;
-            method.forEach((value,index) => {
-              if(value == true){
+            method.forEach((value, index) => {
+              if (value == true) {
                 this.methods[index] = "匿名发布";
-              }else{
+              } else {
                 this.methods[index] = "实名发布";
               }
-            })
+            });
             people[index] = value.wish_many;
-            people.forEach((value,index) => {
+            people.forEach((value, index) => {
               this.many[index] = value;
-            })
+              this.getInfo[index] = `已被${this.many[index]}人领取`;
+            });
             status[index] = value.wish_status;
-            status.forEach((value,index) => {
-              if(value == 0){
-                this.getInfo[index] = `未被领取`;
-                this.isGetted[index] = false;
+            status.forEach((value, index) => {
+              if (value == 0) {
+                this.finish[index] = "确认完成"
+                this.hasGet[index] = false;
+              } else if (value == 1) {
+                this.finish[index] = "已完成"
+                this.hasGet[index] = true
               }
-              else if(value == 1){
-                this.getInfo[index] = `已被${this.many[index]}人领取`;
-                this.isGetted[index] = true;
-              }
-              else if(value == 2){
-                this.getInfo[index] = `已完成`;
-                this.isGetted[index] = false;
-              }
-            })
-          })
+            });
+            this.gainPeople = value.gains;
+            this.gainPeople.forEach((value, index) => {
+              this.photoUrl[index] = value.headimgurl;
+              this.pickName[index] = value.nickname;
+              pickTimes[index] = value.pick_time;
+              pickTimes.forEach((value, index) => {
+                let nowTime = `${new Date().getDate()}`;
+                if (nowTime == value.slice(8, 10)) {
+                  this.pickTime[index] = value.slice(11, 19);
+                } else {
+                  this.pickTime[index] = `${nowTime - value.slice(8, 10)}天前`;
+                }
+              });
+            });
+          });
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   },
-  mounted() {
-  },
-  beforeRouteEnter (to, from, next) {
-    let count = to.query.count
-    console.log(count)
-    next(vm=>{
-      console.log(vm.wishes.length)
-      if(vm.wishes.length == count){
-        console.log("不需要更新");
-      }else{
-        console.log("需要更新");
-        vm.show = [...vm.isGetted];
-        vm.getData();
-      }
-    }
-    )
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getData();
+    });
   }
+  //本来做了条数限制不请求的
+  //可是万一条数不变，可是其他数据变了也不刷新这样也不对的
 };
 </script>
 
@@ -206,6 +246,7 @@ export default {
   background: white;
 }
 .top-wish,
+.which-person,
 .more-info,
 .little-info {
   display: flex;
@@ -297,6 +338,7 @@ export default {
   color: #000000;
   word-wrap: break-word;
   margin: 0 auto;
+  text-align: center;
   margin-top: 13px;
 }
 .more-info p {
@@ -307,8 +349,17 @@ export default {
   line-height: 12px;
   letter-spacing: 0px;
   color: #989898;
-  margin-top: 14px;
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 8px;
   margin-left: 40px;
+}
+.timing {
+  width: 50%;
+  height: 100%;
+}
+.timing p {
+  float: right;
 }
 .wish-info p {
   font-family: Microsoft YaHei;
@@ -338,17 +389,53 @@ export default {
   margin-left: 40vw;
   margin-top: 9px;
 }
+.hasGetted {
+  width: 13vw;
+  height: 20px;
+  background: #cbcbcb;
+  border-radius: 15px;
+  margin-left: 40vw;
+  margin-top: 9px;
+}
 .isGetted p {
   text-align: center;
   margin-top: 5px;
   color: white;
 }
+.which-person {
+  justify-content: space-around;
+  height: 40px;
+}
 .single-icon {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #000000;
-  margin-left: 14px;
   margin-top: 15px;
+}
+.isWho p {
+  width: 200px;
+  height: 14px;
+  font-family: Microsoft YaHei;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #000000;
+  margin-top: 22px;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.pickTime {
+  height: 14px;
+  font-family: Microsoft YaHei;
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #989898;
+  margin-top: 22px;
 }
 </style>

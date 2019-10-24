@@ -14,13 +14,15 @@
         <div class="single-wish">
           <div class="top-wish">
             <p class="method">{{methods[index]}}</p>
-            <div class="delete"></div>
+            <div class="delete" @click="deleteWish(index)"></div>
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>
             <div class="more-info">
               <p>#{{level[index]}}&nbsp;&nbsp;&nbsp;#{{school[index]}}</p>
-              <p>{{time[index]}}</p>
+              <div class="timing">
+                <p>{{time[index]}}</p>
+              </div>
             </div>
             <div class="more-info">
               <p>联系方式:</p>
@@ -30,20 +32,10 @@
         </div>
         <div class="wish-info">
           <div class="little-info">
-            <div class="icon" @click="showMore(index)"></div>
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" v-if="isGetted[index]" @click="finished">
-              <p>{{finish}}</p>
+            <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
+              <p>{{finish[index]}}</p>
             </div>
-          </div>
-          <div class="much-info">
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
-            <div class="single-icon"></div>
           </div>
         </div>
       </div>
@@ -52,7 +44,7 @@
 </template>
 
 <script>
-import { resolve, reject } from 'q';
+import { resolve, reject } from "q";
 export default {
   data() {
     return {
@@ -62,133 +54,120 @@ export default {
       theWish: [],
       level: [],
       school: [],
-      many:[],
+      many: [],
       pWidth: "maxWidth:54vw;wordBreak: break-all;marginLeft:2px;",
       time: [],
       tel: [],
-      getInfo: [],
       isGetted: [],
+      getInfo: [],
       clientHeight: 39,
-      show: [],
-      finish: "确认完成",
-      nums:0,
+      finish:[],
+      nums: 0,
+      wid: [],
+      hasGet:[],
     };
   },
   methods: {
     GetToPost() {
-      let judge = () => {
-        return new Promise((resolve,reject) => {
-          this.$axios.get("/wish/iCreated").then(res => {
-            resolve(res.data.result.length)
-          })
-        })
-      }
-      let that = this
-      async function start(){
-        let nums = await judge();
-        that.$router.replace({ path: `/mypost?count=${nums}` });
-      }
-      start()
+      this.$router.replace({ path: `/mypost` });
     },
-    getData(){
-      const url = "/wish/iGained"
+    getData() {
+      const url = "/wish/iGained";
+      this.$axios.get(url).then(res => {
+        console.log(res);
+        this.wishes = res.data.result;
+        let method = [];
+        let times = [];
+        let status = [];
+        let people = [];
+        this.wishes.forEach((value, index) => {
+          this.hasGet[index] = false;
+          this.wid[index] = value.uuid;
+          this.theWish[index] = value.wish_content;
+          this.level[index] = value.wish_type;
+          this.school[index] = value.wish_where;
+          this.tel[index] = value.contact;
+          method[index] = value.anonymous;
+          // this.time[index] = value.createdAt;
+          times[index] = value.createdAt;
+          times.forEach((value, index) => {
+            this.time[index] = value.slice(0, 10) + " " + value.slice(11, 19);
+          });
+          method.forEach((value, index) => {
+            if (value == true) {
+              this.methods[index] = "匿名发布";
+            } else {
+              this.methods[index] = "实名发布";
+            }
+          });
+          people[index] = value.wish_many;
+          people.forEach((value, index) => {
+            this.many[index] = value;
+            this.getInfo[index] = `已被${this.many[index]}人领取`;
+          });
+          status[index] = value.wish_status;
+          status.forEach((value, index) => {
+            if (value == 0) {
+              this.finish[index] = "确认完成"
+              this.hasGet[index] = false;
+            } else if (value == 1) {
+              this.finish[index] = "已完成"
+              this.hasGet[index] = true
+            }
+          });
+        });
+      });
+    },
+    finished(index) {
+      this.finish[index] = "已完成";
+      this.$set(this.finish,this.finish[index]);
+      this.hasGet[index] = true;
+      this.$set(this.hasGet,this.hasGet[index]);
       this.$axios
-      .get(url)
-      .then(res => {
-        console.log(res)
-          this.wishes = res.data.result;
-          let method = [];
-          let times = [];
-          let status = [];
-          let people = [];
-          this.wishes.forEach((value,index) => {
-            this.theWish[index] = value.wish_content;
-            this.level[index] = value.wish_type;
-            this.school[index] = value.wish_where;
-            this.tel[index] = value.contact;
-            method[index] = value.anonymous;
-            // this.time[index] = value.createdAt;
-            times[index] = value.createdAt;
-            times.forEach((value,index) => {
-              this.time[index] = value.slice(0,10) + " " + value.slice(11,19)
-            })
-            method.forEach((value,index) => {
-              if(value == true){
-                this.methods[index] = "匿名发布";
-              }else{
-                this.methods[index] = "实名发布";
-              }
-            })
-            people[index] = value.wish_many;
-            people.forEach((value,index) => {
-              this.many[index] = value;
-            })
-            status[index] = value.wish_status;
-            status.forEach((value,index) => {
-              if(value == 0){
-                this.getInfo[index] = `未完成`;
-                this.isGetted[index] = false;
-              }
-              else if(value == 1){
-                this.getInfo[index] = `已被${this.many[index]}人领取`;
-                this.isGetted[index] = true;
-              }
-              else if(value == 2){
-                this.getInfo[index] = `已完成`;
-                this.isGetted[index] = false;
-              }
-            })
-          })
+        .get(`/wish/finish?uuid=${this.wid[index]}` )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    backTo() {
+      this.$router.replace("/mine");
+    },
+    deleteWish(index) {
+      let judge = (index) => {
+        console.log(this.wid[index])
+        return new Promise((resolve, reject) => {
+          this.$axios.get(`/wish/remove?uuid=${this.wid[index]}`).then(res => {
+            resolve()
+          });
+        });
+      };
+      let that = this;
+      async function start(index) {
+        await judge(index);
+        that.getData()
+      }
+      this.$dialog.confirm({
+        message:"确认删除吗?"
+      })
+      .then(() => {
+        start(index);
+      })
+      .catch(() => {
+
       })
     },
-    showMore(index) {
-      if (this.show[index] == false) {
-        document.getElementsByClassName("wish-info")[index].style.overflow =
-          "hidden";
-        document.getElementsByClassName("wish-info")[index].style.height =
-          this.clientHeight + "px";
-        this.show[index] = true;
-      } else if (this.isGetted[index] == true) {
-        document.getElementsByClassName("wish-info")[index].style.overflow =
-          "scroll";
-        console.log(
-          document.getElementsByClassName("wish-info")[index].style.overflow
-        );
-        this.clientHeight =
-          document.getElementsByClassName("wish-info")[index].clientHeight +
-          25 * 7;
-        document.getElementsByClassName("wish-info")[index].style.height =
-          this.clientHeight + "px";
-        this.show[index] = false;
-        this.clientHeight = 39;
-      }
-    },
-    finished() {
-      this.finish = "已完成";
-      document.getElementsByClassName("isGetted")[0].style.background =
-        "#cbcbcb";
-    },
-    backTo(){
-      this.$router.replace("/mine")
-    },
   },
-  mounted() {
-  },
-  beforeRouteEnter (to, from, next) {
-    let count = to.query.count
-    console.log(count)
-    next(vm=>{
-      console.log(vm.wishes.length)
-      if(vm.wishes.length == count){
-        console.log("不需要更新");
-      }else{
-        console.log("需要更新");
-        vm.show = [...vm.isGetted];
-        vm.getData();
-      }
-    }
-    )
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.getData();
+    });
   }
+  //本来做了条数限制不请求的
+  //可是万一条数不变，可是其他数据变了也不刷新这样也不对的
 };
 </script>
 
@@ -302,6 +281,7 @@ export default {
   color: #000000;
   word-wrap: break-word;
   margin: 0 auto;
+  text-align: center;
   margin-top: 13px;
 }
 .more-info p {
@@ -312,8 +292,16 @@ export default {
   line-height: 12px;
   letter-spacing: 0px;
   color: #989898;
-  margin-top: 14px;
+  margin-top: 6px;
+  margin-bottom: 8px;
   margin-left: 40px;
+}
+.timing {
+  width: 50%;
+  height: 100%;
+}
+.timing p {
+  float: right;
 }
 .wish-info p {
   font-family: Microsoft YaHei;
@@ -334,11 +322,20 @@ export default {
   width: 70px;
   color: black;
   margin-top: 13px;
+  margin-left: 44px;
 }
 .isGetted {
   width: 13vw;
   height: 20px;
   background-image: linear-gradient(325deg, #fd9bbf 0%, #fde8b7 100%);
+  border-radius: 15px;
+  margin-left: 40vw;
+  margin-top: 9px;
+}
+.hasGetted {
+  width: 13vw;
+  height: 20px;
+  background: #cbcbcb;
   border-radius: 15px;
   margin-left: 40vw;
   margin-top: 9px;

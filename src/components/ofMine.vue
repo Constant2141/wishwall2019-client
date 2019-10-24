@@ -2,10 +2,10 @@
   <div id="my-topic">
     <div class="top-bar">
       <div class="left-arrow"></div>
-      <div class="top-select" :class="{active:isActive1}" @click="ofMine">
+      <div class="top-select" :class="{active:isActive1}">
         <p>与我有关</p>
       </div>
-      <div class="top-select" :class="{active:isActive2}">
+      <div class="top-select" :class="{active:isActive2}" @click="myPost">
         <p>我的发布</p>
       </div>
       <div class="top-select" :class="{active:isActive3}" @click="myComment">
@@ -30,15 +30,17 @@
                 <div class="icons" :class="{girlIcon:isGirl}"></div>
                 <p>{{times[index]}}</p>
               </div>
-              <div class="opinion">
+              <div class="like">
+                <div class="comment-icon"></div>
                 <p>{{opinions[index]}}</p>
               </div>
-              <div class="like">
-                <div class="like-icon"></div>
-                <p>{{likes[index]}}</p>
-                <div class="comment-icon"></div>
-                <p>{{comments[index]}}</p>
+            </div>
+            <div class="whichComment">
+              <div class="name-sex">
+                <p>@{{toName[index]}}</p>
+                <div class="icons" :class="{girlIcon:isGirl}" :style="{marginTop:`9px`}"></div>
               </div>
+              <p class="toContent">{{toCom[index]}}</p>
             </div>
           </div>
         </div>
@@ -50,44 +52,43 @@
 export default {
   data() {
     return {
-      isActive1: false,
-      isActive2: true,
+      isActive1: true,
+      isActive2: false,
       isActive3: false,
       isGirl: false,
-      titles: [],
       topics: [],
+      opinions: [],
+      titles: [],
       names: [],
       times: [],
-      opinions: [],
-      likes: [],
       comments: [],
+      photoUrl: [],
       sex: [],
-      photoUrl: []
+      toCom: [],
+      toName: []
     };
   },
   methods: {
-    ofMine() {
-      this.$router.replace(`/ofmine`);
+    myPost() {
+      this.$router.replace(`/mytopic`);
     },
     myComment() {
       this.$router.replace(`/mycomment`);
     },
     getData() {
-      let url = `/star/myCreated`;
+      let url = `/star/myRelated`;
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res.data.result);
+          console.log(res);
           this.titles = res.data.result;
           let times = [];
           this.titles.forEach((value, index) => {
-            this.topics[index] = value.title;
+            this.topics[index] = value.fc.fs.title;
             this.opinions[index] = value.comment;
             this.names[index] = value.nickname;
-            this.likes[index] = value.likes;
-            this.comments[index] = value.many;
             this.photoUrl[index] = value.headimgurl;
-            times[index] = value.createdAt;
+            times[index] = value.comment_time;
             times.forEach((value, index) => {
               this.times[index] =
                 value.slice(0, 10) + " " + value.slice(11, 19);
@@ -98,6 +99,8 @@ export default {
             } else {
               this.isGirl = true;
             }
+            this.toName[index] = value.fc.nickname;
+            this.toCom[index] = value.fc.comment;
           });
         })
         .catch(err => {
@@ -201,21 +204,9 @@ export default {
   height: 43px;
   width: 43px;
   border-radius: 50%;
-  margin-left: 24px;
-}
-.icons {
-  height: 14px;
-  width: 10px;
   background: url("../assets/Avatar/BoyAvatar.png");
-  background-size: cover;
-  margin-top: 3.5px;
-  margin-right: 13px;
-}
-.gileIcon {
-  height: 14px;
-  width: 10px;
-  background: url("../assets/Avatar/GirlAvatar.png");
-  background-size: cover;
+  background-size: 100% 100%;
+  margin-left: 24px;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;
@@ -237,19 +228,6 @@ export default {
   letter-spacing: 0px;
   color: #707070;
 }
-.opinion {
-  height: 32px;
-  width: 280px;
-  overflow: scroll;
-  font-family: Segoe UI;
-  font-size: 12px;
-  font-weight: normal;
-  font-stretch: normal;
-  line-height: 16px;
-  letter-spacing: 0px;
-  color: #707070;
-  margin-top: 10px;
-}
 .like {
   margin-top: 3px;
 }
@@ -264,17 +242,10 @@ export default {
   margin-top: 2px;
   margin-left: 3px;
 }
-.like-icon {
-  height: 15px;
-  width: 15px;
-  background: url("../assets/BeforeLike.png");
-  background-size: 100% 100%;
-}
 .comment-icon {
   height: 15px;
   width: 15px;
-  background: url("../assets/comment.png");
+  background: url("../assets/comment2.png");
   background-size: 100% 100%;
-  margin-left: 16px;
 }
 </style>
