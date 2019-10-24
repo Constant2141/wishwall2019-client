@@ -14,8 +14,8 @@ import { DropdownMenu, DropdownItem } from 'vant';
 import store from './vuex/store'
 import { userInfo } from 'os';
 import { PullRefresh } from 'vant';
-import { List } from 'vant';
 import { Uploader } from 'vant';
+
 
 
 
@@ -26,7 +26,7 @@ Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
 Vue.use(Dialog);
 Vue.use(PullRefresh);
-Vue.use(List);
+
 
 Vue.use(Uploader);
 
