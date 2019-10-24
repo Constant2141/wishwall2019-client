@@ -133,7 +133,7 @@ export default {
         position: relative;
     }
     .back{
-        background: url(../assets/back2.png) no-repeat;
+        background: url(../assets/backWhite.png) no-repeat;
         width:15px;
         height: 15px;
         position: absolute;

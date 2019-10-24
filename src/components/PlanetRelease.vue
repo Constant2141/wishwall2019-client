@@ -9,10 +9,10 @@
         </div>
         <div class="edit-area">
             <div class="topic-area">
-                <input type="text" placeholder="#发布话题" maxlength="18">
+                <input type="text" placeholder="#发布话题" maxlength="18" v-model="sendData.title">
             </div>
             <div class="message-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment"></textarea>
             </div>    
         </div>
         <div class="upload">
@@ -38,11 +38,9 @@ export default {
 
             //要发送的 数据
             sendData:{
-                wish_content:"",//心愿内容
-                wish_where:"",//校区
-                wish_type:"",//心愿类型
-                anonymous:false,//是否匿名
-                contact:"",//地址
+                title:"",
+                comment:"",
+                bgPic:""
             }
         }
     },
