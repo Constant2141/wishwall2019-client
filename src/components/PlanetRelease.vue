@@ -16,7 +16,13 @@
             </div>    
         </div>
         <div class="upload">
-            <van-uploader :after-read="afterRead" />
+            <van-uploader 
+            v-model="sendData.bgPic"
+            :after-read="afterRead" 
+            multiple
+            preview-size="50px"
+            :max-count="1"
+            accept="image/*"/>
             <div class="upload-prompt">添加话题封面</div>
         </div>
   </div>
@@ -35,12 +41,11 @@ export default {
             //编辑栏变量
             wishPHold:"话题内容",//编写话题内容处的placeholder
 
-
             //要发送的 数据
             sendData:{
                 title:"",
                 comment:"",
-                bgPic:""
+                bgPic:[]
             }
         }
     },
@@ -51,9 +56,26 @@ export default {
          afterRead(file) {
             // 此时可以自行将文件上传至服务器
             console.log(file);
+            console.log(this.sendData.bgPic);
         },
         release(){
-            
+            if(this.sendData.title == ""){
+                this.$dialog.alert({
+                    message:"话题不可为空"
+                })
+            }
+            else if(this.sendData.comment == ""){
+                this.$dialog.alert({
+                    message:"话题内容不可为空"
+                })
+            }
+            else{
+                this.$axios.post("/star/create",this.sendData).then(res=>{
+                    console.log(res);
+                }).catch(err=>{
+                    console.log(err);
+                })
+            }
         }
     }
 }
@@ -145,7 +167,7 @@ export default {
     .upload-prompt{
         display: inline-block;
         width:50vw;
-        line-height: 40px;
+        line-height: 50px;
         font-size: 14px;
         vertical-align: top;
         color: #B8B8B8;
