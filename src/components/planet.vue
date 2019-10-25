@@ -17,39 +17,25 @@
             </div>
         </div>
         <div class="content">
-            <div class="col">
-                <div class="item2" @click="toTopic">
-                    <div class="TopicText">{{testTopic.topicName}}</div>
+            <div class="col" ref="col1">
+                <div class="item2" @click="toTopic" v-for="(item,index) in topicLeft" :key="index">
+                    <div class="TopicText">{{item.title}}</div>
                     <div class="heat">
                         <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{testTopic.hot}}</span>
+                        <span>{{item.hot}}</span>
                     </div>
                 </div>
-                <div class="item1">
-                    <div class="TopicText">{{testTopic.topicName}}</div>
-                    <div class="heat">
-                        <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{testTopic.hot}}</span>
-                    </div>
-                </div>
-                <div class="item1">
-                    <div class="TopicText">{{testTopic.topicName}}</div>
-                    <div class="heat">
-                        <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{testTopic.hot}}</span>
-                    </div>
-                </div>
+               
             </div>
-            <div class="col">
-                <div class="item1"  @click="toTopic">
-                    <div class="TopicText">{{testTopic.topicName}}</div>
+            <div class="col" ref="col2">
+                <div class="item2"  @click="toTopic" v-for="(item,index) in topicRight" :key="index">
+                    <div class="TopicText">{{item.title}}</div>
                     <div class="heat">
                         <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{testTopic.hot}}</span>
+                        <span>{{item.hot}}</span>
                     </div>
                 </div>
-                <div class="item2"></div>
-                <div class="item2"></div>
+
             </div>
         </div>
       </div>
@@ -89,17 +75,15 @@ export default {
                 "艹骏为何如此之骚"
             ],
 
-
+            
             testTopic:{//仅测试用
                     topicName:"今天吃什么呀，不如酸菜魚",
                     hot:233
             },
-            Topic:[
-                {
-                    topicName:"今天吃什么",
-                    hot:233
-                }
-            ]
+            topic:[],
+            topicLeft:[
+            ],
+            topicRight:[]
         }
     },
     methods:{
@@ -122,8 +106,30 @@ export default {
                  
             // },500)
             this.showSearch = val;
-            console.log(1)
+            console.log(1);
+        },
+        insertTopic(allTopic){
+            if(allTopic){
+                allTopic.map((item,index)=>{
+                    if(index % 2 == 0){
+                        this.topicLeft.push(item);
+                    }
+                    else{
+                        this.topicRight.push(item);
+                    }
+                })
+
+            }
         }
+    },
+    mounted(){
+        this.$axios.get("/star/list").then(res=>{
+            this.topic = res.data.result;
+            console.log(this.topic);
+            this.insertTopic(res.data.result);
+        }).catch(err=>{
+            console.log(err)
+        })
     }
 }
 </script>
@@ -243,6 +249,7 @@ export default {
         margin:1.5%;
         border-radius:5px;
         display: inline-block;
+        padding-bottom:80px;
         min-height:100px;
         /* background: red; */
     }
