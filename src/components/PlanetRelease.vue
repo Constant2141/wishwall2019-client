@@ -70,7 +70,14 @@ export default {
                 })
             }
             else{
-                this.$axios.post("/star/create",this.sendData).then(res=>{
+                let data = new FormData();
+                data.append("title",this.sendData.title);
+                data.append("comment",this.sendData.comment);
+                if(this.sendData.bgPic){
+                    console.log(this.sendData.bgPic[0].file)
+                    data.append("bgPic",this.sendData.bgPic[0].file)
+                };
+                this.$axios.post("/star/create",data).then(res=>{
                     console.log(res);
                 }).catch(err=>{
                     console.log(err);
