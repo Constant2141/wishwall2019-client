@@ -25,8 +25,7 @@
         <van-pull-refresh
           v-model="isDownLoading"
           @refresh="onRefresh">
-            <div
-              @touchstart="touchStart($event)" @touchend="touchEnd($event)">
+            <div>
                 <div class="wish"
                   v-for="(wish,index) in wishes" 
                   :key="index">
@@ -69,6 +68,7 @@
             <h2 class="loading-more">
               <p v-show='loadState==0'>下拉加载更多</p>
               <p v-show='loadState==1'>正在加载</p>
+              <p v-show='loadState==2'>我是有底线的</p>
             </h2>
         </van-pull-refresh>
       </div>
@@ -100,10 +100,7 @@ export default {
       isDownLoading:false, //是否处于刷新状态
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2为加载完毕,没有更多数据了
       startY: 0, //按下的位置
-      ifLoading: false, //是否要加载
       finished: false, //全部数据是否加载完
-      scrollTop: 0,
-      scrollHeight: 0 
     }
   },
   methods:{
@@ -112,7 +109,7 @@ export default {
       setTimeout(()=>{
         this.getData()
         this.isDownLoading = false; 
-      },600)
+      },500)
     },
     //判断滚动条是否在底部
     checkBottom(){
@@ -132,57 +129,65 @@ export default {
         return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
       })()
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight;
-      this.scrollTop = scrollTop;
-      this.scrollHeight = scrollHeight;
     },
     //记录按下位置
-    touchStart($event){
-      this.startY = event.targetTouches[0].pageY;
-    },
+    // touchStart($event){
+    //   this.startY = event.targetTouches[0].pageY;
+    // },
     
-    touchEnd($event){
-      this.checkBottom();
-      let endX = event.changedTouches[0].pageX,
-          endY = event.changedTouches[0].pageY,
-          dy = this.startY - endY;
-      //判断是否向上滑动
-      if(dy <= 0){
-        console.log('向上滑着呢')
-        return false;
-      }
-      if(this.startY + dy >= this.scrollHeight){
-        if(this.isBottom && !this.ifLoading){
-          console.log('我想加载')
-          this.loadState = 1;
-          if(this.wishes.length == this.wishTotal){
-            return false;
-          }
-          this.page++;
-          let tempList = this.wishes;
-          this.getData();
-          this.wishes = [...tempList,...this.wishes];
-        }
-      }
-    },
-    // onLoadList(){
-    //   //滚动条是否到达底部
+    // touchEnd($event){
     //   this.checkBottom();
-    //   if(this.isBottom){
-    //     console.log('a')
-    //    this.loadState = 1;
-    //    setTimeout(()=>{
-    //      let tempList = this.wishes;
-    //      this.page++;
-    //      this.getData();
-    //      this.wishes = [...tempList,...this.wishes];
-    //      //改变滚动条位置，一直位于底部的话会反复触发加载函数
-    //       window.removeEventListener("scroll", this.onLoadList)
-    //    },1500)
-        
+    //   let endX = event.changedTouches[0].pageX,
+    //       endY = event.changedTouches[0].pageY,
+    //       dy = this.startY - endY;
+    //   //判断是否向上滑动
+    //   if(dy <= 0){
+    //     console.log('向上滑着呢')
+    //     return false;
+    //   }
+    //   if(this.startY + dy >= this.scrollHeight){
+    //     if(this.isBottom){
+    //       console.log('我想加载')
+    //       this.loadState = 1;
+    //       if(this.wishes.length == this.wishTotal){
+    //         this.state = 2;
+    //         return false;
+    //       }
+    //       this.page++;
+    //       let tempList = this.wishes;
+    //       this.getData();
+    //       this.wishes = [...tempList,...this.wishes];
+    //     }
     //   }
     // },
+    onLoadList(){
+      //滚动条是否到达底部
+      this.checkBottom();
+      if(this.isBottom){
+        console.log('aaa')
+        this.loadState = 1;
+        setTimeout(()=>{
+          let tempList = this.wishes;
+          this.page++;
+          new Promise((res,rej)=>{
+            this.getData();
+            res();
+          }).then(res=>{
+            console.log(this.wishes)
+            this.wishes = [...tempList,...this.wishes];
+            console.log(this.wishes)
+            //改变滚动条位置，一直位于底部的话会反复触发加载函数
+            window.scrollTo(0,0);
+          }
+          )
+       },1500) 
+      }else{
+        this.loadState = 0;
+      }
+    },
     getData(){
       let campus = this.curCampus;
+      console.log(`当前页数为${this.page}`)
       this.$axios.get('/wish/list',{
         params:{
           curPage:this.page,
@@ -191,8 +196,8 @@ export default {
       })
       .then(res=>{
         if(res.status == 200){
-          // console.log(res.data.result.wishList)
           let temp = res.data.result.wishList.rows;
+          console.log(1)
           this.handleAnonymous(temp);
           this.handleTime(temp);
           this.wishes = temp;
@@ -244,17 +249,14 @@ export default {
   },
   mounted(){
     this.getData();
-  }
-}
-  
-  //这个方法不太行，换个试试
-  //   window.addEventListener("scroll", this.onLoadList)
-  // },
-  // //离开该页面时移除，否则会一直监听
-  // beforeDestroy(){
-  //   window.removeEventListener("scroll", this.onLoadList)
-  // }
+    window.addEventListener("scroll", this.onLoadList)
+  },
 
+  //离开该页面时移除，否则会一直监听
+  beforeDestroy(){
+    window.removeEventListener("scroll", this.onLoadList)
+  },
+}
 </script>
 
 <style scoped>
