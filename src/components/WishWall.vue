@@ -68,6 +68,7 @@
             <h2 class="loading-more">
               <p v-show='loadState==0'>下拉加载更多</p>
               <p v-show='loadState==1'>正在加载</p>
+              <p v-show='loadState==2'>我是有底线的</p>
             </h2>
         </van-pull-refresh>
       </div>
@@ -99,9 +100,7 @@ export default {
       isDownLoading:false, //是否处于刷新状态
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2为加载完毕,没有更多数据了
       startY: 0, //按下的位置
-      ifLoading: false, //是否要加载
       finished: false, //全部数据是否加载完
-      scrollTop:0
     }
   },
   methods:{
@@ -110,7 +109,7 @@ export default {
       setTimeout(()=>{
         this.getData()
         this.isDownLoading = false; 
-      },600)
+      },500)
     },
     //判断滚动条是否在底部
     checkBottom(){
