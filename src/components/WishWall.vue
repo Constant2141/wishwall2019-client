@@ -25,8 +25,7 @@
         <van-pull-refresh
           v-model="isDownLoading"
           @refresh="onRefresh">
-            <div
-              @touchstart="touchStart($event)" @touchend="touchEnd($event)">
+            <div>
                 <div class="wish"
                   v-for="(wish,index) in wishes" 
                   :key="index">
@@ -102,8 +101,7 @@ export default {
       startY: 0, //按下的位置
       ifLoading: false, //是否要加载
       finished: false, //全部数据是否加载完
-      scrollTop: 0,
-      scrollHeight: 0 
+      scrollTop:0
     }
   },
   methods:{
@@ -133,73 +131,44 @@ export default {
       })()
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight;
       this.scrollTop = scrollTop;
-      this.scrollHeight = scrollHeight;
-    },
-    //记录按下位置
-    touchStart($event){
-      this.startY = event.targetTouches[0].pageY;
     },
     
-    touchEnd($event){
+    onLoadList(){
+      //滚动条是否到达底部
       this.checkBottom();
-      let endX = event.changedTouches[0].pageX,
-          endY = event.changedTouches[0].pageY,
-          dy = this.startY - endY;
-      //判断是否向上滑动
-      if(dy <= 0){
-        console.log('向上滑着呢')
-        return false;
-      }
-      if(this.startY + dy >= this.scrollHeight){
-        if(this.isBottom && !this.ifLoading){
-          console.log('我想加载')
-          this.loadState = 1;
-          if(this.wishes.length == this.wishTotal){
-            return false;
-          }
-          this.page++;
-          let tempList = this.wishes;
-          this.getData();
-          this.wishes = [...tempList,...this.wishes];
-        }
+      if(this.isBottom){
+       this.loadState = 1;
+       setTimeout(async ()=>{
+         let tempList = this.wishes;
+         this.page++;
+         let temp = await this.getData();
+         
+          this.wishes =  [...tempList,...temp];
+        
+       },1500)
       }
     },
-    // onLoadList(){
-    //   //滚动条是否到达底部
-    //   this.checkBottom();
-    //   if(this.isBottom){
-    //     console.log('a')
-    //    this.loadState = 1;
-    //    setTimeout(()=>{
-    //      let tempList = this.wishes;
-    //      this.page++;
-    //      this.getData();
-    //      this.wishes = [...tempList,...this.wishes];
-    //      //改变滚动条位置，一直位于底部的话会反复触发加载函数
-    //       window.removeEventListener("scroll", this.onLoadList)
-    //    },1500)
-        
-    //   }
-    // },
-    getData(){
+    async getData(){
       let campus = this.curCampus;
-      this.$axios.get('/wish/list',{
+      //在需要返回的值前加await
+      let result  = await this.$axios.get('/wish/list',{
         params:{
           curPage:this.page,
           wish_where:campus=='全部'?'':`${campus}校区`
         }
       })
-      .then(res=>{
+      .then(async res=>{
         if(res.status == 200){
-          // console.log(res.data.result.wishList)
-          let temp = res.data.result.wishList.rows;
+          let temp = await res.data.result.wishList.rows;
           this.handleAnonymous(temp);
           this.handleTime(temp);
-          this.wishes = temp;
+          // this.wishes = temp;
           this.wishTotal = res.data.result.wishList.count;
+          return temp;
         }
       })
       .catch(err =>console.log(err))
+      return result;
     },
     takeWish(index){
       this.wishes[index].gainOrNot = true;
@@ -242,19 +211,20 @@ export default {
       console.log('tips')
     }
   },
-  mounted(){
-    this.getData();
+  watch:{
+    wishes(val){
+      console.log(val);  
+    }
+  },
+  async mounted(){
+    this.wishes = await this.getData();
+    window.addEventListener("scroll", this.onLoadList)
+  },
+  //离开该页面时移除，否则会一直监听
+  beforeDestroy(){
+    window.removeEventListener("scroll", this.onLoadList)
   }
 }
-  
-  //这个方法不太行，换个试试
-  //   window.addEventListener("scroll", this.onLoadList)
-  // },
-  // //离开该页面时移除，否则会一直监听
-  // beforeDestroy(){
-  //   window.removeEventListener("scroll", this.onLoadList)
-  // }
-
 </script>
 
 <style scoped>
