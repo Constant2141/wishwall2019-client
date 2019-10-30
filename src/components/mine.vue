@@ -5,12 +5,13 @@
         class="Profile-Photo"
         :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl})`}"
       ></div>
-      <div class="myName">{{name}}&nbsp;&nbsp;&nbsp;{{sex}}</div>
+      <div class="myName">{{name}}</div>
+      <div :class="{'icons':!isGirl,'girlIcon':isGirl}"></div>
     </div>
     <div class="myWish">
       <div class="wishNum" @click="toMyPost">
         <div class="img1"></div>
-        <p class="text">我发布的心愿</p>
+        <p class="text">我的心愿</p>
         <p class="nums">{{num1}}条</p>
       </div>
       <div class="wishNum" @click="toMyTreeHole">
@@ -35,8 +36,9 @@ export default {
       sex: "",
       num1: 0,
       num2: 0,
-      num3: 2,
-      photoUrl: ""
+      num3: 0,
+      photoUrl: "",
+      isGirl:false
     };
   },
   methods: {
@@ -56,19 +58,21 @@ export default {
   mounted() {
     console.log("mine mounted");
     let userInfos = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(userInfos);
     this.name = userInfos.nickname;
     this.photoUrl = userInfos.headimgurl;
     if (userInfos.sex == 1) {
-      this.sex = "男";
+      this.isGirl = false;
     } else if (userInfos.sex == 2) {
-      this.sex = "女";
+      this.isGirl = true;
     }
     this.$axios.get("/treehole/countMyTreeHoles").then(res => {
       this.num2 = res.data.result;
     });
     this.$axios.get("/wish/iCreated").then(res => {
       this.num1 = res.data.result.length;
+    });
+    this.$axios.get("/star/myCreated").then(res => {
+      this.num3 = res.data.result.length;
     });
   }
 };
@@ -112,6 +116,22 @@ export default {
   line-height: 22px;
   letter-spacing: 0px;
   color: #ffffff;
+}
+.icons {
+	width: 24px;
+	height: 24px;
+  background: url("../assets/boy.png");
+  background-size: 100% 100%;
+  margin-top: 102.5px;
+  margin-left: 7px;
+}
+.girlIcon {
+	width: 24px;
+	height: 24px;
+  background: url("../assets/girl.png");
+  background-size: 100% 100%;
+  margin-top: 102.5px;
+  margin-left: 7px;
 }
 .school {
   height: 25px;

@@ -1,7 +1,7 @@
 <template>
   <div id="my-topic">
     <div class="top-bar">
-      <div class="left-arrow"></div>
+      <div class="left-arrow" @click="backTo"></div>
       <div class="top-select" :class="{active:isActive1}">
         <p>与我有关</p>
       </div>
@@ -38,7 +38,7 @@
             <div class="whichComment">
               <div class="name-sex">
                 <p>@{{toName[index]}}</p>
-                <div class="icons" :class="{girlIcon:isGirl}" :style="{marginTop:`9px`}"></div>
+                <div class="icons" :class="{girlIcon:isGirl2}" :style="{marginTop:`9px`}"></div>
               </div>
               <p class="toContent">{{toCom[index]}}</p>
             </div>
@@ -56,6 +56,7 @@ export default {
       isActive2: false,
       isActive3: false,
       isGirl: false,
+      isGirl2: false,
       topics: [],
       opinions: [],
       titles: [],
@@ -65,7 +66,8 @@ export default {
       photoUrl: [],
       sex: [],
       toCom: [],
-      toName: []
+      toName: [],
+      toSex:[],
     };
   },
   methods: {
@@ -74,6 +76,9 @@ export default {
     },
     myComment() {
       this.$router.replace(`/mycomment`);
+    },
+    backTo() {
+      this.$router.replace("/mine");
     },
     getData() {
       let url = `/star/myRelated`;
@@ -98,6 +103,12 @@ export default {
               this.isGirl = false;
             } else {
               this.isGirl = true;
+            }
+            this.toSex[index] = value.fc.sex;
+            if (this.toSex[index] == "1") {
+              this.isGirl2 = false;
+            } else {
+              this.isGirl2 = true;
             }
             this.toName[index] = value.fc.nickname;
             this.toCom[index] = value.fc.comment;
@@ -207,6 +218,20 @@ export default {
   background: url("../assets/Avatar/BoyAvatar.png");
   background-size: 100% 100%;
   margin-left: 24px;
+}
+.icons {
+  height: 14px;
+  width: 14px;
+  background: url("../assets/boy.png");
+  background-size: 100% 100%;
+  margin-top: 3.5px;
+  margin-right: 13px;
+}
+.girlIcon {
+  height: 14px;
+  width: 14px;
+  background: url("../assets/girl.png");
+  background-size: 100% 100%;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;

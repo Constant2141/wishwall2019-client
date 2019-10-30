@@ -1,7 +1,7 @@
 <template>
   <div id="my-topic">
     <div class="top-bar">
-      <div class="left-arrow"></div>
+      <div class="left-arrow" @click="backTo"></div>
       <div class="top-select" :class="{active:isActive1}" @click="ofMine">
         <p>与我有关</p>
       </div>
@@ -41,7 +41,7 @@
             <div class="whichComment">
               <div class="name-sex">
                 <p>@{{toName[index]}}</p>
-                <div class="icons" :class="{girlIcon:isGirl}" :style="{marginTop:`9px`}"></div>
+                <div class="icons" :class="{girlIcon:isGirl2}" :style="{marginTop:`9px`}"></div>
               </div>
               <p class="toContent">{{toCom[index]}}</p>
             </div>
@@ -59,6 +59,7 @@ export default {
       isActive2: false,
       isActive3: true,
       isGirl: false,
+      isGirl2:false,
       toName: [],
       topics: [],
       titles: [],
@@ -68,7 +69,8 @@ export default {
       likes: [],
       photoUrl: [],
       sex: [],
-      toCom: []
+      toCom: [],
+      toSex:[],
     };
   },
   methods: {
@@ -78,6 +80,9 @@ export default {
     myPost() {
       this.$router.replace(`/mytopic`);
     },
+    backTo() {
+      this.$router.replace("/mine");
+    },
     getData() {
       let url = `/star/myComment`;
       this.$axios
@@ -85,7 +90,7 @@ export default {
         .then(res => {
           console.log(res);
           this.titles = res.data.result;
-          this.title.forEach((value, index) => {
+          this.titles.forEach((value, index) => {
             this.times[index] = value.createdAt;
             this.photoUrl[index] = value.headimgurl;
             this.names[index] = value.nickname;
@@ -96,6 +101,12 @@ export default {
               this.isGirl = false;
             } else {
               this.isGirl = true;
+            }
+            this.toSex[index] = value.fc.sex;
+            if (this.toSex[index] == "1") {
+              this.isGirl2 = false;
+            } else {
+              this.isGirl2 = true;
             }
             this.toName[index] = value.fc.nickname;
             this.toCom[index] = value.fc.comment;
@@ -237,19 +248,17 @@ export default {
 }
 .icons {
   height: 14px;
-  width: 10px;
-  background: url("../assets/Avatar/BoyAvatar.png");
-  background-size: cover;
+  width: 14px;
+  background: url("../assets/boy.png");
+  background-size: 100% 100%;
   margin-top: 3.5px;
   margin-right: 13px;
 }
-.gileIcon {
+.girlIcon {
   height: 14px;
-  width: 10px;
-  background: url("../assets/Avatar/GirlAvatar.png");
-  background-size: cover;
-  margin-top: 3.5px;
-  margin-right: 13px;
+  width: 14px;
+  background: url("../assets/girl.png");
+  background-size: 100% 100%;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;

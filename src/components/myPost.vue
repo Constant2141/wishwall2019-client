@@ -14,7 +14,7 @@
         <div class="single-wish">
           <div class="top-wish">
             <p class="method">{{methods[index]}}</p>
-            <div class="delete" @click="deleteWish(index)"></div>
+            <div class="delete" @click="alertDelete(index)"></div>
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>
@@ -53,6 +53,15 @@
         </div>
       </div>
     </div>
+    <div class="delete-overplay" v-show="isDelete"></div>
+    <div class="delete-alert" v-show="isDelete">
+      <div class="delete-icon"></div>
+      <div class="delete-word">是否确定删除这条评论?</div>
+      <div class="delete-sure" @click="toDeleteWish">
+        <p>确定</p>
+      </div>
+    </div>
+    <div class="delete-cancle" v-show="isDelete" @click="doNothing"></div>
   </div>
 </template>
 
@@ -61,6 +70,7 @@ export default {
   data() {
     return {
       isActive: true,
+      isDelete:false,
       wishes: [],
       methods: [],
       theWish: [],
@@ -82,35 +92,37 @@ export default {
       pickName: [],
       pickTime: [],
       hasGet:[],
+      deleteWish:""
     };
   },
   methods: {
     PostToGet() {
       this.$router.replace({ path: `/myget` });
     },
-    deleteWish(index) {
-      let judge = (index) => {
-        console.log(this.wid[index])
+    alertDelete(index) {
+      this.isDelete = true;
+      this.deleteWish = this.wid[index]
+    },
+    toDeleteWish(){
+      this.isDelete = false;
+      console.log(this.deleteWish)
+      let judge = () => {
         return new Promise((resolve, reject) => {
-          this.$axios.get(`/wish/remove?uuid=${this.wid[index]}`).then(res => {
+          this.$axios.get(`/wish/remove?uuid=${this.deleteWish}`).then(res => {
             resolve()
           });
         });
       };
       let that = this;
-      async function start(index) {
-        await judge(index);
+      async function start() {
+        await judge();
         that.getData()
       }
-      this.$dialog.confirm({
-        message:"确认删除吗?"
-      })
-      .then(() => {
-        start(index);
-      })
-      .catch(() => {
-
-      })
+      start();
+    },
+    doNothing(){
+      this.isDelete = false;
+      this.deleteWish = "";
     },
     showMore(index) {
       if (this.show[index] == false) {
@@ -437,5 +449,84 @@ export default {
   letter-spacing: 0px;
   color: #989898;
   margin-top: 22px;
+}
+.delete-overplay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.7);
+  z-index: 2001;
+}
+.delete-alert{
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  width: 200px;
+	height: 200px;
+	background-color: #ffffff;
+	box-shadow: 0px 3px 6px 0px 
+		rgba(0, 0, 0, 0.16);
+	border-radius: 15px;
+  z-index: 2002;
+}
+.delete-icon{
+	width: 40px;
+	height: 40px;
+  background: url("../assets/Remove.png");
+  background-size: 100% 100%;
+  margin: 0 auto;
+  margin-top: 37px;
+}
+.delete-word{
+	width: 150px;
+	height: 14px;
+	font-family: Segoe UI;
+	font-size: 10px;
+  text-align: center;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 14px;
+	letter-spacing: 0px;
+	color: #707070;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.delete-sure{
+	width: 144px;
+	height: 22px;
+	background-color: #ffcbcb;
+	box-shadow: 0px 3px 6px 0px 
+		rgba(0, 0, 0, 0.16);
+	border-radius: 100px;
+  margin: 0 auto;
+  margin-top: 25px;
+  padding-top: 0.1px;
+}
+.delete-sure p{
+	width: 30px;
+	font-family: Segoe UI;
+	font-size: 12px;
+  text-align: center;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 16px;
+	letter-spacing: 0px;
+	color: #ffffff;
+  margin: 0 auto;
+  margin-top: 3px;
+}
+.delete-cancle{
+  position: fixed;
+  top: 65%;
+  left: 48.5%;
+	width: 24px;
+	height: 24px;
+  border-radius: 50%;
+	background-color: #ffffff;
+	box-shadow: 0px 3px 6px 0px 
+		rgba(0, 0, 0, 0.16);
+  z-index: 2002
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="my-topic">
     <div class="top-bar">
-      <div class="left-arrow"></div>
+      <div class="left-arrow" @click="backTo"></div>
       <div class="top-select" :class="{active:isActive1}" @click="ofMine">
         <p>与我有关</p>
       </div>
@@ -71,6 +71,9 @@ export default {
     },
     myComment() {
       this.$router.replace(`/mycomment`);
+    },
+    backTo() {
+      this.$router.replace("/mine");
     },
     getData() {
       let url = `/star/myCreated`;
@@ -205,17 +208,17 @@ export default {
 }
 .icons {
   height: 14px;
-  width: 10px;
-  background: url("../assets/Avatar/BoyAvatar.png");
-  background-size: cover;
+  width: 14px;
+  background: url("../assets/boy.png");
+  background-size: 100% 100%;
   margin-top: 3.5px;
   margin-right: 13px;
 }
-.gileIcon {
+.girlIcon {
   height: 14px;
-  width: 10px;
-  background: url("../assets/Avatar/GirlAvatar.png");
-  background-size: cover;
+  width: 14px;
+  background: url("../assets/girl.png");
+  background-size: 100% 100%;
 }
 .name-time p:nth-child(2) {
   font-family: Segoe UI;
