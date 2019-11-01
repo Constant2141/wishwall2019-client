@@ -65,12 +65,44 @@
                   <div class="separate" v-show="!wishes[index].gainOrNot"></div>  
                 </div>
             </div>
-            <h2 class="loading-more">
+            <div class="loading-more">
               <p v-show='loadState==0'>下拉加载更多</p>
-              <p v-show='loadState==1'>正在加载</p>
+              <p v-show='loadState==1'>正在加载...</p>
               <p v-show='loadState==2'>我是有底线的</p>
-            </h2>
+              <p v-show='loadState==3'>加载失败，请点击重试</p>
+            </div>
         </van-pull-refresh>
+      </div>
+      <div class="cover" v-show="readTips" @touchmove.prevent>
+        <div class="tips">
+          <h2>玩法介绍</h2>
+          <h4>
+            <img src="@/assets/nav/2.png" alt="">  
+            许愿墙
+          </h4>
+          <p>一个女生许愿，男生实现的线上平台。</p>
+          <p>※女生可以自定义许愿的内容，选择是否留下联系方式，联系方式仅会展示给领取愿望的人，不会出现在首页。</p>
+          <p>※愿望可以被多人领取，一旦被领取，将在四个小时后从首页消失，所以请谨慎领取，不要辜负每一个心愿~</p>
+          <p>※女生可以在“我的心愿”界面查看心愿的领取详情，心愿被完成之后请及时点击“确认完成”，提醒其他领取你心愿的小伙伴哟</p>
+          <p>同理，男生可以在“我的心愿”界面查看你领取心愿的完成情况噢~</p>
+          <p>※11月25日男女反转，男生许愿，女生实现，男孩子们也应该拥有节日~</p>
+          <h4>
+            <img src="@/assets/nav/4.png" alt="">
+            树洞
+          </h4>
+          <p>一个以匿名身份互相吐露心声的真心话空间。</p>
+          <p>※每一条树洞都是随机出现的，你将不能在“我的”界面中看到你评论/点赞过的树洞，请感恩每一次相遇~</p>
+          <h4>
+            <img src="@/assets/nav/6.png" alt="">  
+            星球
+          </h4>
+          <p>一个校内学生畅谈混脸熟的日常社区。</p>
+          <p>※带上你想讨论的话题，在星球社区和身边的同学互相交流。</p>
+          <p>※浏览周围人对日常生活的吐槽，用点赞评论表达你的态度。</p>
+        </div>
+        <div @click="closeTip()">
+          <img src="@/assets/closetips.png" alt=""> 
+        </div>
       </div>
   </div>
 </template>
@@ -96,11 +128,12 @@ export default {
       page:1,
       wishTotal:'', //心愿的总条数
       curCampus:'全部', //当前所在学校，默认为全部
+      isDownLoading:false,
       isBottom:'', //是否是页面最底端
-      isDownLoading:false, //是否处于刷新状态
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2为加载完毕,没有更多数据了
       startY: 0, //按下的位置
       finished: false, //全部数据是否加载完
+      readTips:false,
     }
   },
   methods:{
@@ -135,39 +168,46 @@ export default {
     onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
-      if(this.isBottom){
+      if(this.isBottom && !this.finished){
        this.loadState = 1;
        setTimeout(async ()=>{
          let tempList = this.wishes;
          this.page++;
          let temp = await this.getData();
-         
-          this.wishes =  [...tempList,...temp];
-        
+         this.wishes =  [...tempList,...temp];
        },1500)
+      }
+      if(this.wishes.length == this.wishTotal){
+        this.finished = true;
+        this.loadState = 2;
       }
     },
     async getData(){
-      let campus = this.curCampus;
-      //在需要返回的值前加await
-      let result  = await this.$axios.get('/wish/list',{
-        params:{
-          curPage:this.page,
-          wish_where:campus=='全部'?'':`${campus}校区`
-        }
-      })
-      .then(async res=>{
-        if(res.status == 200){
-          let temp = await res.data.result.wishList.rows;
-          this.handleAnonymous(temp);
-          this.handleTime(temp);
-          // this.wishes = temp;
-          this.wishTotal = res.data.result.wishList.count;
-          return temp;
-        }
-      })
-      .catch(err =>console.log(err))
-      return result;
+      try{
+        let campus = this.curCampus;
+        //在需要返回的值前加await
+        let result  = await this.$axios.get('/wish/list',{
+          params:{
+            curPage:this.page,
+            wish_where:campus=='全部'?'':`${campus}校区`
+          }
+        })
+        .then(async res=>{
+          if(res.status == 200){
+            let temp = await res.data.result.wishList.rows;
+            this.handleAnonymous(temp);
+            this.handleTime(temp);
+            // this.wishes = temp;
+            this.wishTotal = res.data.result.wishList.count;
+            return temp;
+          }
+        })
+        .catch(err =>console.log(err))
+        return result;
+      }
+      finally{
+        this.loadState = 3;
+      }
     },
     takeWish(index){
       this.wishes[index].gainOrNot = true;
@@ -207,7 +247,11 @@ export default {
     return arr;
     },
     checkTips(){
-      console.log('tips')
+      console.log('tips');
+      this.readTips = true;
+    },
+    closeTip(){
+      this.readTips = false;
     }
   },
   watch:{
@@ -256,8 +300,12 @@ li{
   height: 28px;
   border-radius: 15px;
   line-height: 28px;
-  margin-right: 10px;
-  
+  margin-right: 10px;  
+}
+.tip-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .toggle-bg{
   font-size: 20px;
@@ -288,11 +336,6 @@ li{
   top:220px;
   height:100vh;
 }
-/* .wish{
-  position: relative;
-  top:230px;
-} */
-
 .take-button{
   width: 52px;
   font-size: 10px;
@@ -388,8 +431,51 @@ b{
   margin-top:16px;
 }
 .loading-more{
-  height: 180px;
-  background-color:#aaaaaa;
+  height: 160px;
+  color: #989898;
+  font-size: 14px;
+  background-color:#fff;
   text-align: center;
+}
+.cover{
+  background-color:rgba(0, 0,0,0.7);
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index:30;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h2{
+  text-align: center;
+  font-size:20px;
+}
+.tips{
+  position: relative;
+  /* top:7vh; */
+  border-radius: 20px;
+  height: 120vw;
+  width: 70vw;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 3vw 5vw 3vw 5vw;
+  bottom: 10vw;
+  overflow-y: scroll;
+}
+.tips img{
+  width: 20px !important;
+}
+.tips p{
+  font-size: 12px;
+}
+.tips h4{
+  margin-top: 4vw;
+}
+.cover img{
+  width: 35px;
 }
 </style>
