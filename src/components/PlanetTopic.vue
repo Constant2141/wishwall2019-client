@@ -9,24 +9,24 @@
           <div class="comment" v-for="(item,index) in comment" :key="index" @click="toComment">
               <div class="content-area">
                   <div class="avator">
-                      <img :src="item.image" alt="" width="43" height="43" >
+                      <img :src="item.headimgurl" alt="" width="43" height="43" >
                   </div>
                   
                   <div class="content-right">
-                      <div class="username">{{item.userName}}</div>
+                      <div class="username">{{item.nickname}}</div>
                       <div class="date">{{item.date}}</div>
                       <div class="time">{{item.time}}</div>
-                      <div class="content">{{item.content}}</div>
+                      <div class="content">{{item.comment}}</div>
                   </div>
               </div>
               <div class="function-area">
                   <div class="likeCount">
                         <img src="../assets/like.png" alt="">
-                        <div>{{item.goodCount}}</div>
+                        <div>{{item.likes}}</div>
                   </div>
                   <div class="commentCount">
                         <img src="../assets/comment2.png" alt="">
-                        <div>{{item.commentCount}}</div>
+                        <div>{{item.many}}</div>
                   </div>
               </div>
           </div>
@@ -49,52 +49,8 @@ export default {
                 content:"想要一只dior99",
                 goodCount:115,
                 commentCount:115
-            },
-            {
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一只dior99",
-                goodCount:115,
-                commentCount:115
-            },
-            {
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据",
-                goodCount:115,
-                commentCount:115
-            },
-            {
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一只dior99",
-                goodCount:115,
-                commentCount:115
-            },
-            {
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一只dior99",
-                goodCount:115,
-                commentCount:115
-            },
-            {
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据想要一个很长的测试数据",
-                goodCount:115,
-                commentCount:115
-            },
+            }
+ 
             ]
 
         }
@@ -108,6 +64,38 @@ export default {
         },
         toComment(){
             this.$router.push("/planetComment")
+        },
+        handleTopicData(arr){
+            return arr.map(item=>{
+                return item = {
+                    ...item,
+                    date:item.createdAt.slice(item.createdAt.indexOf("-")+1,item.createdAt.indexOf(" ")).replace("-","/"),
+                    time:item.createdAt.slice(item.createdAt.indexOf(" ")+1)
+                }
+            })
+        }
+        
+    },
+     mounted(){
+         console.log(this.$route)
+            this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
+                console.log(res)
+                this.comment = this.handleTopicData(res.data.result);
+                console.log(this.comment)
+            }).catch(err=>{
+                console.log(err)
+            })
+    },
+    watch:{
+        $route(to,from){
+            console.log(to.params)
+            this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
+                console.log(res)
+                this.comment = this.handleTopicData(res.data.result);
+                console.log(this.comment)
+            }).catch(err=>{
+                console.log(err)
+            })
         }
     }
 }
