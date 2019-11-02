@@ -18,7 +18,14 @@
         </div>
         <div class="content">
             <div class="col" ref="col1">
-                <div class="item2" @click="toTopic" v-for="(item,index) in topicLeft" :key="index">
+                <div 
+                @click="toTopic" 
+                :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
+                v-for="(item,index) in topicLeft" 
+                :key="index" 
+                ref="colLeft">
+                    <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
+                    <!-- <img :src="item.bgPic" alt=""> -->
                     <div class="TopicText">{{item.title}}</div>
                     <div class="heat">
                         <img src="../assets/hot.png" alt="" width="20" height="20">
@@ -28,7 +35,14 @@
                
             </div>
             <div class="col" ref="col2">
-                <div class="item2"  @click="toTopic" v-for="(item,index) in topicRight" :key="index">
+                <div 
+                @click="toTopic($event)" 
+                :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
+                v-for="(item,index) in topicRight" 
+                :key="index" 
+                ref="colRight">
+                    <!-- <div  class="pic" ></div> -->
+                    <!-- <img :src="item.bgPic" alt=""> -->
                     <div class="TopicText">{{item.title}}</div>
                     <div class="heat">
                         <img src="../assets/hot.png" alt="" width="20" height="20">
@@ -83,15 +97,31 @@ export default {
             topic:[],
             topicLeft:[
             ],
-            topicRight:[]
+            topicRight:[],
+            pic:""
         }
     },
     methods:{
         search(){//搜索功能
 
         },
-        toTopic(){
-            this.$router.push("/planetTopic")
+        toTopic(event){
+            let target = event.target.innerText.slice(0,event.target.innerText.indexOf(" ")-1);
+            console.log(target)
+            this.topic.map(item=>{
+                if(item.title == target){
+                    // console.log(item.uuid);
+                    localStorage.setItem("planetUid",item.uuid)
+                    this.$router.push({
+                        name:"planetTopic",
+                        params:{
+                            uuid:item.uuid
+                        },
+                    })
+                }
+                
+            })
+            
         },
         changePage(val){
             // if(val){
@@ -105,12 +135,17 @@ export default {
             // setTimeout(e=>{
                  
             // },500)
+            console.log(this.$refs.col1);
             this.showSearch = val;
             console.log(1);
         },
         insertTopic(allTopic){
             if(allTopic){
                 allTopic.map((item,index)=>{
+                    if(item.bgPic){
+                        item.bgPic = "http:/" + item.bgPic.substring(13);
+                        // console.log(item.bgPic)
+                    }
                     if(index % 2 == 0){
                         this.topicLeft.push(item);
                     }
@@ -118,14 +153,37 @@ export default {
                         this.topicRight.push(item);
                     }
                 })
-
             }
+            
+            this.topicLeft.map((item,index)=>{
+                this.$nextTick(()=>{
+                    if(index % 2 == 0){
+                        this.$refs.colLeft[index].classList.add("item2"); 
+                    }
+                    else{
+                        this.$refs.colLeft[index].classList.add("item1");
+                    }
+                })
+            })
+            this.topicRight.map((item,index)=>{
+                this.$nextTick(()=>{
+                    if(index % 2 == 0){
+                        this.$refs.colRight[index].classList.add("item1"); 
+                    }
+                    else{
+                        this.$refs.colRight[index].classList.add("item2");
+                    }
+                })
+            })
         }
     },
     mounted(){
+        console.log(this.$refs.col1);
+    },
+    created(){
         this.$axios.get("/star/list").then(res=>{
             this.topic = res.data.result;
-            console.log(this.topic);
+            console.log(res);
             this.insertTopic(res.data.result);
         }).catch(err=>{
             console.log(err)
@@ -242,6 +300,9 @@ export default {
         background:rgb(141, 219, 202);
         border-radius:5px;
         vertical-align: top;
+        overflow: hidden;
+        background-size:auto 100%;
+        background-position:center;
     }
     .col{
         vertical-align: top;
@@ -253,11 +314,13 @@ export default {
         min-height:100px;
         /* background: red; */
     }
+
     .item1{
         height: 280px;
     }
     .item2{
         height: 180px;
+        /* background:url("http://wishwall.1bin.top/public/upload//b2a6ec36-a1bb-456f-9f03-4b40ce1f81b2.png"); */
     }
     .item1,.item2{
         padding:14px;

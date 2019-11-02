@@ -48,7 +48,6 @@ Axios.defaults.baseURL = 'http://47.100.12.168:3000/';
 Vue.config.productionTip = false
 
 
-Vue.prototype.$imgPreUrl = "http://wishwall.1bin.top";
 
 
 /* eslint-disable no-new */
