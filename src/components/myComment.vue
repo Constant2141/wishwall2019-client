@@ -17,7 +17,7 @@
         <div class="single-topic">
           <div class="top-topic">
             <p>#{{topics[index]}}</p>
-            <div>···</div>
+            <div @click="deleteIt">···</div>
           </div>
           <div class="top-content">
             <div
@@ -49,6 +49,15 @@
         </div>
       </div>
     </div>
+    <div class="delete-overplay" v-show="isDelete"></div>
+    <div class="delete-alert" v-show="isDelete">
+      <div class="delete-icon"></div>
+      <div class="delete-word">是否确定删除这条评论?</div>
+      <div class="delete-sure" @click="toDeleteWish">
+        <p>确定</p>
+      </div>
+    </div>
+    <div class="delete-cancle" v-show="isDelete" @click="doNothing"></div>
   </div>
 </template>
 <script>
@@ -59,7 +68,8 @@ export default {
       isActive2: false,
       isActive3: true,
       isGirl: false,
-      isGirl2:false,
+      isGirl2: false,
+      isDelete: false,
       toName: [],
       topics: [],
       titles: [],
@@ -70,7 +80,8 @@ export default {
       photoUrl: [],
       sex: [],
       toCom: [],
-      toSex:[],
+      toSex: [],
+      deleteTopic: ""
     };
   },
   methods: {
@@ -82,6 +93,13 @@ export default {
     },
     backTo() {
       this.$router.replace("/mine");
+    },
+    deleteIt() {
+      this.isDelete = true;
+    },
+    toDeleteWish() {},
+    doNothing() {
+      this.isDelete = false;
     },
     getData() {
       let url = `/star/myComment`;
@@ -327,5 +345,81 @@ export default {
   background: url("../assets/comment.png");
   background-size: 100% 100%;
   margin-left: 16px;
+}
+.delete-overplay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2001;
+}
+.delete-alert {
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 15px;
+  z-index: 2002;
+}
+.delete-icon {
+  width: 40px;
+  height: 40px;
+  background: url("../assets/Remove.png");
+  background-size: 100% 100%;
+  margin: 0 auto;
+  margin-top: 37px;
+}
+.delete-word {
+  width: 150px;
+  height: 14px;
+  font-family: Segoe UI;
+  font-size: 10px;
+  text-align: center;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #707070;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.delete-sure {
+  width: 144px;
+  height: 22px;
+  background-color: #ffcbcb;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 100px;
+  margin: 0 auto;
+  margin-top: 25px;
+  padding-top: 0.1px;
+}
+.delete-sure p {
+  width: 30px;
+  font-family: Segoe UI;
+  font-size: 12px;
+  text-align: center;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 16px;
+  letter-spacing: 0px;
+  color: #ffffff;
+  margin: 0 auto;
+  margin-top: 3px;
+}
+.delete-cancle {
+  position: fixed;
+  top: 65%;
+  left: 48.5%;
+  width: 24px;
+  height: 24px;
+  background: url("../assets/cancle.png");
+  background-size: 100% 100%;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  z-index: 2002;
 }
 </style>

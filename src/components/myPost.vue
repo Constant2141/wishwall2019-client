@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="much-info">
-            <div class="which-person" v-for="(gainPerson,index) in gainPeople" :key="index">
+            <div class="which-person" v-for="(gainPerson,index) in gainPeople[index]" :key="index">
               <div
                 class="single-icon"
                 :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
@@ -56,7 +56,7 @@
     <div class="delete-overplay" v-show="isDelete"></div>
     <div class="delete-alert" v-show="isDelete">
       <div class="delete-icon"></div>
-      <div class="delete-word">是否确定删除这条评论?</div>
+      <div class="delete-word">是否确定删除这个心愿?</div>
       <div class="delete-sure" @click="toDeleteWish">
         <p>确定</p>
       </div>
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       isActive: true,
-      isDelete:false,
+      isDelete: false,
       wishes: [],
       methods: [],
       theWish: [],
@@ -91,8 +91,8 @@ export default {
       photoUrl: [],
       pickName: [],
       pickTime: [],
-      hasGet:[],
-      deleteWish:""
+      hasGet: [],
+      deleteWish: ""
     };
   },
   methods: {
@@ -101,26 +101,25 @@ export default {
     },
     alertDelete(index) {
       this.isDelete = true;
-      this.deleteWish = this.wid[index]
+      this.deleteWish = this.wid[index];
     },
-    toDeleteWish(){
+    toDeleteWish() {
       this.isDelete = false;
-      console.log(this.deleteWish)
       let judge = () => {
         return new Promise((resolve, reject) => {
           this.$axios.get(`/wish/remove?uuid=${this.deleteWish}`).then(res => {
-            resolve()
+            resolve();
           });
         });
       };
       let that = this;
       async function start() {
         await judge();
-        that.getData()
+        that.getData();
       }
       start();
     },
-    doNothing(){
+    doNothing() {
       this.isDelete = false;
       this.deleteWish = "";
     },
@@ -132,36 +131,35 @@ export default {
           this.clientHeight + "px";
         this.show[index] = true;
       } else if (this.many[index] > 0) {
-        let length = this.gainPeople.length;
+        let length = this.gainPeople[index].length;
         document.getElementsByClassName("wish-info")[index].style.overflow =
           "scroll";
-        this.clientHeight =
+        let showHeight =
           document.getElementsByClassName("wish-info")[index].clientHeight +
           50 * length;
         document.getElementsByClassName("wish-info")[index].style.height =
-          this.clientHeight + "px";
+          showHeight + "px";
         this.show[index] = false;
-        this.clientHeight = 39;
       }
     },
     finished(index) {
       this.finish[index] = "已完成";
-      this.$set(this.finish,this.finish[index]);
+      this.$set(this.finish, this.finish[index]);
       this.hasGet[index] = true;
-      this.$set(this.hasGet,this.hasGet[index]);
-      let judge = (index) => {
+      this.$set(this.hasGet, this.hasGet[index]);
+      let judge = index => {
         return new Promise((resolve, reject) => {
           this.$axios.get(`/wish/finish?uuid=${this.wid[index]}`).then(res => {
-            resolve()
+            resolve();
           });
         });
       };
       let that = this;
       async function start(index) {
         await judge(index);
-        that.getData()
+        that.getData();
       }
-      start(index)
+      start(index);
     },
     backTo() {
       this.$router.replace("/mine");
@@ -171,6 +169,7 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
+          console.log(res);
           this.wishes = res.data.result;
           let method = [];
           let times = [];
@@ -185,33 +184,44 @@ export default {
             this.time[index] = value.createdAt;
             this.wid[index] = value.uuid;
             method[index] = value.anonymous;
-            method.forEach((value, index) => {
-              if (value == true) {
-                this.methods[index] = "匿名发布";
-              } else {
-                this.methods[index] = "实名发布";
-              }
-            });
             people[index] = value.wish_many;
-            people.forEach((value, index) => {
-              this.many[index] = value;
-              this.getInfo[index] = `已被${this.many[index]}人领取`;
-            });
             status[index] = value.wish_status;
             status.forEach((value, index) => {
               if (value == 0) {
-                this.finish[index] = "确认完成"
+                this.finish[index] = "确认完成";
                 this.hasGet[index] = false;
               } else if (value == 1) {
-                this.finish[index] = "已完成"
-                this.hasGet[index] = true
+                this.finish[index] = "已完成";
+                this.hasGet[index] = true;
               }
             });
-            this.gainPeople = value.gains;
-            this.gainPeople.forEach((value, index) => {
-              this.photoUrl[index] = value.headimgurl;
-              this.pickName[index] = value.nickname;
-              pickTimes[index] = value.pick_time;
+            this.gainPeople[index] = value.gains;
+          });
+          method.forEach((value, index) => {
+            if (value == true) {
+              this.methods[index] = "匿名发布";
+            } else {
+              this.methods[index] = "实名发布";
+            }
+          });
+          people.forEach((value, index) => {
+            this.many[index] = value;
+            this.getInfo[index] = `已被${this.many[index]}人领取`;
+          });
+          status.forEach((value, index) => {
+            if (value == 0) {
+              this.finish[index] = "确认完成";
+              this.hasGet[index] = false;
+            } else if (value == 1) {
+              this.finish[index] = "已完成";
+              this.hasGet[index] = true;
+            }
+          });
+          this.gainPeople.forEach((value, index) => {
+            if (value.length > 0) {
+              this.photoUrl[index] = value[0].headimgurl;
+              this.pickName[index] = value[0].nickname;
+              pickTimes[index] = value[0].pick_time;
               pickTimes.forEach((value, index) => {
                 let nowTime = `${new Date().getDate()}`;
                 if (nowTime == value.slice(8, 10)) {
@@ -220,7 +230,7 @@ export default {
                   this.pickTime[index] = `${nowTime - value.slice(8, 10)}天前`;
                 }
               });
-            });
+            }
           });
         })
         .catch(err => {
@@ -400,19 +410,20 @@ export default {
   border-radius: 15px;
   margin-left: 40vw;
   margin-top: 9px;
+  color: white;
 }
 .hasGetted {
   width: 13vw;
   height: 20px;
-  background: #cbcbcb;
-  border-radius: 15px;
+  background: #ffebeb;
+  border-radius: 0;
   margin-left: 40vw;
   margin-top: 9px;
+  color: #000000;
 }
 .isGetted p {
   text-align: center;
-  margin-top: 5px;
-  color: white;
+  margin-top: 4px;
 }
 .which-person {
   justify-content: space-around;
@@ -450,83 +461,80 @@ export default {
   color: #989898;
   margin-top: 22px;
 }
-.delete-overplay{
+.delete-overplay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,.7);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 2001;
 }
-.delete-alert{
+.delete-alert {
   position: fixed;
   top: 30%;
   left: 25%;
   width: 200px;
-	height: 200px;
-	background-color: #ffffff;
-	box-shadow: 0px 3px 6px 0px 
-		rgba(0, 0, 0, 0.16);
-	border-radius: 15px;
+  height: 200px;
+  background-color: #ffffff;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 15px;
   z-index: 2002;
 }
-.delete-icon{
-	width: 40px;
-	height: 40px;
+.delete-icon {
+  width: 40px;
+  height: 40px;
   background: url("../assets/Remove.png");
   background-size: 100% 100%;
   margin: 0 auto;
   margin-top: 37px;
 }
-.delete-word{
-	width: 150px;
-	height: 14px;
-	font-family: Segoe UI;
-	font-size: 10px;
+.delete-word {
+  width: 150px;
+  height: 14px;
+  font-family: Segoe UI;
+  font-size: 10px;
   text-align: center;
-	font-weight: normal;
-	font-stretch: normal;
-	line-height: 14px;
-	letter-spacing: 0px;
-	color: #707070;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 14px;
+  letter-spacing: 0px;
+  color: #707070;
   margin: 0 auto;
   margin-top: 30px;
 }
-.delete-sure{
-	width: 144px;
-	height: 22px;
-	background-color: #ffcbcb;
-	box-shadow: 0px 3px 6px 0px 
-		rgba(0, 0, 0, 0.16);
-	border-radius: 100px;
+.delete-sure {
+  width: 144px;
+  height: 22px;
+  background-color: #ffcbcb;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  border-radius: 100px;
   margin: 0 auto;
   margin-top: 25px;
   padding-top: 0.1px;
 }
-.delete-sure p{
-	width: 30px;
-	font-family: Segoe UI;
-	font-size: 12px;
+.delete-sure p {
+  width: 30px;
+  font-family: Segoe UI;
+  font-size: 12px;
   text-align: center;
-	font-weight: normal;
-	font-stretch: normal;
-	line-height: 16px;
-	letter-spacing: 0px;
-	color: #ffffff;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 16px;
+  letter-spacing: 0px;
+  color: #ffffff;
   margin: 0 auto;
   margin-top: 3px;
 }
-.delete-cancle{
+.delete-cancle {
   position: fixed;
   top: 65%;
   left: 48.5%;
-	width: 24px;
-	height: 24px;
-  border-radius: 50%;
-	background-color: #ffffff;
-	box-shadow: 0px 3px 6px 0px 
-		rgba(0, 0, 0, 0.16);
-  z-index: 2002
+  width: 24px;
+  height: 24px;
+  background: url("../assets/cancle.png");
+  background-size: 100% 100%;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
+  z-index: 2002;
 }
 </style>
