@@ -73,7 +73,7 @@
             </div>
         </van-pull-refresh>
       </div>
-      <div class="cover" v-show="readTips" @touchmove.prevent>
+      <div class="cover" v-show="readTips">
         <div class="tips">
           <h3>玩法介绍</h3>
           <h5>
@@ -130,7 +130,7 @@ export default {
       curCampus:'全部', //当前所在学校，默认为全部
       isDownLoading:false,
       isBottom:false, //是否是页面最底端
-      loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2没有更多数据,3加载失败
+      loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
       finished: false, //全部数据是否加载完
       readTips:false,
     }
@@ -138,17 +138,16 @@ export default {
   methods:{
     onRefresh(){
       this.page = 1;
-      setTimeout(async ()=>{
-        await this.getData()
+      setTimeout(async()=>{
+        this.wishes = await this.getData()
         this.isDownLoading = false; 
       },500)
     },
     //判断滚动条是否在底部
     checkBottom(){
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;// 获取滚动条的高度
-      // console.log(scrollTop)
       const winHeight = document.documentElement.clientHeight || document.body.clientHeight; // 一屏的高度
-      const scrollHeight = (function() {
+      const scrollHeight = (()=>{
         let bodyScrollHeight = 0
         let documentScrollHeight = 0
         if (document.body) {
@@ -160,15 +159,15 @@ export default {
         // 当页面内容超出浏览器可视窗口大小时，Html的高度包含body高度+margin+padding+border所以html高度可能会大于body高度
         return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
       })()
-      this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight;
-      this.scrollTop = scrollTop;
+      // console.log(scrollTop)
+      // console.log(parseInt(scrollHeight)-winHeight)
+      this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
     
     onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
-        console.log('妈的')
        this.loadState = 1;
        setTimeout(async ()=>{
          let tempList = this.wishes;
@@ -180,29 +179,29 @@ export default {
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
         this.loadState = 2;
-      }
+      } 
     },
     async getData(){
-        let campus = this.curCampus;
-        //在需要返回的值前加await
-        let result  = await this.$axios.get('/wish/list',{
-          params:{
-            curPage:this.page,
-            wish_where:campus=='全部'?'':`${campus}校区`
-          }
-        })
-        .then(async res=>{
-          if(res.status == 200){
-            let temp = await res.data.result.wishList.rows;
-            this.handleAnonymous(temp);
-            this.handleTime(temp);
-            // this.wishes = temp;
-            this.wishTotal = res.data.result.wishList.count;
-            return temp;
-          }
-        })
-        .catch(err =>console.log(err))
-        return result;
+      let campus = this.curCampus;
+      //在需要返回的值前加await
+      let result  = await this.$axios.get('/wish/list',{
+        params:{
+          curPage:this.page,
+          wish_where:campus=='全部'?'':`${campus}校区`
+        }
+      })
+      .then(async res=>{
+        if(res.status == 200){
+          let temp = await res.data.result.wishList.rows;
+          this.handleAnonymous(temp);
+          this.handleTime(temp);
+          // this.wishes = temp;
+          this.wishTotal = res.data.result.wishList.count;
+          return temp;
+        }
+      })
+      .catch(err =>console.log(err))
+      return result;
     },
     takeWish(index){
       this.wishes[index].gainOrNot = true;
@@ -253,11 +252,6 @@ export default {
     },
     closeTip(){
       this.readTips = false;
-    }
-  },
-  watch:{
-    wishes(val){
-      console.log(val);  
     }
   },
   async mounted(){
@@ -363,7 +357,7 @@ li{
 }
 .wish-tag {
   justify-content: space-between;
-  align-items: center;
+  align-items: top;
   width: 238px;
 }
 .yellow-left{
