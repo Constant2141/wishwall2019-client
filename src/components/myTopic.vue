@@ -17,7 +17,7 @@
         <div class="single-topic">
           <div class="top-topic">
             <p>#{{topics[index]}}</p>
-            <div @click="deleteIt">···</div>
+            <div class="cancle" @click="deleteIt(index)"></div>
           </div>
           <div class="top-content">
             <div
@@ -47,7 +47,7 @@
     <div class="delete-overplay" v-show="isDelete"></div>
     <div class="delete-alert" v-show="isDelete">
       <div class="delete-icon"></div>
-      <div class="delete-word">是否确定删除这条评论?</div>
+      <div class="delete-word">是否确定删除这条超话?</div>
       <div class="delete-sure" @click="toDeleteWish">
         <p>确定</p>
       </div>
@@ -73,7 +73,8 @@ export default {
       comments: [],
       sex: [],
       photoUrl: [],
-      deleteTopic: ""
+      deleteTopic: "",
+      uids: []
     };
   },
   methods: {
@@ -86,10 +87,30 @@ export default {
     backTo() {
       this.$router.replace("/mine");
     },
-    deleteIt() {
+    deleteIt(index) {
       this.isDelete = true;
+      this.deleteTopic = this.uids[index];
+      console.log(this.deleteTopic);
     },
-    toDeleteWish() {},
+    toDeleteWish() {
+      this.isDelete = false;
+      let judge = () => {
+        return new Promise((resolve, reject) => {
+          this.$axios
+            .get(`/star/removeStar?uuid=${this.deleteTopic}`)
+            .then(res => {
+              resolve();
+              console.log(res);
+            });
+        });
+      };
+      let that = this;
+      async function start() {
+        await judge();
+        that.getData();
+      }
+      start();
+    },
     doNothing() {
       this.isDelete = false;
     },
@@ -108,6 +129,7 @@ export default {
             this.likes[index] = value.likes;
             this.comments[index] = value.many;
             this.photoUrl[index] = value.headimgurl;
+            this.uids[index] = value.uuid;
             times[index] = value.createdAt;
             times.forEach((value, index) => {
               this.times[index] =
@@ -214,10 +236,6 @@ export default {
   color: #707070;
   overflow: scroll;
 }
-.top-topic div {
-  margin-left: 10px;
-  margin-top: 9px;
-}
 .icon {
   height: 43px;
   width: 43px;
@@ -297,6 +315,13 @@ export default {
   background: url("../assets/comment.png");
   background-size: 100% 100%;
   margin-left: 16px;
+}
+.cancle {
+  width: 10px;
+  height: 10px;
+  background: url("../assets/cancle2.png");
+  background-size: 100% 100%;
+  margin-top: 15px;
 }
 .delete-overplay {
   position: fixed;

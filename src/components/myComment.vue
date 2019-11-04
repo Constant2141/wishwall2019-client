@@ -17,7 +17,7 @@
         <div class="single-topic">
           <div class="top-topic">
             <p>#{{topics[index]}}</p>
-            <div @click="deleteIt">···</div>
+            <div class="cancle" @click="deleteIt(index)"></div>
           </div>
           <div class="top-content">
             <div
@@ -81,7 +81,8 @@ export default {
       sex: [],
       toCom: [],
       toSex: [],
-      deleteTopic: ""
+      deleteTopic: "",
+      cids: []
     };
   },
   methods: {
@@ -94,10 +95,30 @@ export default {
     backTo() {
       this.$router.replace("/mine");
     },
-    deleteIt() {
+    deleteIt(index) {
       this.isDelete = true;
+      this.deleteTopic = this.cids[index];
+      console.log(this.deleteTopic);
     },
-    toDeleteWish() {},
+    toDeleteWish() {
+      this.isDelete = false;
+      let judge = () => {
+        return new Promise((resolve, reject) => {
+          this.$axios
+            .get(`/star/removeComment?commentid=${this.deleteTopic}`)
+            .then(res => {
+              resolve();
+              console.log(res);
+            });
+        });
+      };
+      let that = this;
+      async function start() {
+        await judge();
+        that.getData();
+      }
+      start();
+    },
     doNothing() {
       this.isDelete = false;
     },
@@ -114,6 +135,7 @@ export default {
             this.names[index] = value.nickname;
             this.topics[index] = value.fc.fs.title;
             this.opinions[index] = value.comment;
+            this.cids[index] = value.commentid;
             this.sex[index] = value.sex;
             if (this.sex[index] == "1") {
               this.isGirl = false;
@@ -225,10 +247,6 @@ export default {
   color: #707070;
   overflow: scroll;
 }
-.top-topic div {
-  margin-left: 10px;
-  margin-top: 9px;
-}
 .icon {
   height: 43px;
   width: 43px;
@@ -238,8 +256,6 @@ export default {
   margin-left: 24px;
 }
 .name-sex p {
-  width: 29px;
-  height: 14px;
   font-family: Segoe UI;
   font-size: 10px;
   font-weight: normal;
@@ -345,6 +361,13 @@ export default {
   background: url("../assets/comment.png");
   background-size: 100% 100%;
   margin-left: 16px;
+}
+.cancle {
+  width: 10px;
+  height: 10px;
+  background: url("../assets/cancle2.png");
+  background-size: 100% 100%;
+  margin-top: 15px;
 }
 .delete-overplay {
   position: fixed;
