@@ -60,7 +60,7 @@ export default {
       }
     },
     back() {
-      this.$router.replace("wishwall");
+      this.$router.go(-1);
       this.content = "";
     }
   }
@@ -107,11 +107,15 @@ export default {
   height: 56vw;
 }
 .wish-area textarea {
-  border: none;
+  border-top:none;
+  border-bottom:1px solid rgb(245, 245, 245);
+  border-left:none;
+  border-right:none;
   width: 92vw;
   height: 40vw;
   padding: 5vw 4vw 3vw 4vw;
   outline: none;
+  box-shadow: 0 3px 15px rgb(238, 237, 237);
 }
 .wish-area textarea::placeholder {
   color: #b8b8b8;

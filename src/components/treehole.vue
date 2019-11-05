@@ -90,6 +90,12 @@ export default {
       window.scrollTo(0, 0);
     },
     post() {
+      if(this.postWord == ''){
+        this.$dialog.alert({
+          message:"评论不可为空"
+        })
+        return ;
+      }
       let data = {
         comment:this.postWord,
         treeholeId:this.cards[this.realIndex].treeholeId,
@@ -126,11 +132,16 @@ export default {
       })
     },
     next(){
-      alert('next')
+      // alert('next')
     }
   },
   mounted() {
     console.log('treehole mounted')
+    this.clientHeight =
+      (window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight) + "px";
+    console.log('当前页面高度',this.clientHeight);
     this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
       console.log('获得所有树洞成功',res.data.result);
       this.currentPage = this.currentPage + 1;
@@ -187,6 +198,7 @@ export default {
   height: 25.72px;
   padding: 7.3px 13px 7.3px 22px;
   font-size: 12px;
+  color:white;
   z-index:10000;
 }
 .comment > input {
@@ -195,6 +207,7 @@ export default {
   width: 260px;
   box-sizing: border-box;
   padding: 3.7px 10px;
+  color:black;
 }
 .comment > div {
   width: 66px;
@@ -262,6 +275,7 @@ export default {
   background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
   padding: 2px 12px;
   border-radius: 10px;
+  color:white;
 }
 
 /* 多人评论 */
