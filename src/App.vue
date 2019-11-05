@@ -65,7 +65,7 @@ export default {
   color: #2c3e50;
   width: 100vw;
   height: 100vh;
-  background-color:rgb(249, 249, 249);
+  /* background-color:rgb(249, 249, 249); */
 }
 /* 黑色板 */
 .black-cover {
