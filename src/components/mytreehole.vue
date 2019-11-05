@@ -4,6 +4,7 @@
     <div class="left" @click="back"></div>
     <div class="holes-wrapper">
       <div v-for="(item,index) in holesData" :key="index" class="holes">
+        <div class="delete" @click="deleteHole(index)"></div>
         <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt />
         <p>{{item.text}}</p>
         <div class="love-cover">
@@ -46,6 +47,17 @@ export default {
       let obj = this.holesData[index];
       obj.hide = !obj.hide;
       this.$set(this.holesData, index, obj);
+    },
+    deleteHole(index){
+      console.log('删除',index);
+      // this.$axios.post('/',{
+      //   "treeholeId":this.holesData[index].treeholeId
+      //   }).then(res=>{
+      //     // this.holesData.splice(index,1);
+      //     console.log('删除成功');
+      //   }).catch(err=>{
+      //     console.log('删除失败')
+      //   })
     }
   },
   beforeRouteEnter(to,from,next){
@@ -108,6 +120,16 @@ export default {
   border-radius: 10px;
   margin-bottom: 9px;
   /* overflow: scroll; */
+  position: relative;
+}
+.delete{
+  position: absolute;
+  right:10px;
+  top:10px;
+  width:30px;
+  height:30px;
+  background:url('~@/assets/Remove.png') no-repeat center center;
+  background-size: 100% 100%;
 }
 .holes:last-child {
   margin-bottom: 0px;
