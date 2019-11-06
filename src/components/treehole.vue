@@ -29,8 +29,8 @@
       <!-- <div class="swiper-button-next" slot="button-next"></div> -->
     </swiper>
     <!-- 底下的输入款 -->
-    <div class="comment">
-      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @blur="scoll" />
+    <div class="comment" :class="{'comment-active':moveBottom}">
+      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="scoll" />
       <div @click="post">发表</div>
     </div>
   </div>
@@ -82,12 +82,19 @@ export default {
           self.lastSlide = swiper.isEnd;
           console.log(self.lastSlide);
         },
-      }
+      },
+      moveBottom:false
     };
   },
   methods: {
     scoll() {
+      this.$emit('changeNavShow',true);
       window.scrollTo(0, 0);
+      this.moveBottom = false;
+    },
+    inputFocus(){
+      this.$emit('changeNavShow',false);
+      this.moveBottom = true;
     },
     post() {
       if(this.postWord == ''){
@@ -137,11 +144,17 @@ export default {
   },
   mounted() {
     console.log('treehole mounted')
-    this.clientHeight =
-      (window.innerHeight ||
-        document.documentElement.clientHeight ||
-        document.body.clientHeight) + "px";
-    console.log('当前页面高度',this.clientHeight);
+    // this.clientHeight =
+    //   (window.innerHeight ||
+    //     document.documentElement.clientHeight ||
+    //     document.body.clientHeight) + "px";
+    // console.log(window.innerHeight);
+
+    // window.onresize = function(e){
+    //   // console.log("检测到resize事件!",e);
+    //   alert("检测到resize事件!",e);
+    // }
+
     this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
       console.log('获得所有树洞成功',res.data.result);
       this.currentPage = this.currentPage + 1;
@@ -200,6 +213,9 @@ export default {
   font-size: 12px;
   color:white;
   z-index:10000;
+}
+.comment-active{
+  bottom:0;
 }
 .comment > input {
   outline: none;

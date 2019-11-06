@@ -5,15 +5,15 @@
     <div :class="[{'cover-active':toggleBool},'black-cover']"></div>
     <!-- 路由 -->
     <keep-alive >
-      <router-view v-if="!$route.meta.hasOwnProperty('trueKeepAlive')"></router-view>
+      <router-view v-if="!$route.meta.hasOwnProperty('trueKeepAlive')" @changeNavShow='changeNavShow'></router-view>
     </keep-alive>
-    <router-view v-if="$route.meta.hasOwnProperty('trueKeepAlive')"></router-view>
+    <router-view v-if="$route.meta.hasOwnProperty('trueKeepAlive')" @changeNavShow='changeNavShow'></router-view>
     <!-- 导航 -->
     <navi
       @cover="cover"
       @removeCover="removeCover"
       :toggleBool="toggleBool"
-      v-show="$route.meta.keepAlive"
+      v-show="$route.meta.keepAlive && this.showNav"
     ></navi>
   </div>
 </template>
@@ -31,7 +31,8 @@ export default {
   components: { navi },
   data() {
     return {
-      toggleBool: true
+      toggleBool: true,
+      showNav:true
     };
   },
   methods: {
@@ -48,6 +49,10 @@ export default {
       document.removeEventListener("touchmove", preventDefault, {
         passive: false
       });
+    },
+    //改变nav的显隐
+    changeNavShow(bool){
+      this.showNav = bool;
     }
   }
 };
