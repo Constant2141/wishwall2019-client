@@ -50,14 +50,17 @@ export default {
     },
     deleteHole(index){
       console.log('删除',index);
-      // this.$axios.post('/',{
-      //   "treeholeId":this.holesData[index].treeholeId
-      //   }).then(res=>{
-      //     // this.holesData.splice(index,1);
-      //     console.log('删除成功');
-      //   }).catch(err=>{
-      //     console.log('删除失败')
-      //   })
+      this.$axios.post('/treehole/deleteTreeHole',{
+        "treeholeId":this.holesData[index].treeholeId
+        }).then(res=>{
+          this.holesData.splice(index,1);
+          this.$dialog.alert({
+            message:"删除成功空"
+          })
+          console.log('删除成功');
+        }).catch(err=>{
+          console.log('删除失败')
+        })
     }
   },
   beforeRouteEnter(to,from,next){
