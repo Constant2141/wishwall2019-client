@@ -15,7 +15,7 @@ import store from './vuex/store'
 import { userInfo } from 'os';
 import { PullRefresh } from 'vant';
 import { Uploader } from 'vant';
-
+import { Toast } from 'vant';
 
 
 
@@ -26,7 +26,7 @@ Vue.use(Picker);
 Vue.use(VueAwesomeSwiper);
 Vue.use(Dialog);
 Vue.use(PullRefresh);
-
+Vue.use(Toast);
 
 Vue.use(Uploader);
 

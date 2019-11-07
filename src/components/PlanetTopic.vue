@@ -1,12 +1,13 @@
 <template>
   <div class="topic">
-      <div class="topicBackground">
+      <div class="topicBackground" ref="background">
+          <div class="blur"></div>
           <div class="back" @click="back"></div>
-          <div class="topicName">{{topicName}}</div>
+          <div class="topicName"># {{topic.title}}</div>
       </div>
       <div class="bottom-background"></div>
       <div class="comment-area">
-          <div class="comment" v-for="(item,index) in comment" :key="index" @click="toComment">
+          <div class="comment" v-for="(item,index) in comment" :key="index" @click="toComment(item,$event)">
               <div class="content-area">
                   <div class="avator">
                       <img :src="item.headimgurl" alt="" width="43" height="43" >
@@ -20,7 +21,7 @@
                   </div>
               </div>
               <div class="function-area">
-                  <div class="likeCount">
+                  <div class="likeCount" @click="like(item,$event)">
                         <img src="../assets/like.png" alt="">
                         <div>{{item.likes}}</div>
                   </div>
@@ -39,17 +40,10 @@
 export default {
     data(){
         return {
+            topic:{},
             topicName:"#海底捞最喜欢什么火锅底料",
 
-            comment:[{
-                image: require("../assets/NWlogo.png"),
-                userName: "jio",
-                date:"7/22",
-                time:"17:30",
-                content:"想要一只dior99",
-                goodCount:115,
-                commentCount:115
-            }
+            comment:[
  
             ]
 
@@ -62,7 +56,9 @@ export default {
         release(){
             this.$router.push("/pCommentRelease");
         },
-        toComment(){
+        toComment(item,event){
+            console.log(event)
+            localStorage.setItem("comment",JSON.stringify(item));
             this.$router.push("/planetComment")
         },
         handleTopicData(arr){
@@ -73,11 +69,38 @@ export default {
                     time:item.createdAt.slice(item.createdAt.indexOf(" ")+1)
                 }
             })
+        },
+        like(item,event){//点赞
+            event.stopPropagation();//点赞时不需要路由跳转
+            console.log(item)
+            if(item.likeOrNot == 0){
+                this.$axios.post("/star/handleLike",{
+                    commentid:item.commentid,
+                    upDown:1
+                }).then(res=>{
+                    item.likes++;
+                }).catch(err=>{
+                    console.log(err)
+                })   
+            }
+            else{
+                this.$axios.post("/star/handleLike",{
+                    commentid:item.commentid,
+                    upDown:0
+                }).then(res=>{
+                    item.likes--;
+                }).catch(err=>{
+                    console.log(err)
+                })   
+            }
         }
         
     },
      mounted(){
-         console.log(this.$route)
+        //  console.log(this.$route)
+            this.topic = JSON.parse(localStorage.planet);
+            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
+            console.log(this.topic)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
@@ -88,11 +111,12 @@ export default {
     },
     watch:{
         $route(to,from){
-            console.log(to.params)
+            this.topic = JSON.parse(localStorage.planet);
+            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
-                console.log(res)
+                // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
-                console.log(this.comment)
+                // console.log(this.comment)
             }).catch(err=>{
                 console.log(err)
             })
@@ -111,12 +135,20 @@ export default {
         height: 100vh;
         overflow: hidden;
     }
-
+    .blur{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #00000024;
+        top: 0;
+        left:0;
+    }
     .topicBackground{
         width: 100%;
         height: 189px;
         background: url(../assets/background.png);
-        background-size: 110%;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
         background-position: 22% 20%;
         position: relative;
     }

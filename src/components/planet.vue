@@ -2,7 +2,7 @@
   <div class="planet">
       <div class="background"></div>
       <div class="search">
-          <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)">
+          <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keydown="search($event)">
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
@@ -19,11 +19,12 @@
         <div class="content">
             <div class="col" ref="col1">
                 <div 
-                @click="toTopic" 
                 :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
                 v-for="(item,index) in topicLeft" 
                 :key="index" 
-                ref="colLeft">
+                ref="colLeft"
+                @click="toTopic(item,$event)" >
+                    <div  class="blur" ></div>
                     <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
                     <!-- <img :src="item.bgPic" alt=""> -->
                     <div class="TopicText">{{item.title}}</div>
@@ -36,12 +37,12 @@
             </div>
             <div class="col" ref="col2">
                 <div 
-                @click="toTopic($event)" 
                 :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
                 v-for="(item,index) in topicRight" 
                 :key="index" 
+                @click="toTopic(item,$event)" 
                 ref="colRight">
-                    <!-- <div  class="pic" ></div> -->
+                    <div  class="blur" ></div>
                     <!-- <img :src="item.bgPic" alt=""> -->
                     <div class="TopicText">{{item.title}}</div>
                     <div class="heat">
@@ -98,29 +99,38 @@ export default {
             topicLeft:[
             ],
             topicRight:[],
-            pic:""
+            pic:"",
+
+            searchText:""
         }
     },
     methods:{
-        search(){//搜索功能
-
+        search(event){//搜索功能
+            console.log(event)
+            if(event.code == "Enter"){
+                this.$axios.post("/star/search",{
+                    title:this.searchText
+                }).then(res=>{
+                    this.topic = res.data.result;
+                    // console.log(res);
+                    this.topicLeft = [];
+                    this.topicRight = [];
+                    this.insertTopic(res.data.result);
+                    this.showSearch = !this.showSearch;
+                    console.log(this.topic)
+                }).catch(err=>{
+                    console.log("搜索失败")
+                })
+            }
         },
-        toTopic(event){
-            let target = event.target.innerText.slice(0,event.target.innerText.indexOf(" ")-1);
-            console.log(target)
-            this.topic.map(item=>{
-                if(item.title == target){
-                    // console.log(item.uuid);
-                    localStorage.setItem("planetUid",item.uuid)
-                    this.$router.push({
-                        name:"planetTopic",
-                        params:{
-                            uuid:item.uuid
-                        },
-                    })
-                }
-                
+        toTopic(item,event){
+            console.log(item)
+            localStorage.setItem("planetUid",item.uuid)
+            localStorage.setItem("planet",JSON.stringify(item))
+            this.$router.push({
+                name:"planetTopic",
             })
+
             
         },
         changePage(val){
@@ -140,6 +150,7 @@ export default {
             console.log(1);
         },
         insertTopic(allTopic){
+            console.log(this.topicLeft);
             if(allTopic){
                 allTopic.map((item,index)=>{
                     if(item.bgPic){
@@ -178,7 +189,14 @@ export default {
         }
     },
     mounted(){
-        console.log(this.$refs.col1);
+        this.$axios.get("/star/topChart").then(res=>{
+            this.searchLabel = [];
+            res.data.result.map(item=>{
+                this.searchLabel.push("#"+item.title)
+            })
+        }).catch(err=>{
+            console.log(err)
+        })
     },
     created(){
         this.$axios.get("/star/list").then(res=>{
@@ -327,11 +345,21 @@ export default {
         box-sizing: border-box;
         position: relative;
     }
+    .blur{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #00000033;
+        top: 0;
+        left:0;
+    }
     .TopicText{
         width: 100%;
         height:60px;
         font-size: 14px;
         color: white;
+        position: relative;
+        z-index: 5;
     }
     .heat{
         /* background: url(../assets/hot.png) no-repeat; */
@@ -342,6 +370,7 @@ export default {
         right:20px;
         font-size: 14px;
         color: white;
+        z-index: 5;
     }
     .heat span{
         display: inline-block;

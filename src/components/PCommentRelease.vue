@@ -9,10 +9,10 @@
         </div>
         <div class="edit-area">
             <div class="topic-area">
-                <div class="topic">{{topic}}</div>
+                <div class="topic"># {{topic}}</div>
             </div>
             <div class="message-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment"></textarea>
             </div>    
         </div>
   </div>
@@ -35,13 +35,10 @@ export default {
             wishPHold:"话题内容",//编写话题内容处的placeholder
 
 
-            //要发送的 数据
+            //要发送的数据
             sendData:{
-                wish_content:"",//心愿内容
-                wish_where:"",//校区
-                wish_type:"",//心愿类型
-                anonymous:false,//是否匿名
-                contact:"",//地址
+                conmment:"",//发布的评论内容
+                uuid:"",//星球话题的uuid
             }
         }
     },
@@ -54,9 +51,28 @@ export default {
             console.log(file);
         },
         release(){
-
+            this.sendData.uuid = localStorage.planetUid;
+            this.$axios.post("/star/addComment",this.sendData).then(res=>{
+                console.log(res);
+                this.$toast.success('发布成功');
+                this.$router.go(-1);
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        refreshTopic(){
+            this.topic = JSON.parse(localStorage.planet).title
+        }
+    },
+    mounted(){
+        this.refreshTopic();
+    },
+    wacth:{
+        $router(to,from){
+            this.refreshTopic();
         }
     }
+
 }
 </script>
 
