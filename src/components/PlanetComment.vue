@@ -4,20 +4,20 @@
       <div class="back" @click="back"></div>
       <div class="content-area">
           <div class="avator">
-              <img :src="user.image" alt="" width="48" height="48" >
+              <img :src="user.headimgurl" alt="" width="48" height="48" >
           </div>
           
           <div class="content-right">
-              <div class="username">{{user.name}}</div>
+              <div class="username">{{user.nickname}}</div>
               <div class="date">{{user.date}}</div>
               <div class="time">{{user.time}}</div>
-              <div class="content">{{user.message}}</div>
+              <div class="content">{{user.comment}}</div>
           </div>
       </div>
       <div class="function-area">
           <div class="likeCount">
                 <img src="../assets/like.png" alt="">
-                <div>{{user.likeCount}}</div>
+                <div>{{user.likes}}</div>
           </div>
       </div>
     </div>  
@@ -32,17 +32,17 @@
       <div class="comment-list">
         <div class="comment-detail" v-for="(item,index) in comment" :key="index">
           <div class="comment-avator">
-            <img :src="item.image" alt="" width="35" height="35">
+            <img :src="item.headimgurl" alt="" width="35" height="35">
           </div>
           <div class="comment-detail-content">
             <div class="detail-top">
-              <div class="comment-username">{{item.name}}</div>
+              <div class="comment-username">{{item.nickname}}</div>
               <div class="time-set">
                 <div class="comment-date">{{item.date}}</div>
                 <div class="comment-time">{{item.time}}</div>
               </div>
             </div>
-            <div class="detail-content">{{item.message}}</div>
+            <div class="detail-content">{{item.comment}}</div>
           </div>
         </div>
       </div>
@@ -50,8 +50,8 @@
 
 
     <div class="publish">
-      <input type="text" name="" id="" placeholder="你想对ta说些什么吗...">
-      <div class="publish-button">发表</div>
+      <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input">
+      <div class="publish-button" @click="release">发表</div>
     </div>
   </div>
 </template>
@@ -72,41 +72,73 @@ export default {
 
       commentCount:115,
       comment:[
-        {
-          image:require("../assets/NWlogo.png"),
-          name:"两碗",
-          date:"7/22",
-          time:"17:30",
-          message:"我也喜欢",
-        },
-        {
-          image:require("../assets/NWlogo.png"),
-          name:"两碗",
-          date:"7/22",
-          time:"17:30",
-          message:"我也喜欢dsadsadsasssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-        },
-        {
-          image:require("../assets/NWlogo.png"),
-          name:"两碗",
-          date:"7/22",
-          time:"17:30",
-          message:"我也喜欢",
-        },
-        {
-          image:require("../assets/NWlogo.png"),
-          name:"两碗",
-          date:"7/22",
-          time:"17:30",
-          message:"我也喜欢",
-        },
-      ]
+        
+      ],
+
+
+      input:"",//发表内容
     }
   },
 
   methods:{
     back(){
       this.$router.go(-1);
+    },
+    handleTopicData(i){
+      if(i instanceof Array){
+        return i.map(item=>{
+                return i = {
+                    ...item,
+                    date:item.createdAt.slice(item.createdAt.indexOf("-")+1,item.createdAt.indexOf(" ")).replace("-","/"),
+                    time:item.createdAt.slice(item.createdAt.indexOf(" ")+1)
+                }
+            })
+      }
+      else{
+        return i = {
+            ...i,
+            date:i.createdAt.slice(i.createdAt.indexOf("-")+1,i.createdAt.indexOf(" ")).replace("-","/"),
+            time:i.createdAt.slice(i.createdAt.indexOf(" ")+1)
+        }
+      }
+        
+    },
+    release(){
+      if(this.input != ""){
+        let data = {
+          comment:this.input,
+          commentid:this.user.commentid,
+          openid:JSON.parse(localStorage.userInfo).openid
+        }
+        console.log(data)
+        this.$axios.post("/star/addComment",data).then(res=>{
+          this.$toast.success('发布成功');
+          this.refresh();
+        }).catch(err=>{
+          console.log(err)
+        })
+      }
+    },
+    refresh(){
+      this.user = this.handleTopicData(JSON.parse(localStorage.comment));
+      console.log(JSON.parse(localStorage.comment).commentid)
+      this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
+        this.comment = this.handleTopicData(res.data.result);
+        console.log(this.comment)
+        console.log(res);
+      }).catch(err=>{
+        console.log(err);
+      })
+    }
+  },
+  mounted(){
+    // console.log(JSON.parse(localStorage.comment))
+    this.refresh();
+
+  },
+  watch:{
+    $route(to,from){
+      this.refresh();
     }
   }
 }

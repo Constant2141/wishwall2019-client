@@ -22,6 +22,7 @@ export default {
       .then(res => {
         console.log(res);
         
+        
         if(res.status == 200){
           console.log(res.data)
           localStorage.setItem('token',res.data.token);
@@ -47,6 +48,7 @@ export default {
   
   },
   mounted(){
+    console.log(1)
     this.getUserInfo();
   }
 }

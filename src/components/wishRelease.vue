@@ -149,9 +149,7 @@ export default {
             else{
                 this.$axios.post('wish/create',this.sendData).then(res =>{
                     console.log(res)
-                    this.$dialog.alert({
-                        message:'发布成功！'       
-                    })
+                    this.$toast.success('发布成功');
                     this.$router.go(-1);
                 }).catch(err =>{
                     console.log(err)
