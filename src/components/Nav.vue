@@ -45,6 +45,7 @@ export default {
   props: ["toggleBool"],
   data() {
     return {
+      activeNavIndex:0,
       isGirl: true,
       activeBool: false,
       activeSrc: [
@@ -70,7 +71,7 @@ export default {
     };
   },
   methods: {
-    //委托
+    //事件委托
     changeNav(e) {
       var target = e.target;
       if (target.nodeName.toLocaleLowerCase() == "a") {

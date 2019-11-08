@@ -18,14 +18,14 @@
           <div class="holes-comment" v-show="item.hide?true:false">
             <div class="comment-title">评论：</div>
             <div v-for="(item,index) in item.comments" :key="index" class="comment">
-              <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="性别头像">
+              <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="性别头像" />
               <span>{{item.comment}}</span>
             </div>
           </div>
         </transition>
       </div>
     </div>
-    <div class="nomore" v-if="this.holesData.length > 4?true:false">再脱就没了...</div>
+    <div class="nomore" v-if="this.holesData.length > 4?true:false">别再往下拉啦...</div>
   </div>
 </template>
 <script>
@@ -35,48 +35,58 @@ export default {
     return {
       boyImgUrl: require("../assets/Avatar/BoyAvatar.png"),
       girlImgUrl: require("../assets/Avatar/GirlAvatar.png"),
-      holesData:[],
+      holesData: []
     };
   },
   methods: {
     back() {
-      this.$router.replace("/mine")
+      this.$router.push("/mine");
     },
     toggle(index) {
-      if(this.holesData[index].comments.length == 0)return ;
-      let obj = this.holesData[index];
-      obj.hide = !obj.hide;
-      this.$set(this.holesData, index, obj);
+      let item = this.holesData[index];
+      if (item.comments.length != 0){
+        item.hide = !item.hide;
+      }else{
+        console.log('没有评论');
+      }
     },
-    deleteHole(index){
-      console.log('删除',index);
-      this.$axios.post('/treehole/deleteTreeHole',{
-        "treeholeId":this.holesData[index].treeholeId
-        }).then(res=>{
-          this.holesData.splice(index,1);
-          this.$dialog.alert({
-            message:"删除成功空"
-          })
-          console.log('删除成功');
-        }).catch(err=>{
-          console.log('删除失败')
+    deleteHole(index) {
+      console.log("删除", index);
+      this.$axios
+        .post("/treehole/deleteTreeHole", {
+          treeholeId: this.holesData[index].treeholeId
         })
+        .then(res => {
+          this.holesData.splice(index, 1);
+          this.$dialog.alert({
+            message: "删除成功空"
+          });
+          console.log("删除成功");
+        })
+        .catch(err => {
+          console.log("删除失败");
+        });
     }
   },
-  beforeRouteEnter(to,from,next){
-    let count = to.query.count
-    next(vm=>{
-      if(count == vm.holesData.length){
-        console.log('不需要更新');
-      }else{
-        //更新        
-        console.log('需要更新');
-        vm.$axios.get('/treehole/getMyTreeHoles').then(res=>{
-          console.log('获取我的树洞成功',res.data.result);
-          vm.holesData = res.data.result;
-        }).catch(err=>{
-          console.log('获取我的树洞错误',err);
-        })
+  beforeRouteEnter(to, from, next) {
+    let count = to.query.count;
+    next(vm => {
+      if (count == vm.holesData.length) {
+        console.log("不需要更新");
+      } else {
+        //更新
+        console.log("需要更新");
+        vm.$axios
+          .get("/treehole/getMyTreeHoles")
+          .then(({ data }) => {
+            console.log("获取我的树洞成功", data.result);
+            let holesData = data.result;
+            holesData.map(item => item.hide = false);
+            vm.holesData = holesData;
+          })
+          .catch(err => {
+            console.log("获取我的树洞错误", err);
+          });
       }
     });
   }
@@ -125,13 +135,13 @@ export default {
   /* overflow: scroll; */
   position: relative;
 }
-.delete{
+.delete {
   position: absolute;
-  right:10px;
-  top:10px;
-  width:30px;
-  height:30px;
-  background:url('~@/assets/Remove.png') no-repeat center center;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  background: url("~@/assets/Remove.png") no-repeat center center;
   background-size: 100% 100%;
 }
 .holes:last-child {
@@ -146,7 +156,7 @@ export default {
 }
 .holes p {
   box-sizing: border-box;
-  padding:0 20px;
+  padding: 0 20px;
   width: 300px;
   text-align: left;
   font-size: 12px;
@@ -215,20 +225,20 @@ export default {
   background-color: #eee;
 }
 /* 每一条评论 */
-.comment{
+.comment {
   margin-bottom: 12px;
 }
-.comment img{
-  width:30px;
-  height:30px;
+.comment img {
+  width: 30px;
+  height: 30px;
   margin-right: 20px;
   border-radius: 50%;
 }
-.comment span{
-  margin-top:8px;
+.comment span {
+  margin-top: 8px;
   font-size: 10px;
 }
-.comment{
+.comment {
   display: flex;
   align-items: flex-start;
 }
