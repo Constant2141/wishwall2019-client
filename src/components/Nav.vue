@@ -16,12 +16,12 @@
       </div>
     </div>
     <!-- （声明导航） -->
-    <router-link id="wishwall" class="nav-list" :to="{path:'/wishwall'}" replace>
-      <img :src="imgSrc[0]" />
+    <router-link id="wishwall" class="nav-list" :to="{path:'/wishwall'}">
+      <div class="router-img1 router-img" :class="{'active':(activeNavIndex == 1)}"></div>
       <span>许愿墙</span>
     </router-link>
-    <router-link id="treehole" class="nav-list" :to="{path:'/treehole'}" replace>
-      <img :src="imgSrc[1]" />
+    <router-link id="treehole" class="nav-list" :to="{path:'/treehole'}">
+      <div class="router-img2 router-img" :class="{'active':activeNavIndex == 2}"></div>
       <span>树洞</span>
     </router-link>
 
@@ -29,12 +29,12 @@
       <div id="main-box"></div>
     </div>
 
-    <router-link id="starball" class="nav-list" :to="{path:'/planet'}" replace>
-      <img :src="imgSrc[2]" />
+    <router-link id="starball" class="nav-list" :to="{path:'/planet'}">
+      <div class="router-img3 router-img" :class="{'active':activeNavIndex == 4}"></div>
       <span>星球</span>
     </router-link>
-    <router-link id="mine" class="nav-list" :to="{path:'/mine'}" replace>
-      <img :src="imgSrc[3]" />
+    <router-link id="mine" class="nav-list" :to="{path:'/mine'}">
+      <div class="router-img4 router-img" :class="{'active':activeNavIndex == 5}"></div>
       <span>我的</span>
     </router-link>
   </div>
@@ -45,26 +45,8 @@ export default {
   props: ["toggleBool"],
   data() {
     return {
-      activeNavIndex:0,
+      activeNavIndex:1,
       activeBool: false,
-      activeSrc: [
-        require("../assets/nav/2.png"),
-        require("../assets/nav/4.png"),
-        require("../assets/nav/6.png"),
-        require("../assets/nav/8.png")
-      ],
-      notActiveSrc: [
-        require("../assets/nav/1.png"),
-        require("../assets/nav/3.png"),
-        require("../assets/nav/5.png"),
-        require("../assets/nav/7.png")
-      ],
-      imgSrc: [
-        require("../assets/nav/2.png"),
-        require("../assets/nav/3.png"),
-        require("../assets/nav/5.png"),
-        require("../assets/nav/7.png")
-      ],
       // 三个发布路由
       routerLink: ["/wishRelease", "/treeholeRelease", "/planetRelease"]
     };
@@ -78,24 +60,16 @@ export default {
         this.$emit("removeCover");
         switch (target.id) {
           case "wishwall":
-            var arr = this.notActiveSrc.slice();
-            arr[0] = this.activeSrc[0];
-            this.imgSrc = arr;
+            this.activeNavIndex = 1;
             break;
           case "treehole":
-            var arr = this.notActiveSrc.slice();
-            arr[1] = this.activeSrc[1];
-            this.imgSrc = arr;
+            this.activeNavIndex = 2;
             break;
           case "starball":
-            var arr = this.notActiveSrc.slice();
-            arr[2] = this.activeSrc[2];
-            this.imgSrc = arr;
+            this.activeNavIndex = 4;
             break;
           case "mine":
-            var arr = this.notActiveSrc.slice();
-            arr[3] = this.activeSrc[3];
-            this.imgSrc = arr;
+            this.activeNavIndex = 5;
             break;
         }
       } else if (
@@ -115,7 +89,7 @@ export default {
         }
       } else if (
         target &&
-        (target.nodeName.toLocaleLowerCase() == "img" ||
+        (target.nodeName.toLocaleLowerCase() == "div" ||
           target.nodeName.toLocaleLowerCase() == "span")
       ) {
         this.changeNav({ target: target.parentNode });
@@ -215,9 +189,36 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.nav-list > img {
+.nav-list .router-img {
+  width:8vw;
   height: 6vw;
   margin: 2vw 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.nav-list .router-img1{
+  background-image: url('~@/assets/nav/1.png')
+}
+.nav-list .router-img2{
+  background-image: url('~@/assets/nav/3.png')
+}
+.nav-list .router-img3{
+  background-image: url('~@/assets/nav/5.png')
+}
+.nav-list .router-img4{
+  background-image: url('~@/assets/nav/7.png')
+}
+.nav-list .router-img1.active{
+  background-image: url('~@/assets/nav/2.png')
+}
+.nav-list .router-img2.active{
+  background-image: url('~@/assets/nav/4.png')
+}
+.nav-list .router-img3.active{
+  background-image: url('~@/assets/nav/6.png')
+}
+.nav-list .router-img4.active{
+  background-image: url('~@/assets/nav/8.png')
 }
 /* 中心区域 */
 #main-box {
