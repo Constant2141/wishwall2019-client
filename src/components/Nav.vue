@@ -46,7 +46,6 @@ export default {
   data() {
     return {
       activeNavIndex:0,
-      isGirl: true,
       activeBool: false,
       activeSrc: [
         require("../assets/nav/2.png"),
@@ -129,8 +128,10 @@ export default {
       this.$emit("removeCover");
     }
   },
-  created(){
-    
+  computed:{
+    isGirl(){
+      return this.$store.state.userInfo.sex == 2;
+    }
   }
 };
 </script>
