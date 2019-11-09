@@ -34,7 +34,6 @@ export default {
   methods: {
     release() {
       // 向后台发送数据
-      // console.log(localStorage.getItem('token'))
       if (this.content == "") {
         this.$dialog.alert({
           message: "愿望内容不可为空"
@@ -42,7 +41,7 @@ export default {
       } else {
         console.log("要发请求了");
         this.$axios
-          .post("treehole/addTreeHole", {text:this.content})
+          .post("treehole/addTreeHole", { text: this.content })
           .then(res => {
             console.log(res);
             this.$dialog.alert({
@@ -93,7 +92,6 @@ export default {
   display: inline-block;
   margin-left: 2vw;
   font-size: 18px;
-  /* padding-top: .5vw; */
 }
 .release-button {
   display: inline-block;
@@ -104,18 +102,14 @@ export default {
 /* 编辑栏样式 */
 .edit-area {
   width: 100vw;
-  height: 56vw;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 3px 6px;
 }
 .wish-area textarea {
-  border-top:none;
-  border-bottom:1px solid rgb(245, 245, 245);
-  border-left:none;
-  border-right:none;
+  border: none;
   width: 92vw;
   height: 40vw;
   padding: 5vw 4vw 3vw 4vw;
   outline: none;
-  box-shadow: 0 3px 15px rgb(238, 237, 237);
 }
 .wish-area textarea::placeholder {
   color: #b8b8b8;
