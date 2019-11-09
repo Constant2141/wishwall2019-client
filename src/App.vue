@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import navi from "./components/Nav.vue";
+import navi from "@/components/Nav.vue";
 
 //阻止默认行为函数
 function preventDefault(e) {

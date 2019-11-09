@@ -129,7 +129,9 @@ export default {
       this.$emit("removeCover");
     }
   },
-  mounted() {}
+  created(){
+    
+  }
 };
 </script>
 <style scoped>

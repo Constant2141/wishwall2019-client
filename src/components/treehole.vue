@@ -142,8 +142,8 @@ export default {
       // alert('next')
     }
   },
-  mounted() {
-    console.log('treehole mounted')
+  created() {
+    console.log('treehole created')
     // this.clientHeight =
     //   (window.innerHeight ||
     //     document.documentElement.clientHeight ||
@@ -325,6 +325,7 @@ export default {
 .commentList span{
   display: block;
   /* float: right; */
+  word-break: break-all;
   margin-top:8px;
   font-size: 10px;
 }

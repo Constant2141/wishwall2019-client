@@ -1,19 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
+const state = {
+  userInfo: null,
+  token: '',
+  token_exp: '',
+}
 
-const store = new Vuex.Store({
-  state:{
-    userInfo:localStorage.getItem('userInfo'),
-    token:localStorage.getItem('token'),
-    token_exp:localStorage.getItem('token_exp'),
-  },
-  mutations:{
-    
+const mutations = {
+  initUser(state, payload) {
+    for(let prop in payload){
+      state[prop] = payload[prop]
+    }
   }
-})
+}
 
-export default store
+export default new Vuex.Store({
+  state,
+  mutations,
+  plugins: [createPersistedState()]
+})
 

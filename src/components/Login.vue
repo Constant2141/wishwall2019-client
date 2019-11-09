@@ -18,16 +18,18 @@ export default {
   methods:{
     getUserInfo(){
       // console.log(1)
-      axios.get('http://47.100.12.168:3000/login/getUserInfo?userID=11')
+      axios.get('http://47.100.12.168:3000/login/getUserInfo?userID=00')
       .then(res => {
         console.log(res);
         
         
         if(res.status == 200){
           console.log(res.data)
-          localStorage.setItem('token',res.data.token);
-          localStorage.setItem('token_exp',new Date().getTime());
-          localStorage.setItem('userInfo',JSON.stringify(res.data));
+          this.$store.commit('initUser',{
+            token:res.data.token,
+            token_exp:new Date().getTime(),
+            userInfo:res.data
+          })
         }else{
           console.log('响应失败')
           }
@@ -35,6 +37,8 @@ export default {
       .catch(err => {
         console.log(err)
         console.log('获取失败')
+      }).finally(() => {
+        console.log('登录了，store改了吗',this.$store.state);
       })
       
     },

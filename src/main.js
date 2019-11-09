@@ -12,7 +12,6 @@ import { Popup } from 'vant';
 import { Dialog } from 'vant';
 import { DropdownMenu, DropdownItem } from 'vant';
 import store from './vuex/store'
-import { userInfo } from 'os';
 import { PullRefresh } from 'vant';
 import { Uploader } from 'vant';
 import { Toast } from 'vant';
