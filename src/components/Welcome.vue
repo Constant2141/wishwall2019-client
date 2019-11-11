@@ -1,7 +1,7 @@
 <template>
   <div class="first">
     <div class="welcome" v-if="!choose">
-      <div 
+      <div
         :class="{'words-appear':welcome,'words-disappear':!welcome}" >
           <p>欢迎使用</p>
           <p>女生节许愿墙</p>
@@ -53,7 +53,7 @@ export default {
   },
   methods:{
     wordsMove(){
-      
+
     },
     selectBoy(){
       this.boy = true;
@@ -66,15 +66,18 @@ export default {
       this.sex = 2;
     },
     confirmSex(){
-      let trueSex = JSON.parse((localStorage.getItem('userInfo'))).sex;
+      let trueSex = localStorage.sex;
       if(this.sex){
         if(this.sex!=trueSex){
           this.$dialog.confirm({
             message:'您选择的性别和微信性别不匹配，是否继续'
           })
           .then(()=>{
-            localStorage.setItem('userInfo.sex',trueSex)
-            this.$router.push({path:'/wishwall'});
+            this.$axios.get(`/user/set?sex=${this.sex}`)
+            .then(res => {
+                localStorage.setItem('sex',this.sex)
+                this.$router.push({path:'/wishwall'});
+              })
             })
           .catch(()=>{})
         }else{
@@ -94,7 +97,7 @@ export default {
            this.choose = true;
         }, 1000);
       },2000)
-     
+
     }
   }
 </script>
@@ -133,7 +136,7 @@ export default {
 .words-appear p,
 .words-disappear p{
   font-size: 2.25rem;
-  margin-bottom: 2vh; 
+  margin-bottom: 2vh;
 }
 .logo{
   position: fixed;;
@@ -180,7 +183,7 @@ export default {
 .avatar{
   width:22vw;
   height:22vw;
-  border-radius: 50px; 
+  border-radius: 50px;
   margin:auto;
   margin-top: 7vh;
   margin-bottom: 8vh;
@@ -208,12 +211,12 @@ export default {
 }
 .isGirl{
   background-color: #FFC4C4;
-  color: #fff; 
+  color: #fff;
 }
 .confirm-girl{
   border:0;
   color: #ffffff;
-  background: linear-gradient(left,#fd9cbf,#fff8c9); 
+  background: linear-gradient(left,#fd9cbf,#fff8c9);
 }
 .confirm-boy{
   border:0;
