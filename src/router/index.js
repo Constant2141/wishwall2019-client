@@ -25,7 +25,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/wishwall"
+      redirect: "/login"
     },
     {
       path: "/treehole",

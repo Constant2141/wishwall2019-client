@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">      
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- 我需要一张屏障 -->
     <div :class="[{'cover-active':toggleBool},'black-cover']"></div>
     <!-- 路由 -->
@@ -20,6 +20,7 @@
 
 <script>
 import navi from "@/components/Nav.vue";
+import share from '../utils/wxshare.js'
 
 //阻止默认行为函数
 function preventDefault(e) {
@@ -34,6 +35,9 @@ export default {
       toggleBool: true,
       showNav:true
     };
+  },
+  mounted(){
+    share()
   },
   methods: {
     // 盖锅盖

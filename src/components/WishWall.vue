@@ -10,7 +10,7 @@
         <li class="tip-wrapper">
           <img src="@/assets/tips.png" style="width:20px" @click="checkTips()">
         </li>
-      </ul> 
+      </ul>
       <div class="banner">
         <swiper :options="swiperOption">
           <swiper-slide><img src="../assets/banner/wishwall.jpg" alt=""></swiper-slide>
@@ -27,7 +27,7 @@
           @refresh="onRefresh">
             <div>
                 <div class="wish"
-                  v-for="(wish,index) in wishes" 
+                  v-for="(wish,index) in wishes"
                   :key="index">
                   <div class="wish-body">
                     <div class="take-button"
@@ -62,46 +62,46 @@
                     <div class="contact-way"
                       v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
                   </div>
-                  <div class="separate" v-show="!wishes[index].gainOrNot"></div>  
+                  <div class="separate" v-show="!wishes[index].gainOrNot"></div>
                 </div>
             </div>
             <div class="loading-more">
               <p v-show='loadState==0'>下拉加载更多</p>
               <p v-show='loadState==1'>正在加载...</p>
               <p v-show='loadState==2'>我是有底线的</p>
-              <p v-show='loadState==3' >加载失败，请刷新重试</p>
+              <p v-show='loadState==3'>加载失败，请点击重试</p>
             </div>
         </van-pull-refresh>
       </div>
-      <div class="cover" v-show="readTips">
+      <div class="cover" v-show="readTips" @touchmove.prevent>
         <div class="tips">
-          <h3>玩法介绍</h3>
-          <h5>
-            <img src="@/assets/nav/2.png" alt="">  
+          <h2>玩法介绍</h2>
+          <h4>
+            <img src="@/assets/nav/2.png" alt="">
             许愿墙
-          </h5>
+          </h4>
           <p>一个女生许愿，男生实现的线上平台。</p>
           <p>※女生可以自定义许愿的内容，选择是否留下联系方式，联系方式仅会展示给领取愿望的人，不会出现在首页。</p>
           <p>※愿望可以被多人领取，一旦被领取，将在四个小时后从首页消失，所以请谨慎领取，不要辜负每一个心愿~</p>
           <p>※女生可以在“我的心愿”界面查看心愿的领取详情，心愿被完成之后请及时点击“确认完成”，提醒其他领取你心愿的小伙伴哟</p>
           <p>同理，男生可以在“我的心愿”界面查看你领取心愿的完成情况噢~</p>
           <p>※11月25日男女反转，男生许愿，女生实现，男孩子们也应该拥有节日~</p>
-          <h5>
+          <h4>
             <img src="@/assets/nav/4.png" alt="">
             树洞
-          </h5>
+          </h4>
           <p>一个以匿名身份互相吐露心声的真心话空间。</p>
           <p>※每一条树洞都是随机出现的，你将不能在“我的”界面中看到你评论/点赞过的树洞，请感恩每一次相遇~</p>
-          <h5>
-            <img src="@/assets/nav/6.png" alt="">  
+          <h4>
+            <img src="@/assets/nav/6.png" alt="">
             星球
-          </h5>
+          </h4>
           <p>一个校内学生畅谈混脸熟的日常社区。</p>
           <p>※带上你想讨论的话题，在星球社区和身边的同学互相交流。</p>
           <p>※浏览周围人对日常生活的吐槽，用点赞评论表达你的态度。</p>
         </div>
         <div @click="closeTip()">
-          <img src="@/assets/closetips.png" alt=""> 
+          <img src="@/assets/closetips.png" alt="">
         </div>
       </div>
   </div>
@@ -129,8 +129,9 @@ export default {
       wishTotal:'', //心愿的总条数
       curCampus:'全部', //当前所在学校，默认为全部
       isDownLoading:false,
-      isBottom:false, //是否是页面最底端
-      loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
+      isBottom:'', //是否是页面最底端
+      loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2为加载完毕,没有更多数据了
+      startY: 0, //按下的位置
       finished: false, //全部数据是否加载完
       readTips:false,
     }
@@ -138,16 +139,17 @@ export default {
   methods:{
     onRefresh(){
       this.page = 1;
-      setTimeout(async()=>{
-        this.wishes = await this.getData()
-        this.isDownLoading = false; 
+      setTimeout(()=>{
+        this.getData()
+        this.isDownLoading = false;
       },500)
     },
     //判断滚动条是否在底部
     checkBottom(){
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;// 获取滚动条的高度
+      // console.log(scrollTop)
       const winHeight = document.documentElement.clientHeight || document.body.clientHeight; // 一屏的高度
-      const scrollHeight = (()=>{
+      const scrollHeight = (function() {
         let bodyScrollHeight = 0
         let documentScrollHeight = 0
         if (document.body) {
@@ -159,11 +161,10 @@ export default {
         // 当页面内容超出浏览器可视窗口大小时，Html的高度包含body高度+margin+padding+border所以html高度可能会大于body高度
         return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
       })()
-      // console.log(scrollTop)
-      // console.log(parseInt(scrollHeight)-winHeight)
-      this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
+      this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight;
+      this.scrollTop = scrollTop;
     },
-    
+
     onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
@@ -179,44 +180,49 @@ export default {
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
         this.loadState = 2;
-      } 
+      }
     },
     async getData(){
-      let campus = this.curCampus;
-      //在需要返回的值前加await
-      let result  = await this.$axios.get('/wish/list',{
-        params:{
-          curPage:this.page,
-          wish_where:campus=='全部'?'':`${campus}校区`
-        }
-      })
-      .then(async res=>{
-        if(res.status == 200){
-          let temp = await res.data.result.wishList.rows;
-          this.handleAnonymous(temp);
-          this.handleTime(temp);
-          // this.wishes = temp;
-          this.wishTotal = res.data.result.wishList.count;
-          return temp;
-        }
-      })
-      .catch(err =>console.log(err))
-      return result;
+      try{
+        let campus = this.curCampus;
+        //在需要返回的值前加await
+        let result  = await this.$axios.get('/wish/list',{
+          params:{
+            curPage:this.page,
+            wish_where:campus=='全部'?'':`${campus}校区`
+          }
+        })
+        .then(async res=>{
+          if(res.status == 200){
+            let temp = await res.data.result.wishList.rows;
+            this.handleAnonymous(temp);
+            this.handleTime(temp);
+            // this.wishes = temp;
+            this.wishTotal = res.data.result.wishList.count;
+            return temp;
+          }
+        })
+        .catch(err =>console.log(err))
+        return result;
+      }
+      finally{
+        this.loadState = 3;
+      }
     },
     takeWish(index){
       this.wishes[index].gainOrNot = true;
       //一开始的wish_many是第一次发请求获得的，所以这里要手动加一
-      this.wishes[index].wish_many++; 
+      this.wishes[index].wish_many++;
       this.$axios.get('/wish/gain',{
         params:{
           uuid:this.wishes[index].uuid
         }
       })
     },
-    async changeCampus(index){
+    changeCampus(index){
       this.isActive = index;
       this.curCampus = event.currentTarget.innerHTML;
-      this.wishes = await this.getData();
+      this.getData();
     },
     handleAnonymous(arr){
       arr.map(item=>{
@@ -234,13 +240,7 @@ export default {
         if(createDay == curDay){
             item.createdAt = time.getHours()+':'+time.getMinutes();
         }else{
-            let gapDay;
-            if(curDay > createDay){
-              gapDay = curDay - createDay;
-            }
-            if(curDay < createDay){
-              gapDay = createDay - curDay;
-            }
+            let gapDay = curDay - createDay;
             item.createdAt = gapDay + '天前';
         }
     })
@@ -252,6 +252,11 @@ export default {
     },
     closeTip(){
       this.readTips = false;
+    }
+  },
+  watch:{
+    wishes(val){
+      console.log(val);
     }
   },
   async mounted(){
@@ -272,7 +277,7 @@ export default {
 }
 .header{
   position:fixed;
-  background-color:#fff; 
+  background-color:#fff;
   z-index: 20;
   height: 200px;
   width: 100%;
@@ -295,7 +300,7 @@ li{
   height: 28px;
   border-radius: 15px;
   line-height: 28px;
-  margin-right: 10px;  
+  margin-right: 10px;
 }
 .tip-wrapper{
   display: flex;
@@ -344,7 +349,7 @@ li{
   color: #ffffff;
 }
 .taken-button{
-  background: #D2D2D2 !important; 
+  background: #D2D2D2 !important;
 }
 .wish-content{
   padding-left: 24px;
@@ -357,7 +362,7 @@ li{
 }
 .wish-tag {
   justify-content: space-between;
-  align-items: top;
+  align-items: center;
   width: 238px;
 }
 .yellow-left{
@@ -392,7 +397,7 @@ li{
 }
 .wish-txt{
   flex-direction:column;
-  font-size: 12px; 
+  font-size: 12px;
 }
 b{
   margin-bottom:12px;
@@ -444,9 +449,9 @@ b{
   justify-content: center;
   align-items: center;
 }
-h3{
+h2{
   text-align: center;
-  font-size:18px;
+  font-size:20px;
 }
 .tips{
   position: relative;
@@ -467,8 +472,8 @@ h3{
 .tips p{
   font-size: 12px;
 }
-.tips h5{
-  margin-top: 2vw;
+.tips h4{
+  margin-top: 4vw;
 }
 .cover img{
   width: 35px;
