@@ -214,9 +214,10 @@ export default {
       })
     },
     async changeCampus(index){
-      // window.scrollTo(0,0);
+      
       this.isActive = index;
       this.curCampus = event.currentTarget.innerHTML;
+      window.scrollTo(0,0);
       this.wishes = await this.getData();
       
     },
