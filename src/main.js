@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Axios from 'axios'
-/*使用的时候注意版本*/ 
+/*使用的时候注意版本*/
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import { Picker } from 'vant';
@@ -56,5 +56,5 @@ new Vue({
   store,
   components: { App },
   template: '<App/>',
- 
+
 })

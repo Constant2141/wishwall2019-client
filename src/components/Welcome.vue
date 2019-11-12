@@ -76,12 +76,12 @@ export default {
             this.$axios.get(`/user/set?sex=${this.sex}`)
             .then(res => {
                 localStorage.setItem('sex',this.sex)
-                this.$router.push({path:'/wishwall'});
+                this.$router.replace({path:'/wishwall'});
               })
             })
           .catch(()=>{})
         }else{
-          this.$router.push({path:'/wishwall'})
+          this.$router.replace({path:'/wishwall'})
         }
       }else{
         this.$dialog.alert({

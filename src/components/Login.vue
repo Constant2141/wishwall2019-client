@@ -65,14 +65,10 @@ export default {
     clearInterval(this.timer);
   },
   mounted(){
-      let RE = new RegExp(/\w+\&/);
       let _this = this
-
-      if(location.search.match(RE)){
-        let str = location.search.match(RE)[0]
-        let len = str.length;
-        let code = str.substring(0,len-1)
-
+      if(location.href.includes('code')) {
+        let query = location.href.split('?')[1].split('&')[0]
+        let code = query.slice(5)
         this.$axios.get(`/login?code=${code}`)
         .then(res => {
           let user = res.data;
@@ -90,10 +86,13 @@ export default {
             _this.$router.replace({path:'/wishwall'})
           }
         }).catch(e => console.log(e))
-      }else{
-
+      }
+      else if(!localStorage.getItem('token')){
         let href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxce1195ab4b9fcb66&redirect_uri=http%3A%2F%2Fwx.1bin.top&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect`
+        // window.open(href,'_self')
         window.location.href =href;
+      }else {
+        _this.$router.replace({path:'/wishwall'})
       }
     // this.getUserInfo();
   }
