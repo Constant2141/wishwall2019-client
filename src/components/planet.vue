@@ -6,60 +6,63 @@
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
-            <div class="message">
+            <!-- <div class="message">
                 10条更新！
-            </div>
+            </div> -->
             <div class="changeSort">
-                <!-- <van-dropdown-item v-model="value1" :options="" /> -->
                     <van-dropdown-menu >
                         <van-dropdown-item v-model="value1" :options="option1" />
                     </van-dropdown-menu>
             </div>
         </div>
-        <div class="content">
-            <div class="col" ref="col1">
-                <div 
-                :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
-                v-for="(item,index) in topicLeft" 
-                :key="index" 
-                ref="colLeft"
-                @click="toTopic(item,$event)" >
-                    <div  class="blur" ></div>
-                    <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
-                    <!-- <img :src="item.bgPic" alt=""> -->
-                    <div class="TopicText">{{item.title}}</div>
-                    <div class="heat">
-                        <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{item.hot}}</span>
+        <van-pull-refresh
+        v-model="isDownLoading"
+        @refresh="onRefresh">
+            <div class="content">
+                <div class="col" ref="col1">
+                    <div 
+                    :style="{backgroundImage: item.bgPic}"
+                    v-for="(item,index) in topicLeft" 
+                    :key="index" 
+                    ref="colLeft"
+                    @click="toTopic(item,$event)" >
+                        <div  class="blur" ></div>
+                        <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
+                        <!-- <img :src="item.bgPic" alt=""> -->
+                        <div class="TopicText">{{item.title}}</div>
+                        <div class="heat">
+                            <img src="../assets/hot.png" alt="" width="20" height="20">
+                            <span>{{item.hot}}</span>
+                        </div>
                     </div>
+                
                 </div>
-               
-            </div>
-            <div class="col" ref="col2">
-                <div 
-                :style="{backgroundImage: 'url(' + item.bgPic + ')'}"
-                v-for="(item,index) in topicRight" 
-                :key="index" 
-                @click="toTopic(item,$event)" 
-                ref="colRight">
-                    <div  class="blur" ></div>
-                    <!-- <img :src="item.bgPic" alt=""> -->
-                    <div class="TopicText">{{item.title}}</div>
-                    <div class="heat">
-                        <img src="../assets/hot.png" alt="" width="20" height="20">
-                        <span>{{item.hot}}</span>
+                <div class="col" ref="col2">
+                    <div 
+                    :style="{backgroundImage: item.bgPic}"
+                    v-for="(item,index) in topicRight" 
+                    :key="index" 
+                    @click="toTopic(item,$event)" 
+                    ref="colRight">
+                        <div  class="blur" ></div>
+                        <!-- <img :src="item.bgPic" alt=""> -->
+                        <div class="TopicText">{{item.title}}</div>
+                        <div class="heat">
+                            <img src="../assets/hot.png" alt="" width="20" height="20">
+                            <span>{{item.hot}}</span>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
+        </van-pull-refresh>
       </div>
       
-      <div class="SearchArea" v-show="showSearch" ref="Search">
+      <div class="SearchArea" v-show="showSearch" ref="Search" >
           <p>热门</p>
           <div class="HotSearch">
-              <div class="SearchLabel" v-for="(item,index) in searchLabel" :key="index">
-                <span>{{item}}</span>
+              <div class="SearchLabel" v-for="(item,index) in searchLabel" :key="index" @click="toTopic(item,$event)">
+                <span># {{item.title}}</span>
               </div>
           </div>
         <div class="cancelSearch" @click="changePage(false)"></div>
@@ -75,10 +78,11 @@ export default {
             // 通知栏
             msgCount:0,
             msgAfter:"条更新！",
-            value1:0,
+            value1:"最热",
+            page:1,
             option1: [
-                { text: '最新', value: 0 },
-                { text: '最热', value: 1 }
+                { text: '最热', value: "最热" },
+                { text: '最新', value: "最新" }
             ],
 
             showSearch:false,//是否显示搜索区域
@@ -101,10 +105,67 @@ export default {
             topicRight:[],
             pic:"",
 
-            searchText:""
+            isDownLoading:false,
+            isBottom:false, //是否是页面最底端
+            loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
+            finished: false, //全部数据是否加载完
+            readTips:false,
+            searchText:"",
+
+            
+
         }
     },
     methods:{
+        onRefresh(){
+            this.page = 1;
+            setTimeout(async()=>{
+                await this.getData()
+                this.isDownLoading = false; 
+            },500)
+        },
+        //判断滚动条是否在底部
+        checkBottom(){
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;// 获取滚动条的高度
+            const winHeight = document.documentElement.clientHeight || document.body.clientHeight; // 一屏的高度
+            const scrollHeight = (()=>{
+                let bodyScrollHeight = 0
+                let documentScrollHeight = 0
+                if (document.body) {
+                bodyScrollHeight = document.body.scrollHeight
+                }
+                if (document.documentElement) {
+                documentScrollHeight = document.documentElement.scrollHeight
+                }
+                // 当页面内容超出浏览器可视窗口大小时，Html的高度包含body高度+margin+padding+border所以html高度可能会大于body高度
+                return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
+            })()
+            // console.log(scrollTop)
+            // console.log(parseInt(scrollHeight)-winHeight)
+            this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
+        },
+        
+        onLoadList(){
+        //滚动条是否到达底部
+            this.checkBottom();
+            console.log(this.isBottom)
+            if(this.isBottom){
+                this.getData(true)
+            }
+            // if(this.isBottom && !this.finished){
+            // this.loadState = 1;
+            // setTimeout(async ()=>{
+            //     let tempList = this.wishes;
+            //     this.page++;
+            //     let temp = await this.getData();
+            //     this.wishes =  [...tempList,...temp];
+            // },1500)
+            // }
+            // if(this.wishes.length == this.wishTotal){
+            //     this.finished = true;
+            //     this.loadState = 2;
+            // } 
+        },
         search(event){//搜索功能
             console.log(event)
             if(event.code == "Enter"){
@@ -130,8 +191,20 @@ export default {
             this.$router.push({
                 name:"planetTopic",
             })
-
-            
+        },
+        getData(load = false){
+            if(!load)this.page = 1;
+            else this.page++;
+            this.$axios.get(`/star/list?flag=${this.value1=="最热"?0:1}&curPage=${this.page}`).then(res=>{
+                this.topic = res.data.result;
+                if(!load){
+                    this.topicLeft = [],this.topicRight = [];
+                }
+                console.log(res);
+                this.insertTopic(res.data.result);
+            }).catch(err=>{
+                console.log(err)
+            })
         },
         changePage(val){
             // if(val){
@@ -145,18 +218,21 @@ export default {
             // setTimeout(e=>{
                  
             // },500)
-            console.log(this.$refs.col1);
+            // console.log(this.$refs.col1);
             this.showSearch = val;
-            console.log(1);
         },
         insertTopic(allTopic){
-            console.log(this.topicLeft);
+            // console.log(this.topicLeft);
             if(allTopic){
                 allTopic.map((item,index)=>{
                     if(item.bgPic){
-                        item.bgPic = "http:/" + item.bgPic.substring(13);
+                        item.bgPic = `url("http:/${item.bgPic.substring(13)}")` ;
                         // console.log(item.bgPic)
                     }
+                    else{
+                        item.bgPic = "linear-gradient(to bottom right,#FD9CBF,#FFF8C9)";
+                    }
+                    // console.log(item.bgPic)
                     if(index % 2 == 0){
                         this.topicLeft.push(item);
                     }
@@ -189,23 +265,30 @@ export default {
         }
     },
     mounted(){
+        window.addEventListener("scroll", this.onLoadList)
         this.$axios.get("/star/topChart").then(res=>{
-            this.searchLabel = [];
-            res.data.result.map(item=>{
-                this.searchLabel.push("#"+item.title)
+            console.log(res)
+            this.searchLabel = res.data.result;
+            this.searchLabel.map(item=>{
+                if(item.bgPic){
+                        item.bgPic = "http:/" + item.bgPic.substring(13);
+                        console.log(item.bgPic)
+                } 
             })
         }).catch(err=>{
             console.log(err)
         })
     },
+    beforeDestroy(){
+        window.removeEventListener("scroll", this.onLoadList)
+    },
     created(){
-        this.$axios.get("/star/list").then(res=>{
-            this.topic = res.data.result;
-            console.log(res);
-            this.insertTopic(res.data.result);
-        }).catch(err=>{
-            console.log(err)
-        })
+        this.getData();
+    },
+    watch:{
+        value1(val){
+            this.getData();
+        }
     }
 }
 </script>
@@ -315,7 +398,7 @@ export default {
         display: inline-flex;
         width:100%;
         margin-top:7%;
-        background:rgb(141, 219, 202);
+        /* background:linear-gradient(to bottom,#ffdb9c,#ff9797) ; */
         border-radius:5px;
         vertical-align: top;
         overflow: hidden;
