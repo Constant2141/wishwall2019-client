@@ -15,6 +15,7 @@
                   
                   <div class="content-right">
                       <div class="username">{{item.nickname}}</div>
+                      <img :src="item.sex==2?girlImg:boyImg" alt="" class="sex">
                       <div class="date">{{item.date}}</div>
                       <div class="time">{{item.time}}</div>
                       <div class="content">{{item.comment}}</div>
@@ -22,7 +23,7 @@
               </div>
               <div class="function-area">
                   <div class="likeCount" @click="like(item,$event)">
-                        <img src="../assets/like.png" alt="">
+                        <img :src="item.likeOrNot?likedImg:likeImg" alt="">
                         <div>{{item.likes}}</div>
                   </div>
                   <div class="commentCount">
@@ -43,10 +44,16 @@ export default {
             topic:{},
             topicName:"#海底捞最喜欢什么火锅底料",
 
-            comment:[
+            comment:[//评论表
  
-            ]
+            ],
 
+            likeImg:require("../assets/like.png"),
+            likedImg:require("../assets/liked.png"),
+            girlImg:require("../assets/girl.png"),
+            boyImg:require("../assets/boy.png"),
+            
+            banLike:false
         }
     },
     methods:{
@@ -70,15 +77,27 @@ export default {
                 }
             })
         },
+        cancelLike(){
+            this.banLike = true;
+            setTimeout(()=>{
+                this.banLike = false;
+            },500)
+        },
         like(item,event){//点赞
             event.stopPropagation();//点赞时不需要路由跳转
             console.log(item)
+            if(this.banLike == true){
+                return ;
+            }
             if(item.likeOrNot == 0){
                 this.$axios.post("/star/handleLike",{
                     commentid:item.commentid,
                     upDown:1
                 }).then(res=>{
                     item.likes++;
+                    item.likeOrNot = 1;
+                    this.cancelLike();
+                    this.refresh();
                 }).catch(err=>{
                     console.log(err)
                 })   
@@ -88,18 +107,19 @@ export default {
                     commentid:item.commentid,
                     upDown:0
                 }).then(res=>{
-                    item.likes--;
+                    item.likes--; 
+                    item.likeOrNot = 0;
+                    this.cancelLike();
+                    this.refresh();
                 }).catch(err=>{
                     console.log(err)
                 })   
             }
-        }
-        
-    },
-     mounted(){
-        //  console.log(this.$route)
+        },
+        refresh(){
             this.topic = JSON.parse(localStorage.planet);
-            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
+
+            this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             console.log(this.topic)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 console.log(res)
@@ -108,18 +128,19 @@ export default {
             }).catch(err=>{
                 console.log(err)
             })
+        }
+        
+    },
+     mounted(){
+        //  console.log(this.$route)
+        this.refresh();
     },
     watch:{
         $route(to,from){
-            this.topic = JSON.parse(localStorage.planet);
-            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
-            this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
-                // console.log(res)
-                this.comment = this.handleTopicData(res.data.result);
-                // console.log(this.comment)
-            }).catch(err=>{
-                console.log(err)
-            })
+            if(to.name == "planetTopic"){
+                this.refresh();
+            }
+            
         }
     }
 }
@@ -207,6 +228,13 @@ export default {
         margin-left: 25px;
         margin-top: 15px;
     }
+    .sex{
+        display: inline-block;
+        width: 15px;
+        height:15px;
+        margin-left: -7px;
+        vertical-align: middle;
+    }
     .content-area > img{
         border-radius: 100%;
     }
@@ -244,6 +272,10 @@ export default {
     .likeCount,.commentCount,.likeCount img,.likeCount div,.commentCount img,.commentCount div{
         display: inline-block;
         vertical-align: top;
+    }
+    .likeCount img{
+        width:15px;
+        height: 15px;
     }
     .likeCount{
         margin-left: 243px;
