@@ -31,7 +31,7 @@
                   :key="index">
                   <div class="wish-body">
                     <div class="take-button"
-                      @click="takeWish(index)"
+                      @click="wishes[index].gainOrNot == false? takeWish(index): null"
                       :class="{'taken-button':wishes[index].gainOrNot}">
                       <span v-if="!wishes[index].gainOrNot">领取心愿</span>
                       <span v-if="wishes[index].gainOrNot">您已领取</span>
@@ -214,9 +214,11 @@ export default {
       })
     },
     async changeCampus(index){
+      // window.scrollTo(0,0);
       this.isActive = index;
       this.curCampus = event.currentTarget.innerHTML;
       this.wishes = await this.getData();
+      
     },
     handleAnonymous(arr){
       arr.map(item=>{
@@ -247,11 +249,12 @@ export default {
     return arr;
     },
     checkTips(){
-      console.log('tips');
       this.readTips = true;
+      document.body.style.overflow = 'hidden'
     },
     closeTip(){
       this.readTips = false;
+      document.body.style.overflow = '';
     }
   },
   async mounted(){
@@ -379,6 +382,12 @@ li{
   left: -12px;
   overflow: hidden;
 }
+/* .avatar-center{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform:translateX(-50%) translateY(-50%)
+} */
 .avatar-wrapper img{
   width: 50px;
 }
