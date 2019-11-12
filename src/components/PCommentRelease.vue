@@ -61,14 +61,16 @@ export default {
             })
         },
         refreshTopic(){
+            console.log(JSON.parse(localStorage.planet))
             this.topic = JSON.parse(localStorage.planet).title
         }
     },
     mounted(){
         this.refreshTopic();
     },
-    wacth:{
-        $router(to,from){
+    watch:{
+        $route(to,from){
+            // console.log(1)
             this.refreshTopic();
         }
     }

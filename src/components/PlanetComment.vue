@@ -9,14 +9,15 @@
           
           <div class="content-right">
               <div class="username">{{user.nickname}}</div>
+              <img :src="user.sex==2?girlImg:boyImg" alt="" class="sex">
               <div class="date">{{user.date}}</div>
               <div class="time">{{user.time}}</div>
               <div class="content">{{user.comment}}</div>
           </div>
       </div>
       <div class="function-area">
-          <div class="likeCount">
-                <img src="../assets/like.png" alt="">
+          <div class="likeCount" @click="like(user,$event)">
+                <img :src="user.likeOrNot?likedImg:likeImg" alt="">
                 <div>{{user.likes}}</div>
           </div>
       </div>
@@ -26,7 +27,7 @@
         <div class="top-name">评论</div>
         <div class="comment-count">
           <img src="../assets/comment2.png" alt="">
-          <div>{{commentCount}}</div>
+          <div>{{user.many}}</div>
         </div>
       </div>
       <div class="comment-list">
@@ -37,6 +38,7 @@
           <div class="comment-detail-content">
             <div class="detail-top">
               <div class="comment-username">{{item.nickname}}</div>
+              <img :src="item.sex==2?girlImg:boyImg" alt="" class="sex2">
               <div class="time-set">
                 <div class="comment-date">{{item.date}}</div>
                 <div class="comment-time">{{item.time}}</div>
@@ -77,6 +79,13 @@ export default {
 
 
       input:"",//发表内容
+
+      likeImg:require("../assets/like.png"),
+      likedImg:require("../assets/liked.png"),
+      girlImg:require("../assets/girl.png"),
+      boyImg:require("../assets/boy.png"),
+
+      banLike:false
     }
   },
 
@@ -103,6 +112,51 @@ export default {
       }
         
     },
+            cancelLike(){
+            this.banLike = true;
+            setTimeout(()=>{
+                this.banLike = false;
+            },500)
+        },
+        async like(item,event){//点赞
+            event.stopPropagation();//点赞时不需要路由跳转
+            
+            if(this.banLike == true){
+                return ;
+            }
+            if(item.likeOrNot == 0){
+                this.$axios.post("/star/handleLike",{
+                    commentid:item.commentid,
+                    upDown:1
+                }).then(res=>{
+                    console.log(res)
+                    item.likes++;
+                    item.likeOrNot = 1;
+                    localStorage.setItem("comment",JSON.stringify(item))
+                    this.cancelLike();//禁止重复快速地点赞，设置点赞间隔
+                    console.log(localStorage)
+                    // this.refresh();//刷新界面
+                }).catch(err=>{
+                    console.log(err)
+                })   
+            }
+            else{
+                this.$axios.post("/star/handleLike",{
+                    commentid:item.commentid,
+                    upDown:0
+                }).then(res=>{
+                    console.log(res)
+                    item.likes--; 
+                    localStorage.setItem("comment",JSON.stringify(item))
+                    this.cancelLike();
+                    console.log(localStorage)
+                    // this.refresh();
+                }).catch(err=>{
+                    console.log(err)
+                })   
+            }
+            
+        },
     release(){
       if(this.input != ""){
         let data = {
@@ -120,7 +174,9 @@ export default {
       }
     },
     refresh(){
+      console.log(localStorage)
       this.user = this.handleTopicData(JSON.parse(localStorage.comment));
+      // console.log(this.user)
       console.log(JSON.parse(localStorage.comment).commentid)
       this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
         this.comment = this.handleTopicData(res.data.result);
@@ -138,7 +194,11 @@ export default {
   },
   watch:{
     $route(to,from){
-      this.refresh();
+      console.log(to)
+      if(to.name == "planetcomment"){
+          console.log(1)
+         this.refresh();
+      }
     }
   }
 }
@@ -188,7 +248,20 @@ export default {
         top: -528px;   
         overflow: scroll;
     }
-
+    .sex{
+        display: inline-block;
+        width: 15px;
+        height:15px;
+        margin-left: -7px;
+        vertical-align: middle;
+    }
+    .sex2{
+        display: inline-block;
+        width: 15px;
+        height:15px;
+        /* margin-left: -7px; */
+        vertical-align: bottom;
+    }
     .content-area{
         min-height: 75px;
         width: 100%;
@@ -241,10 +314,13 @@ export default {
         display: inline-block;
         vertical-align: top;
     }
+    .likeCount img{
+      width: 15px;
+      height: 15px;
+    }
     .likeCount{
-        margin-left: 265px;
-        margin-right:4px;
-        margin-top: 3px;
+        position: absolute;
+        right: 27px;
     }
     .likeCount div{
         transform: scale(0.9)
