@@ -103,10 +103,10 @@ export default {
   },
   computed:{
     isGirl(){
-      if(this.$store.state.userInfo){
-        return this.$store.state.userInfo.sex == 2;
+      if(this.$store.state.wishwallUser){
+        return this.$store.state.wishwallUser.sex == 2;
       }else{
-        return false;
+        return true
       }
     }
   }
