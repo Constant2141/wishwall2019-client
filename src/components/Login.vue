@@ -18,14 +18,10 @@ export default {
       try {
         let res = await axios.get("http://47.100.12.168:3000/login/getUserInfo?userID=11")
         if (res.status == 200) {
-          // this.$store.commit("initUser",{
-          //   token: data.token,
-          //   token_exp: new Date().getTime(),
-          //   userInfo: data
-          // });
           localStorage.setItem('token',res.data.token);
           localStorage.setItem('token_exp',new Date().getTime());
           localStorage.setItem('userInfo',JSON.stringify(res.data));
+          this.$store.commit("initUser",res.data);
           console.log('登录成功');
         } else {
           console.log("响应失败");
