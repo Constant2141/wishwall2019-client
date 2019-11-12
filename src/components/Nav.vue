@@ -77,7 +77,6 @@ export default {
         target.id == "main-box"
       ) {
         //点中间区域
-        // this.imgSrc = this.notActiveSrc;
         // 禁用触摸滚动页面
         if (this.toggleBool) {
           this.activeBool = true;
@@ -104,7 +103,11 @@ export default {
   },
   computed:{
     isGirl(){
-      return this.$store.state.userInfo.sex == 2;
+      if(this.$store.state.wishwallUser){
+        return this.$store.state.wishwallUser.sex == 2;
+      }else{
+        return true
+      }
     }
   }
 };

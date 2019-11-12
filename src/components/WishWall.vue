@@ -201,6 +201,7 @@ export default {
         }
       })
       .catch(err =>console.log(err))
+      console.log(result)
       return result;
     },
     takeWish(index){
@@ -214,9 +215,10 @@ export default {
       })
     },
     async changeCampus(index){
-      // window.scrollTo(0,0);
       this.isActive = index;
       this.curCampus = event.currentTarget.innerHTML;
+      this.page = 1;
+      window.scrollTo(0,0);
       this.wishes = await this.getData();
       
     },
