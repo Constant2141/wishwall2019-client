@@ -22,7 +22,7 @@ export default {
   methods:{
     getUserInfo(){
       // console.log(1)
-      axios.get('http://47.100.12.168:3000/login/getUserInfo?userID=00')
+      axios.get('http://47.100.12.168:3000/login/getUserInfo?userID=11')
       .then(res => {
         console.log(res);
 
@@ -65,36 +65,36 @@ export default {
     clearInterval(this.timer);
   },
   mounted(){
-      let _this = this
-      if(location.href.includes('code')) {
-        let query = location.href.split('?')[1].split('&')[0]
-        let code = query.slice(5)
-        this.$axios.get(`/login?code=${code}`)
-        .then(res => {
-          let user = res.data;
-          console.log(user);
-          localStorage.setItem('token',user.token);
-          localStorage.setItem('sex',user.sex);
-          localStorage.setItem('token_exp',new Date().getTime());
-          localStorage.setItem('userInfo',user);
+      // let _this = this
+      // if(location.href.includes('code')) {
+      //   let query = location.href.split('?')[1].split('&')[0]
+      //   let code = query.slice(5)
+      //   this.$axios.get(`/login?code=${code}`)
+      //   .then(res => {
+      //     let user = res.data;
+      //     console.log(user);
+      //     localStorage.setItem('token',user.token);
+      //     localStorage.setItem('sex',user.sex);
+      //     localStorage.setItem('token_exp',new Date().getTime());
+      //     localStorage.setItem('userInfo',user);
 
-          if(user.isNewUser){
-            console.log('welcome');
-            _this.$router.replace({path:'/welcome'})
-          }else{
-            console.log('wishwall');
-            _this.$router.replace({path:'/wishwall'})
-          }
-        }).catch(e => console.log(e))
-      }
-      else if(!localStorage.getItem('token')){
-        let href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxce1195ab4b9fcb66&redirect_uri=http%3A%2F%2Fwx.1bin.top&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect`
-        // window.open(href,'_self')
-        window.location.href =href;
-      }else {
-        _this.$router.replace({path:'/wishwall'})
-      }
-    // this.getUserInfo();
+      //     if(user.isNewUser){
+      //       console.log('welcome');
+      //       _this.$router.replace({path:'/welcome'})
+      //     }else{
+      //       console.log('wishwall');
+      //       _this.$router.replace({path:'/wishwall'})
+      //     }
+      //   }).catch(e => console.log(e))
+      // }
+      // else if(!localStorage.getItem('token')){
+      //   let href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxce1195ab4b9fcb66&redirect_uri=http%3A%2F%2Fwx.1bin.top&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect`
+      //   // window.open(href,'_self')
+      //   window.location.href =href;
+      // }else {
+      //   _this.$router.replace({path:'/wishwall'})
+      // }
+    this.getUserInfo();
   }
 }
 </script>
