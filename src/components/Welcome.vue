@@ -74,6 +74,7 @@ export default {
           })
           .then(()=>{
             localStorage.setItem('userInfo.sex',trueSex)
+            this.$store.commit('initSex',this.sex)
             this.$router.push({path:'/wishwall'});
             })
           .catch(()=>{})
