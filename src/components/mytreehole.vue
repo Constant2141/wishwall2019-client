@@ -26,7 +26,6 @@
       </div>
     </div>
     <div class="nomore" v-if="this.holesData.length > 4?true:false">别再往下拉啦...</div>
-    <div class="nomore" v-else>你的树洞好少哦...</div>
   </div>
 </template>
 <script>
