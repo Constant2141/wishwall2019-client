@@ -50,6 +50,35 @@ export default {
       // }else{
       //   this.$router.push({path:'/wishwall'})
       // }
+    },
+    getMyInfo(){
+      if(location.href.includes('code')) {
+        let query = location.href.split('?')[1].split('&')[0]
+        let code = query.slice(5)
+        this.$axios.get(`/login?code=${code}`)
+        .then(res => {
+          let user = res.data;
+          localStorage.setItem('token',user.token);
+          localStorage.setItem('sex',user.sex);
+          localStorage.setItem('token_exp',new Date().getTime());
+          localStorage.setItem('userInfo',JSON.stringify(user));
+          this.$store.commit("initSex",user.sex);
+          if(user.isNewUser){
+            console.log('welcome');
+            this.$router.replace({path:'/welcome'})
+          }else{
+            console.log('wishwall');
+            this.$router.replace({path:'/wishwall'})
+          }
+        }).catch(e => console.log(e))
+      }
+      else if(!localStorage.getItem('token')){
+        let href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxce1195ab4b9fcb66&redirect_uri=http%3A%2F%2Fwx.1bin.top&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect`
+        // window.open(href,'_self')
+        window.location.href =href;
+      }else {
+        this.$router.replace({path:'/wishwall'})
+      }
     }
 
   },
@@ -67,36 +96,11 @@ export default {
     clearInterval(this.timer);
   },
   mounted(){
-      let _this = this
-      if(location.href.includes('code')) {
-        let query = location.href.split('?')[1].split('&')[0]
-        let code = query.slice(5)
-        this.$axios.get(`/login?code=${code}`)
-        .then(res => {
-          let user = res.data;
-          localStorage.setItem('token',user.token);
-          localStorage.setItem('sex',user.sex);
-          localStorage.setItem('token_exp',new Date().getTime());
-          localStorage.setItem('userInfo',JSON.stringify(user));
-          _this.$store.commit("initSex",user.sex);
-          if(user.isNewUser){
-            console.log('welcome');
-            _this.$router.replace({path:'/welcome'})
-          }else{
-            console.log('wishwall');
-            _this.$router.replace({path:'/wishwall'})
-          }
-        }).catch(e => console.log(e))
-      }
-      else if(!localStorage.getItem('token')){
-        let href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxce1195ab4b9fcb66&redirect_uri=http%3A%2F%2Fwx.1bin.top&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect`
-        // window.open(href,'_self')
-        window.location.href =href;
-      }else {
-        _this.$router.replace({path:'/wishwall'})
-      }
+      // 这是本地测试使用的
       // this.getUserInfo();
 
+      // 这是线上版本，打包的话注释掉上面的用下面这个方法
+      this.getMyInfo()
   }
 }
 </script>
