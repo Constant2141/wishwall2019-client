@@ -28,11 +28,11 @@ export default {
 
         if(res.status == 200){
           console.log(res.data)
-          this.$router.replace ({path:'/wishwall'})
           localStorage.setItem('token',res.data.token);
           localStorage.setItem('token_exp',new Date().getTime());
           localStorage.setItem('userInfo',JSON.stringify(res.data));
           this.$store.commit("initUser",res.data);
+          this.$router.replace ({path:'/wishwall'})
         }else{
           console.log('响应失败')
           }
@@ -79,6 +79,7 @@ export default {
           localStorage.setItem('sex',user.sex);
           localStorage.setItem('token_exp',new Date().getTime());
           localStorage.setItem('userInfo',JSON.stringify(user));
+          _this.$store.commit("initUser",res.data);
           if(user.isNewUser){
             console.log('welcome');
             _this.$router.replace({path:'/welcome'})
@@ -95,7 +96,7 @@ export default {
       }else {
         _this.$router.replace({path:'/wishwall'})
       }
-      this.getUserInfo();
+      // this.getUserInfo();
 
   }
 }
