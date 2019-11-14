@@ -4,7 +4,7 @@
       <div class="back" @click="back"></div>
       <div class="content-area">
           <div class="avator">
-              <img :src="user.headimgurl" alt="" width="48" height="48" >
+              <img :src="user.headimgurl" alt="" width="43" height="43" >
           </div>
           
           <div class="content-right">
@@ -27,7 +27,7 @@
         <div class="top-name">评论</div>
         <div class="comment-count">
           <img src="../assets/comment2.png" alt="">
-          <div>{{user.many}}</div>
+          <div>{{commentCount}}</div>
         </div>
       </div>
       <div class="comment-list">
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+
+import { debounce } from "@/utils/debounce.js";
 export default {
   data(){
     return {
@@ -121,42 +123,53 @@ export default {
         async like(item,event){//点赞
             event.stopPropagation();//点赞时不需要路由跳转
             
-            if(this.banLike == true){
-                return ;
-            }
+            // if(this.banLike == true){
+            //     return ;
+            // }
             if(item.likeOrNot == 0){
-                this.$axios.post("/star/handleLike",{
+                this.likepost(item,1,this)
+            }
+            else{
+                this.likepost(item,0,this)
+                    
+            }
+            
+        },
+      likepost:debounce((item,flag,th)=>{
+            console.log(2222)
+            if(flag){
+                th.$axios.post("/star/handleLike",{
                     commentid:item.commentid,
                     upDown:1
                 }).then(res=>{
-                    console.log(res)
+                    // console.log(res)
                     item.likes++;
+                    console.log(item.likes)
                     item.likeOrNot = 1;
                     localStorage.setItem("comment",JSON.stringify(item))
-                    this.cancelLike();//禁止重复快速地点赞，设置点赞间隔
-                    console.log(localStorage)
-                    // this.refresh();//刷新界面
                 }).catch(err=>{
                     console.log(err)
                 })   
             }
+               
             else{
-                this.$axios.post("/star/handleLike",{
+             th.$axios.post("/star/handleLike",{
                     commentid:item.commentid,
                     upDown:0
                 }).then(res=>{
                     console.log(res)
                     item.likes--; 
+                    item.likeOrNot = 0;
                     localStorage.setItem("comment",JSON.stringify(item))
-                    this.cancelLike();
+                    // this.cancelLike();
                     console.log(localStorage)
                     // this.refresh();
                 }).catch(err=>{
                     console.log(err)
-                })   
+                }) 
             }
             
-        },
+        },400),
     release(){
       if(this.input != ""){
         let data = {
@@ -176,10 +189,12 @@ export default {
     refresh(){
       console.log(localStorage)
       this.user = this.handleTopicData(JSON.parse(localStorage.comment));
+      this.commentCount = this.user.many;
       // console.log(this.user)
       console.log(JSON.parse(localStorage.comment).commentid)
       this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
         this.comment = this.handleTopicData(res.data.result);
+        this.commentCount = this.comment.length;
         console.log(this.comment)
         console.log(res);
       }).catch(err=>{
@@ -268,13 +283,16 @@ export default {
     }
     .avator{
         border-radius: 100%;  
-        overflow: hidden;
+        /* overflow: hidden; */
         width: 14%;
         height: 100%;
         display: inline-block;
         /* background: blue; */
         margin-left: 25px;
         margin-top: 15px;
+    }
+    .avator img{
+      border-radius: 100%;
     }
     .content-area > img{
         border-radius: 100%;
@@ -368,6 +386,7 @@ export default {
     }
     .comment-detail:last-child{
       padding-bottom:20px;
+      border-bottom:none !important;
     }
     .comment-detail{
       min-height: 45px;
@@ -381,6 +400,10 @@ export default {
     .comment-avator{
       width:15%;
       /* min-height: 100%; */
+    }
+    .comment-avator img{
+      border-radius: 50%;
+      /* background: blue; */
     }
     .comment-detail-content{
       width:80%;
