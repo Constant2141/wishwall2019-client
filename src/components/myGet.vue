@@ -40,7 +40,7 @@
         <div class="wish-info">
           <div class="little-info">
             <p class="getted">{{getInfo[index]}}</p>
-            <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
+            <div class="isGetted">
               <p>{{finish[index]}}</p>
             </div>
           </div>
@@ -82,7 +82,6 @@ export default {
       finish: [],
       nums: 0,
       wid: [],
-      hasGet: [],
       deleteWish: "",
       photoUrl: [],
       nickName: []
@@ -101,7 +100,6 @@ export default {
         let status = [];
         let people = [];
         this.wishes.forEach((value, index) => {
-          this.hasGet[index] = false;
           this.wid[index] = value.uuid;
           this.theWish[index] = value.wish_content;
           this.level[index] = value.wish_type;
@@ -132,28 +130,12 @@ export default {
         });
         status.forEach((value, index) => {
           if (value == 0) {
-            this.finish[index] = "确认完成";
-            this.hasGet[index] = false;
+            this.finish[index] = "未完成";
           } else if (value == 1) {
             this.finish[index] = "已完成";
-            this.hasGet[index] = true;
           }
         });
       });
-    },
-    finished(index) {
-      this.finish[index] = "已完成";
-      this.$set(this.finish, this.finish[index]);
-      this.hasGet[index] = true;
-      this.$set(this.hasGet, this.hasGet[index]);
-      this.$axios
-        .get(`/wish/finish?uuid=${this.wid[index]}`)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
     },
     backTo() {
       this.$router.replace("/mine");
@@ -352,20 +334,10 @@ export default {
 .isGetted {
   width: 13vw;
   height: 20px;
-  background-image: linear-gradient(325deg, #fd9bbf 0%, #fde8b7 100%);
   border-radius: 15px;
   margin-left: 40vw;
   margin-top: 9px;
-  color: white;
-}
-.hasGetted {
-  width: 13vw;
-  height: 20px;
-  background: #ffebeb;
-  border-radius: 0;
-  margin-left: 40vw;
-  margin-top: 9px;
-  color: #000000;
+  color: black;
 }
 .isGetted p {
   text-align: center;
