@@ -6,11 +6,11 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state:{
-    wishwallUser:null
+    sex:null
   },
   mutations:{
-    initUser(state,payload){
-      state.wishwallUser = payload
+    initSex(state,payload){
+      state.sex = payload
     }
   },
   plugins: [createPersistedState()]
