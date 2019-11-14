@@ -127,9 +127,10 @@ export default {
         },400),
         refresh(){
             this.topic = JSON.parse(localStorage.planet);
-
-            this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
-            console.log(this.topic)
+            // console.log(this.topic.bgPic)
+            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
+            
+            // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
