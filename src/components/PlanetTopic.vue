@@ -38,6 +38,9 @@
 </template>
 
 <script>
+import { debounce } from "@/utils/debounce.js";
+  
+var commentid = "";
 export default {
     data(){
         return {
@@ -45,7 +48,7 @@ export default {
             topicName:"#海底捞最喜欢什么火锅底料",
 
             comment:[//评论表
- 
+
             ],
 
             likeImg:require("../assets/like.png"),
@@ -77,45 +80,51 @@ export default {
                 }
             })
         },
-        cancelLike(){
-            this.banLike = true;
-            setTimeout(()=>{
-                this.banLike = false;
-            },500)
-        },
-        like(item,event){//点赞
-            event.stopPropagation();//点赞时不需要路由跳转
-            console.log(item)
-            if(this.banLike == true){
-                return ;
-            }
+        like(item,event){
+            event.stopPropagation();
+            // if(this.banLike == true){
+            //     return ;
+            // }
             if(item.likeOrNot == 0){
-                this.$axios.post("/star/handleLike",{
-                    commentid:item.commentid,
-                    upDown:1
-                }).then(res=>{
-                    item.likes++;
-                    item.likeOrNot = 1;
-                    this.cancelLike();
-                    this.refresh();
-                }).catch(err=>{
-                    console.log(err)
-                })   
+                this.likepost(item,1,this)
             }
             else{
-                this.$axios.post("/star/handleLike",{
-                    commentid:item.commentid,
-                    upDown:0
-                }).then(res=>{
-                    item.likes--; 
-                    item.likeOrNot = 0;
-                    this.cancelLike();
-                    this.refresh();
-                }).catch(err=>{
-                    console.log(err)
-                })   
+                this.likepost(item,0,this)
+                    
             }
         },
+        likepost:debounce((item,flag,th)=>{
+            console.log(2222)
+            if(flag){
+                th.$axios.post("/star/handleLike",{
+                        commentid:item.commentid,
+                        upDown:1
+                    }).then(res=>{
+                        console.log("+")
+                        // item.likes++;
+                        // item.likeOrNot = 1;
+                        // this.cancelLike();
+                        th.refresh();
+                    }).catch(err=>{
+                        console.log(err)
+                })
+               
+            }
+            else{
+                th.$axios.post("/star/handleLike",{
+                        commentid:item.commentid,
+                        upDown:0
+                    }).then(res=>{
+                        // item.likes--; 
+                        // item.likeOrNot = 0;
+                        // this.cancelLike();
+                        th.refresh();
+                    }).catch(err=>{
+                        console.log(err)
+                    }) 
+            }
+            
+        },400),
         refresh(){
             this.topic = JSON.parse(localStorage.planet);
 
@@ -132,7 +141,8 @@ export default {
         
     },
      mounted(){
-        //  console.log(this.$route)
+        //  console.log(bounce)\
+        // window.addEventListener("click",bounce(this.like(),500))
         this.refresh();
     },
     watch:{
@@ -166,9 +176,9 @@ export default {
     }
     .topicBackground{
         width: 100%;
-        height: 189px;
+        height: 28vh;
         background: url(../assets/background.png);
-        background-size: 100% auto;
+        background-size:  100% auto;
         background-repeat: no-repeat;
         background-position: 22% 20%;
         position: relative;
@@ -191,7 +201,7 @@ export default {
 
     /* 评论区样式 */
     .bottom-background{
-        height: 478px;
+        height: 72vh;
         width: 100%;
         position: relative;
         background: #F2F2F2;
@@ -199,10 +209,10 @@ export default {
     }
     .comment-area{
         width: 100%;
-        height: 528px; 
+        height:80vh; 
         /* background: blue; */
         position: relative;
-        top: -528px;   
+        top: -80vh;   
         overflow: scroll;
     }
     .comment{
@@ -220,13 +230,17 @@ export default {
     }
     .avator{
         border-radius: 100%;  
-        overflow: hidden;
+        /* overflow: hidden; */
         width: 14%;
         height: 100%;
         display: inline-block;
+        border-radius:50%;
         /* background: blue; */
         margin-left: 25px;
         margin-top: 15px;
+    }
+    .avator img{
+        border-radius:50%;
     }
     .sex{
         display: inline-block;
