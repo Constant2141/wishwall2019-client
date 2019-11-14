@@ -16,12 +16,6 @@ import { PullRefresh } from 'vant';
 import { Uploader } from 'vant';
 import { Toast } from 'vant';
 
-// import VConsole from 'vconsole'
-
-// // init vConsole
-//  var vConsole = new VConsole();
-// console.log('Hello world');
-
 
 Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
