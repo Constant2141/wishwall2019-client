@@ -67,7 +67,7 @@ export default {
             this.$router.push("/pCommentRelease");
         },
         toComment(item,event){
-            console.log(event)
+            console.log(item)
             localStorage.setItem("comment",JSON.stringify(item));
             this.$router.push("/planetComment")
         },
@@ -127,9 +127,15 @@ export default {
         },400),
         refresh(){
             this.topic = JSON.parse(localStorage.planet);
+            // console.log(this.topic.bgPic.slice(0,3))
             // console.log(this.topic.bgPic)
-            this.$refs.background.style.backgroundImage = `url("${this.topic.bgPic}")` 
-            
+             
+            if(this.topic.bgPic.slice(0,3) == "url"){
+                this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
+            }
+            else{
+                this.$refs.background.style.backgroundImage = `url(${this.topic.bgPic})`
+            }
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 console.log(res)
@@ -185,11 +191,12 @@ export default {
         position: relative;
     }
     .back{
-        background: url(../assets/backWhite.png) no-repeat;
-        width:15px;
-        height: 15px;
+        width:30px;
+        height: 30px;
         position: absolute;
-        top: 20px;
+        top: 20px; 
+        background: url(../assets/backWhite.png) no-repeat;
+        background-size:30px 30px;
         left: 17px;
     }
     .topicName{

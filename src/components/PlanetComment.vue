@@ -31,6 +31,7 @@
         </div>
       </div>
       <div class="comment-list">
+        <div class="no-comment" v-if="nocomment">暂无评论</div>
         <div class="comment-detail" v-for="(item,index) in comment" :key="index">
           <div class="comment-avator">
             <img :src="item.headimgurl" alt="" width="35" height="35">
@@ -78,7 +79,7 @@ export default {
       comment:[
         
       ],
-
+      nocomment:false,//是否展示暂无评论信息
 
       input:"",//发表内容
 
@@ -187,11 +188,13 @@ export default {
       }
     },
     refresh(){
-      console.log(localStorage)
+      // console.log(localStorage)
       this.user = this.handleTopicData(JSON.parse(localStorage.comment));
       this.commentCount = this.user.many;
+      if(this.commentCount <= 0)this.nocomment = true;
+      else this.nocomment = false;
       // console.log(this.user)
-      console.log(JSON.parse(localStorage.comment).commentid)
+      // console.log(JSON.parse(localStorage.comment).commentid)
       this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
         this.comment = this.handleTopicData(res.data.result);
         this.commentCount = this.comment.length;
@@ -253,6 +256,7 @@ export default {
       left: -13px;
       top: -13px;
       background-image: url(../assets/backWhite.png);
+      background-size:20px 20px;
       background-position: center;
     }
     .comment-area{
@@ -348,7 +352,7 @@ export default {
     /* 评论 */
     .comment{
       width:330px;
-      min-height: 200px;
+      min-height: 150px;
       margin-left: 22.5px;
       background: #ffffff;
       border-radius: 7px;
@@ -383,6 +387,13 @@ export default {
       min-height:20px;
       margin-left:7%;
       /* background: blue; */
+    }
+    .no-comment{
+      font-size:13px;
+      line-height: 70px;
+      /* letter-spacing: 1px; */
+      text-align: center;
+      color: inherit
     }
     .comment-detail:last-child{
       padding-bottom:20px;
