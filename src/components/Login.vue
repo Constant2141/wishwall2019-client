@@ -31,6 +31,7 @@ export default {
           localStorage.setItem('token',res.data.token);
           localStorage.setItem('token_exp',new Date().getTime());
           localStorage.setItem('userInfo',JSON.stringify(res.data));
+          this.$store.commit("initUser",res.data);
         }else{
           console.log('响应失败')
           }
