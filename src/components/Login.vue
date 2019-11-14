@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template>
   <div class="loading">
     <img src="../assets/cat.gif" alt width="104px" height="90px">
@@ -126,3 +127,54 @@ export default {
   text-align: left;
 }
 </style>
+=======
+<template>
+  <div class="login">
+    <button @click="ifFirst()">登录</button>
+  </div>
+</template>
+
+<script>
+const axios = require("axios");
+
+export default {
+  data() {
+    return {
+      firstLogin: ""
+    };
+  },
+  methods: {
+    async getUserInfo() {
+      try {
+        let res = await axios.get("http://47.100.12.168:3000/login/getUserInfo?userID=11")
+        if (res.status == 200) {
+          localStorage.setItem('token',res.data.token);
+          localStorage.setItem('token_exp',new Date().getTime());
+          localStorage.setItem('userInfo',JSON.stringify(res.data));
+          this.$store.commit("initSex",res.data);
+          console.log('登录成功');
+        } else {
+          console.log("响应失败");
+        }
+      } catch (error) {
+        console.log('error',error);
+      }
+    },
+    ifFirst() {
+      if (this.firstLogin) {
+        this.$router.push({ path: "/welcome" });
+      } else {
+        this.$router.push({ path: "/wishwall" });
+      }
+    }
+  },
+  mounted() {
+    console.log('login mounted');
+    this.getUserInfo();
+  }
+};
+</script>
+
+<style>
+</style>
+>>>>>>> ca9f71ed2c248d41b9f0c94c55a684e28b717a74

@@ -58,13 +58,12 @@ export default {
         })
         .then(res => {
           this.holesData.splice(index, 1);
-          this.$dialog.alert({
-            message: "删除成功空"
-          });
+          this.$toast.success('删除成功');
           console.log("删除成功");
         })
         .catch(err => {
           console.log("删除失败");
+          this.$toast.fail('删除失败');
         });
     }
   },

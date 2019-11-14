@@ -103,8 +103,8 @@ export default {
   },
   computed:{
     isGirl(){
-      if(this.$store.state.wishwallUser){
-        return this.$store.state.wishwallUser.sex == 2;
+      if(this.$store.state.sex){
+        return this.$store.state.sex == 2;
       }else{
         return true
       }
@@ -228,7 +228,8 @@ export default {
   width: 13vw;
   height: 13vw;
   margin: 1vw 0 1.5vw;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: url('~@/assets/nav/center.png') no-repeat center center;
+  background-size: 100% 100%;
   border-radius: 50%;
 }
 </style>

@@ -44,16 +44,13 @@ export default {
           .post("treehole/addTreeHole", { text: this.content })
           .then(res => {
             console.log(res);
-            this.$dialog.alert({
-              message: "发布成功！"
-            });
+            this.$toast.success('发布成功');
             this.content = "";
+            this.$router.go(-1);
           })
           .catch(err => {
             console.log(err);
-            this.$dialog.alert({
-              message: "发布失败喔"
-            });
+            this.$toast.fail('发布失败');
             this.content = "";
           });
       }
@@ -78,7 +75,7 @@ export default {
   position: relative;
 }
 .left {
-  margin-top: 4vw;
+  margin-top: 3vw;
   display: inline-block;
 }
 .left > img {

@@ -60,9 +60,9 @@ export default {
     let userInfos = JSON.parse(localStorage.getItem("userInfo"));
     this.name = userInfos.nickname;
     this.photoUrl = userInfos.headimgurl;
-    if (userInfos.sex == 1) {
+    if (this.$store.state.sex == 1) {
       this.isGirl = false;
-    } else if (userInfos.sex == 2) {
+    } else if (this.$store.state.sex == 2) {
       this.isGirl = true;
     }
     this.$axios.get("/treehole/countMyTreeHoles").then(res => {
