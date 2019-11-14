@@ -9,12 +9,12 @@
     </keep-alive>
     <router-view v-if="$route.meta.hasOwnProperty('trueKeepAlive')" @changeNavShow='changeNavShow'></router-view>
     <!-- 导航 -->
-    <!-- <navi
+    <navi
       @cover="cover"
       @removeCover="removeCover"
       :toggleBool="toggleBool"
       v-show="$route.meta.keepAlive && this.showNav"
-    ></navi> -->
+    ></navi>
   </div>
 </template>
 
@@ -37,7 +37,9 @@ export default {
     };
   },
   mounted(){
-    share()
+    if(location.href.includes('code')){
+      share()
+    }
   },
   methods: {
     // 盖锅盖
