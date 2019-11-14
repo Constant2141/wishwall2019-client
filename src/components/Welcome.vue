@@ -76,6 +76,7 @@ export default {
             this.$axios.get(`/user/set?sex=${this.sex}`)
             .then(res => {
                 localStorage.setItem('sex',this.sex)
+                this.$store.commit('initSex',this.sex)
                 this.$router.replace({path:'/wishwall'});
               })
             })
