@@ -38,7 +38,7 @@ export default {
       num2: 0,
       num3: 0,
       photoUrl: "",
-      isGirl:false
+      isGirl:true
     };
   },
   methods: {

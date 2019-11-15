@@ -1,5 +1,6 @@
 <template>
   <div class="tree-hole" ref="treeHole">
+    <div class="right-arrow"></div>
     <!-- <div class="title">树洞</div> -->
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item,index) in cards" :key="index">
@@ -42,6 +43,7 @@ export default {
   data() {
     const self = this;
     return {
+      countPerPage:8,
       currentPage:1,
       lastSlide:false,
       realIndex:0,//对后台返回的那一条进行评论
@@ -144,21 +146,18 @@ export default {
   },
   created() {
     console.log('treehole created')
-    // this.clientHeight =
-    //   (window.innerHeight ||
-    //     document.documentElement.clientHeight ||
-    //     document.body.clientHeight) + "px";
-    // console.log(window.innerHeight);
 
     // window.onresize = function(e){
     //   // console.log("检测到resize事件!",e);
     //   alert("检测到resize事件!",e);
     // }
 
-    this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
-      console.log('获得所有树洞成功',res.data.result);
+    this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${this.currentPage}`).then(res=>{
+      let list = res.data.result;
+      list.sort(()=>Math.random() - 0.5);
+      console.log('获得所有树洞成功',list);
       this.currentPage = this.currentPage + 1;
-      this.cards = res.data.result;
+      this.cards = list;
     }).catch(err=>{
       console.log('获得所有树洞错误',err);
     })
@@ -166,15 +165,18 @@ export default {
   watch:{
     lastSlide(value){
       if(value){
+        if(this.cards.length < this.countPerPage)return;
         console.log('是最后一张了');
         let cards = this.cards;
         // 要push多点数据，慢慢push
-        this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=2&currentPage=${this.currentPage}`).then(res=>{
+        this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${this.currentPage}`).then(res=>{
           console.log('获得树洞成功',res.data.result);
-         if(res.data.result.length > 0){
-          this.currentPage = this.currentPage + 1;
-          this.cards = [...cards,...res.data.result];
-         }
+          let list = res.data.result;
+          if(list.length > 0){
+            list.sort(()=>Math.random() - 0.5);
+            this.currentPage = this.currentPage + 1;
+            this.cards = [...cards,...list];
+          }
         }).catch(err=>{
           console.log('获得树洞错误',err);
         })
@@ -204,7 +206,7 @@ export default {
 .comment {
   background-color: rgba(255, 255, 255, 0.6);
   position: fixed;
-  bottom: 18vw;
+  bottom: 15vw;
   display: flex;
   justify-content: flex-start;
   width: 375px;
@@ -260,7 +262,19 @@ export default {
   line-height: 24px;
   box-sizing: border-box;
   padding:0 20px;
+  position:relative;
+  line-height:1.4em;
+  height:4.2em;
+  overflow:hidden;
 }
+/* .holes p::after {
+  content:"...";
+  font-weight:bold;
+  position:absolute;
+  bottom:0;
+  right:-10px;
+  padding:0 20px 1px 45px;
+} */
 
 /* 点赞 */
 .love-cover {

@@ -26,6 +26,7 @@
       </div>
     </div>
     <div class="nomore" v-if="this.holesData.length > 4?true:false">别再往下拉啦...</div>
+    <div class="nomore" v-if="this.holesData.length == 0?true:false">快去发布你的树洞8...</div>
   </div>
 </template>
 <script>
@@ -221,7 +222,7 @@ export default {
 .nomore {
   line-height: 60px;
   text-align: center;
-  background-color: #eee;
+  background-color: rgb(246, 245, 245);
 }
 /* 每一条评论 */
 .comment {
