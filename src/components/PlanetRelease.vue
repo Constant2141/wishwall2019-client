@@ -30,6 +30,7 @@
 
 <script>
 import { debounce } from "@/utils/debounce.js"
+import { compress } from "@/utils/compress.js"
 export default {
     data(){  
         return {
@@ -59,8 +60,8 @@ export default {
             console.log(file);
             console.log(this.sendData.bgPic);
         },
-        release:debounce(()=>{
-            // this.$toast.success('发布成功');
+        release:debounce(function(){
+            console.log(this.sendData)
             if(this.sendData.title == ""){
                 this.$dialog.alert({
                     message:"话题不可为空"
@@ -77,7 +78,8 @@ export default {
                 data.append("comment",this.sendData.comment);
                 // console.log(this.sendData.bgPic)
                 if(this.sendData.bgPic.length != 0){
-                    console.log(this.sendData.bgPic[0].file)
+                    console.log(compress(this.sendData.bgPic[0].file));
+                    
                     data.append("bgPic",this.sendData.bgPic[0].file)
                 };
                 this.$axios.post("/star/create",data).then(res=>{

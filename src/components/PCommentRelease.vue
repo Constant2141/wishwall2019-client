@@ -52,7 +52,7 @@ export default {
             // 此时可以自行将文件上传至服务器
             console.log(file);
         },
-        release:debounce(()=>{
+        release:debounce(function(){
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
