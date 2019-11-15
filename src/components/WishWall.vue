@@ -210,7 +210,6 @@ export default {
         }
       })
       .catch(err =>console.log(err))
-      console.log(result)
       return result;
     },
     takeWish(index){
@@ -240,21 +239,21 @@ export default {
       })
     },
     handleTime(arr){
-      let curDay = new Date().getDate();
       arr.map(item=>{
-        let time = new Date(item.createdAt);
-        let createDay = time.getDate();
-        if(createDay == curDay){
-            item.createdAt = time.getHours()+':'+time.getMinutes();
+        let gapDay;
+        let nowDay = new Date().getDate();
+        let createDay = item.createdAt.slice(8,10);
+        let time = item.createdAt.slice(11,16);
+        if(createDay!=nowDay){
+          if(createDay > nowDay){
+            gapDay = createDay - nowDay;
+          }
+          if(createDay < nowDay){
+            gapDay = nowDay - createDay;
+          }
+          item.createdAt = `${gapDay}天前`
         }else{
-            let gapDay;
-            if(curDay > createDay){
-              gapDay = curDay - createDay;
-            }
-            if(curDay < createDay){
-              gapDay = createDay - curDay;
-            }
-            item.createdAt = gapDay + '天前';
+        item.createdAt = time;
         }
     })
     return arr;
@@ -270,7 +269,7 @@ export default {
   },
   async mounted(){
     this.wishes = await this.getData();
-    window.addEventListener("scroll", this.debounce(this.onLoadList,1500))
+    window.addEventListener("scroll", this.onLoadList)
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
@@ -335,6 +334,10 @@ li{
 }
 .banner img{
   width: 100%;
+  /* position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%); */
 }
 .banner >>> .swiper-pagination-bullet-active{
   background:  #FF9D9D;
@@ -346,8 +349,8 @@ li{
   height:100vh;
 }
 .take-button{
-  width: 52px;
   font-size: 10px;
+  width: 52px;
   height: 20px;
   position: absolute;
   background: linear-gradient(135deg,#fd9cbf,#fff8c9);
@@ -357,6 +360,7 @@ li{
   text-align: center;
   color: #ffffff;
 }
+
 .taken-button{
   background: #D2D2D2 !important; 
 }
@@ -371,9 +375,13 @@ li{
 }
 .wish-tag {
   justify-content: space-between;
-  align-items: top;
+  align-items: flex-end;
   width: 238px;
 }
+/* .wish-tag span{
+  display: inline-block;
+  vertical-align: bottom;
+} */
 .yellow-left{
   position: relative;
   width:22px;
@@ -388,18 +396,17 @@ li{
   width: 46px;
   height: 46px;
   background-color: #fff8c9;
-  border: 3.4px solid #FEBCC2;
+  border: 3.6px solid #FEBCC2;
   border-radius: 50px;
   left: -12px;
   overflow: hidden;
 }
-/* .avatar-center{
-  position: absolute;
-  top:50%;
-  left: 50%;
-  transform:translateX(-50%) translateY(-50%)
-} */
 .avatar-wrapper img{
+  position: absolute;
+  left: 50%;
+  top:50%;
+  border-radius: 50px;
+  transform: translateX(-50%) translateY(-50%);
   width: 50px;
 }
 .yellow-right{
@@ -472,7 +479,7 @@ h3{
   position: relative;
   /* top:7vh; */
   border-radius: 20px;
-  height: 120vw;
+  height: 100vw;
   width: 70vw;
   background-color: #ffffff;
   display: flex;
