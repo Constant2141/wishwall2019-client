@@ -10,7 +10,7 @@
         <li class="tip-wrapper">
           <img src="@/assets/tips.png" style="width:20px" @click="checkTips()">
         </li>
-      </ul>
+      </ul> 
       <div class="banner">
         <swiper :options="swiperOption">
           <swiper-slide><img src="../assets/banner/wishwall.jpg" alt=""></swiper-slide>
@@ -27,7 +27,7 @@
           @refresh="onRefresh">
             <div>
                 <div class="wish"
-                  v-for="(wish,index) in wishes"
+                  v-for="(wish,index) in wishes" 
                   :key="index">
                   <div class="wish-body">
                     <div class="take-button"
@@ -62,7 +62,7 @@
                     <div class="contact-way"
                       v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
                   </div>
-                  <div class="separate" v-show="!wishes[index].gainOrNot"></div>
+                  <div class="separate" v-show="!wishes[index].gainOrNot"></div>  
                 </div>
             </div>
             <div class="loading-more">
@@ -77,7 +77,7 @@
         <div class="tips">
           <h3>玩法介绍</h3>
           <h5>
-            <img src="@/assets/nav/2.png" alt="">
+            <img src="@/assets/nav/2.png" alt="">  
             许愿墙
           </h5>
           <p>一个女生许愿，男生实现的线上平台。</p>
@@ -93,7 +93,7 @@
           <p>一个以匿名身份互相吐露心声的真心话空间。</p>
           <p>※每一条树洞都是随机出现的，你将不能在“我的”界面中看到你评论/点赞过的树洞，请感恩每一次相遇~</p>
           <h5>
-            <img src="@/assets/nav/6.png" alt="">
+            <img src="@/assets/nav/6.png" alt="">  
             星球
           </h5>
           <p>一个校内学生畅谈混脸熟的日常社区。</p>
@@ -101,7 +101,7 @@
           <p>※浏览周围人对日常生活的吐槽，用点赞评论表达你的态度。</p>
         </div>
         <div @click="closeTip()">
-          <img src="@/assets/closetips.png" alt="">
+          <img src="@/assets/closetips.png" alt=""> 
         </div>
       </div>
   </div>
@@ -140,7 +140,7 @@ export default {
       this.page = 1;
       setTimeout(async()=>{
         this.wishes = await this.getData()
-        this.isDownLoading = false;
+        this.isDownLoading = false; 
       },500)
     },
     //判断滚动条是否在底部
@@ -163,23 +163,32 @@ export default {
       // console.log(parseInt(scrollHeight)-winHeight)
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
-
-    onLoadList(){
+    //防抖函数
+    debounce(fn,wait){
+      let timeout = null;
+      return ()=>{
+        if(timeout!==null){
+          clearTimeout(timeout);
+          timeout = setTimeout(fn,wait);
+        }
+      }
+    },
+    
+    async onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
-       this.loadState = 1;
-       setTimeout(async ()=>{
-         let tempList = this.wishes;
-         this.page++;
-         let temp = await this.getData();
-         this.wishes =  [...tempList,...temp];
-       },1500)
+      this.loadState = 1;
+      let tempList = this.wishes;
+      this.page++;
+      let temp = await this.getData();
+      this.wishes =  [...tempList,...temp];
+      
       }
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
         this.loadState = 2;
-      }
+      } 
     },
     async getData(){
       let campus = this.curCampus;
@@ -207,7 +216,7 @@ export default {
     takeWish(index){
       this.wishes[index].gainOrNot = true;
       //一开始的wish_many是第一次发请求获得的，所以这里要手动加一
-      this.wishes[index].wish_many++;
+      this.wishes[index].wish_many++; 
       this.$axios.get('/wish/gain',{
         params:{
           uuid:this.wishes[index].uuid
@@ -220,7 +229,7 @@ export default {
       this.page = 1;
       window.scrollTo(0,0);
       this.wishes = await this.getData();
-
+      
     },
     handleAnonymous(arr){
       arr.map(item=>{
@@ -261,7 +270,7 @@ export default {
   },
   async mounted(){
     this.wishes = await this.getData();
-    window.addEventListener("scroll", this.onLoadList)
+    window.addEventListener("scroll", this.debounce(this.onLoadList,1500))
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
@@ -277,7 +286,7 @@ export default {
 }
 .header{
   position:fixed;
-  background-color:#fff;
+  background-color:#fff; 
   z-index: 20;
   height: 200px;
   width: 100%;
@@ -300,7 +309,7 @@ li{
   height: 28px;
   border-radius: 15px;
   line-height: 28px;
-  margin-right: 10px;
+  margin-right: 10px;  
 }
 .tip-wrapper{
   display: flex;
@@ -349,7 +358,7 @@ li{
   color: #ffffff;
 }
 .taken-button{
-  background: #D2D2D2 !important;
+  background: #D2D2D2 !important; 
 }
 .wish-content{
   padding-left: 24px;
@@ -403,7 +412,7 @@ li{
 }
 .wish-txt{
   flex-direction:column;
-  font-size: 12px;
+  font-size: 12px; 
 }
 b{
   margin-bottom:12px;
