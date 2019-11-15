@@ -200,7 +200,7 @@ export default {
                 if(!load){
                     this.topicLeft = [],this.topicRight = [];
                 }
-                console.log(res);
+                // console.log(res);
                 this.insertTopic(res.data.result);
             }).catch(err=>{
                 console.log(err)

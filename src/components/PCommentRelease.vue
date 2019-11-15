@@ -89,6 +89,8 @@ export default {
     .plantRelease{
         background: #F5F5F5;
         height: 100vh;
+        width: 100vw;
+        overflow-x: hidden;
     }
 
 

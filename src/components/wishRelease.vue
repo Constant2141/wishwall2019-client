@@ -42,9 +42,9 @@
                 @confirm="ConfirmPickType"
                  />
             </van-popup>
-            <div class="anonymous">
-                <div class="check-box" @click="checkclick" ref="check"></div>
-                <span>{{chooseText[2]}}</span>
+            <div class="anonymous" @click="checkclick">
+                <div class="check-box"  ref="check"></div>
+                <span class="anonymous-text">{{chooseText[2]}}</span>
             </div>
         </div>
         <div class="contact" >
@@ -325,6 +325,10 @@ export default {
         content: "✔";
         position: absolute;
         left:2px;
+    }
+    .anonymous-text{
+        display: inline-block;
+        vertical-align: middle !important;
     }
     .anonymous span{
         /* display: inline-block; */
