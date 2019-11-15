@@ -163,18 +163,27 @@ export default {
       // console.log(parseInt(scrollHeight)-winHeight)
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
+    //防抖函数
+    debounce(fn,wait){
+      let timeout = null;
+      return ()=>{
+        if(timeout!==null){
+          clearTimeout(timeout);
+          timeout = setTimeout(fn,wait);
+        }
+      }
+    },
     
-    onLoadList(){
+    async onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
-       this.loadState = 1;
-       setTimeout(async ()=>{
-         let tempList = this.wishes;
-         this.page++;
-         let temp = await this.getData();
-         this.wishes =  [...tempList,...temp];
-       },1500)
+      this.loadState = 1;
+      let tempList = this.wishes;
+      this.page++;
+      let temp = await this.getData();
+      this.wishes =  [...tempList,...temp];
+      
       }
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
@@ -261,7 +270,7 @@ export default {
   },
   async mounted(){
     this.wishes = await this.getData();
-    window.addEventListener("scroll", this.onLoadList)
+    window.addEventListener("scroll", this.debounce(this.onLoadList,1500))
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
