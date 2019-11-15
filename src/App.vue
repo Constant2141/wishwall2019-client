@@ -37,9 +37,7 @@ export default {
     };
   },
   mounted(){
-    if(location.href.includes('code')){
-      share()
-    }
+    share()
   },
   methods: {
     // 盖锅盖
