@@ -192,7 +192,8 @@ export default {
   margin-bottom: 2px;
 }
 .content {
-  margin-left: 11px;
+  width: 52.8vw;
+  margin-left: 6px;
 }
 .top-topic p {
   height: 25px;
@@ -283,22 +284,22 @@ export default {
   margin-top: 8px;
 }
 .like {
-  margin-top: 3px;
+  margin-top: 15px;
 }
 .like p {
   font-family: Segoe UI;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: normal;
   font-stretch: normal;
-  line-height: 11px;
+  line-height: 16px;
   letter-spacing: 0px;
   color: #707070;
-  margin-top: 2px;
+  margin-top: 1px;
   margin-left: 3px;
 }
 .comment-icon {
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   background: url("../assets/comment2.png");
   background-size: 100% 100%;
 }

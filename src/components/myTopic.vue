@@ -220,7 +220,7 @@ export default {
   margin-bottom: 2px;
 }
 .content {
-  margin-left: 11px;
+  margin-left: 6px;
 }
 .top-topic p {
   height: 25px;
