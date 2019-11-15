@@ -98,7 +98,6 @@ export default {
     deleteIt(index) {
       this.isDelete = true;
       this.deleteTopic = this.cids[index];
-      console.log(this.deleteTopic);
     },
     toDeleteWish() {
       this.isDelete = false;
@@ -108,7 +107,6 @@ export default {
             .get(`/star/removeComment?commentid=${this.deleteTopic}`)
             .then(res => {
               resolve();
-              console.log(res);
             });
         });
       };
@@ -127,7 +125,6 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res);
           this.titles = res.data.result;
           this.titles.forEach((value, index) => {
             this.times[index] = value.createdAt;

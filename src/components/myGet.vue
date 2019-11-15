@@ -104,7 +104,11 @@ export default {
           this.theWish[index] = value.wish_content;
           this.level[index] = value.wish_type;
           this.school[index] = value.wish_where;
-          this.tel[index] = value.contact;
+          if (value.contact.length == 0) {
+            this.tel[index] = "这个小姐姐没有填写联系方式噢";
+          } else {
+            this.tel[index] = value.contact;
+          }
           this.photoUrl[index] = value.headimgurl;
           this.nickName[index] = value.nickname;
           method[index] = value.anonymous;
