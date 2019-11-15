@@ -160,8 +160,7 @@ export default new Router({
       component: WishWall,
       meta: {
         keepAlive: true,
-        title: '许愿墙',
-        trueKeepAlive: false
+        title: '许愿墙'
       }
     },
     {
