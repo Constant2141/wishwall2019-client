@@ -38,7 +38,7 @@ export default {
       num2: 0,
       num3: 0,
       photoUrl: "",
-      isGirl:true
+      isGirl: true
     };
   },
   methods: {
@@ -51,7 +51,7 @@ export default {
       //根据条数看看是不是需要更新
       this.$router.replace(`/mytreehole?count=${this.num2}`);
     },
-    toMyPlant(){
+    toMyPlant() {
       this.$router.replace(`/mytopic`);
     }
   },
@@ -92,7 +92,7 @@ export default {
 .myInfo {
   width: 375px;
   height: 190px;
-  background:#FFC4C4;
+  background: #ffc4c4;
   border-bottom-left-radius: 100% 55%;
   padding-top: 0.1px;
   display: flex;
@@ -101,6 +101,7 @@ export default {
   width: 80px;
   height: 80px;
   border: solid 3px #ffffff;
+  background-color: #fff8c9;
   margin-top: 75px;
   margin-left: 29px;
   border-radius: 50%;
@@ -118,16 +119,16 @@ export default {
   color: #ffffff;
 }
 .icons {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
   background: url("../assets/boy.png");
   background-size: 100% 100%;
   margin-top: 102.5px;
   margin-left: 7px;
 }
 .girlIcon {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
   background: url("../assets/girl.png");
   background-size: 100% 100%;
   margin-top: 102.5px;

@@ -85,7 +85,6 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res);
           this.titles = res.data.result;
           let times = [];
           this.titles.forEach((value, index) => {
