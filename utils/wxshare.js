@@ -6,13 +6,13 @@ function getUrl(){
 }
 function getWord(){
   let words = [
-      '轻轻地，我们来了。',
-      '$ echo aSBhbSBoZXJlIHdhdGluZyBmb3IgeW91Cgo= | base64 -d # ',
-      'NaN Undefined Null Number Object Boolean Symbol ',
-      '记住你无畏青春的样子，你未必出类拔萃，但一定与众不同 ',
-      '"Night\'s " + "Watch" = "Night \'s Watch"',
-      '长夜将至，我从今开始守望。今夜如此，夜夜皆然。'
-  ].map(e => e + '[正在招新]');
+      '如果事与愿违，请相信另有安排。',
+      '野旷天低树，江清月近人。 ',
+      '因为心无所恃,所以随遇而安。 ',
+      '万一，努力的尽头,是你呢？ ',
+      '我明白你会来，所以我等。',
+      '"Night\'s " + "Watch" = "Night \'s Watch" '
+  ].map(e => e + '[许愿墙]');
 
   return words[parseInt(Math.random() * words.length)];
 }
