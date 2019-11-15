@@ -90,7 +90,6 @@ export default {
     deleteIt(index) {
       this.isDelete = true;
       this.deleteTopic = this.uids[index];
-      console.log(this.deleteTopic);
     },
     toDeleteWish() {
       this.isDelete = false;
@@ -100,7 +99,6 @@ export default {
             .get(`/star/removeStar?uuid=${this.deleteTopic}`)
             .then(res => {
               resolve();
-              console.log(res);
             });
         });
       };
@@ -119,7 +117,6 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res.data.result);
           this.titles = res.data.result;
           let times = [];
           this.titles.forEach((value, index) => {

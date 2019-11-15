@@ -169,7 +169,6 @@ export default {
       this.$axios
         .get(url)
         .then(res => {
-          console.log(res);
           this.wishes = res.data.result;
           let method = [];
           let times = [];
@@ -180,7 +179,11 @@ export default {
             this.theWish[index] = value.wish_content;
             this.level[index] = value.wish_type;
             this.school[index] = value.wish_where;
-            this.tel[index] = value.contact;
+            if (value.contact.length == 0) {
+              this.tel[index] = "这个小姐姐没有填写联系方式噢";
+            } else {
+              this.tel[index] = value.contact;
+            }
             this.time[index] = value.createdAt;
             this.wid[index] = value.uuid;
             method[index] = value.anonymous;
