@@ -299,7 +299,8 @@ export default {
         padding:0;
     }
     .planet{
-        width:100%;
+        width:100vw;
+        overflow-x: hidden;
         /* background:linear-gradient(to bottom right,#FD9CBF,#FFF8C9); */
     }
     .background{

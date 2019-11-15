@@ -19,6 +19,8 @@
 </template>
 
 <script>
+
+import { debounce } from "@/utils/debounce.js"
 export default {
     data(){  
         return {
@@ -50,16 +52,18 @@ export default {
             // 此时可以自行将文件上传至服务器
             console.log(file);
         },
-        release(){
+        release:debounce(()=>{
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
+                this.sendData.conmment = "";
                 this.$toast.success('发布成功');
                 this.$router.go(-1);
             }).catch(err=>{
                 console.log(err)
+                this.$toast.success('发布失败');
             })
-        },
+        },400),
         refreshTopic(){
             console.log(JSON.parse(localStorage.planet))
             this.topic = JSON.parse(localStorage.planet).title

@@ -181,6 +181,7 @@ export default {
         console.log(data)
         this.$axios.post("/star/addComment",data).then(res=>{
           this.$toast.success('发布成功');
+          this.input = "";
           this.refresh();
         }).catch(err=>{
           console.log(err)
