@@ -12,7 +12,7 @@ function getWord(){
       '万一，努力的尽头,是你呢？ ',
       '我明白你会来，所以我等。',
       '"Night\'s " + "Watch" = "Night \'s Watch" '
-  ].map(e => e + '[许愿墙]');
+  ];
 
   return words[parseInt(Math.random() * words.length)];
 }
