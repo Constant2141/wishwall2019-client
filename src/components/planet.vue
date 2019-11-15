@@ -148,7 +148,7 @@ export default {
         onLoadList(){
         //滚动条是否到达底部
             this.checkBottom();
-            console.log(this.isBottom)
+            // console.log(this.isBottom)
             if(this.isBottom){
                 this.getData(true)
             }

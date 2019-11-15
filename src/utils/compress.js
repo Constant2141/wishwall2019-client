@@ -20,7 +20,7 @@ const compress = (file,callback)=>{//压缩图片
             while (n--) {
                 u8arr[n] = bstr.charCodeAt(n);
             }
-            let files = new window.File([new Blob([u8arr], {type: mime})], 'test.jpeg', {type: 'image/jpeg'}) // 转成file
+            let files = new window.File([new Blob([u8arr], {type: mime})], file.name, {type: 'image/jpeg'}) // 转成file
             callback(files) // 回调
         }
     }
