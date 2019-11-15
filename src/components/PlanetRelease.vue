@@ -23,12 +23,13 @@
             preview-size="50px"
             :max-count="1"
             accept="image/*"/>
-            <div class="upload-prompt">添加话题封面</div>
+            <div class="upload-prompt" style="height:50px">添加话题封面</div>
         </div>
   </div>
 </template>
 
 <script>
+import { debounce } from "@/utils/debounce.js"
 export default {
     data(){  
         return {
@@ -58,7 +59,7 @@ export default {
             console.log(file);
             console.log(this.sendData.bgPic);
         },
-        release(){
+        release:debounce(()=>{
             // this.$toast.success('发布成功');
             if(this.sendData.title == ""){
                 this.$dialog.alert({
@@ -81,14 +82,17 @@ export default {
                 };
                 this.$axios.post("/star/create",data).then(res=>{
                     // console.log(1)
+                    this.sendData.title = "";
+                    this.sendData.comment = "";
                     this.$toast.success('发布成功');
                     this.$router.go(-1);
                     // console.log(res);
                 }).catch(err=>{
                     console.log(err);
+                    this.$toast.success('发布失败');
                 })
             }
-        }
+        },400)
     }
 }
 </script>
@@ -179,7 +183,8 @@ export default {
     .upload-prompt{
         display: inline-block;
         width:50vw;
-        line-height: 50px;
+        /* min-height:50px; */
+        line-height: 50px !important;
         font-size: 14px;
         vertical-align: top;
         color: #B8B8B8;

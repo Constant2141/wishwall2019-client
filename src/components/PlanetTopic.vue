@@ -99,12 +99,12 @@ export default {
                 th.$axios.post("/star/handleLike",{
                         commentid:item.commentid,
                         upDown:1
-                    }).then(res=>{
+                    }).then(async res=>{
                         console.log("+")
-                        // item.likes++;
-                        // item.likeOrNot = 1;
+                        item.likes++;
+                        item.likeOrNot = 1;
                         // this.cancelLike();
-                        th.refresh();
+                        await th.refresh();
                     }).catch(err=>{
                         console.log(err)
                 })
@@ -114,11 +114,11 @@ export default {
                 th.$axios.post("/star/handleLike",{
                         commentid:item.commentid,
                         upDown:0
-                    }).then(res=>{
-                        // item.likes--; 
-                        // item.likeOrNot = 0;
+                    }).then(async res=>{
+                        item.likes--; 
+                        item.likeOrNot = 0;
                         // this.cancelLike();
-                        th.refresh();
+                        await th.refresh();
                     }).catch(err=>{
                         console.log(err)
                     }) 
