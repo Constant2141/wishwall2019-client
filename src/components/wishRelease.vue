@@ -1,62 +1,65 @@
 <template>
     <div class="wish-release">
-        <div class="top">
-            <div class="left" @click="back">
-                <img :src="backImg" alt="" class="back">
-                <span class="title">{{title}}</span>
+        <div class="wrap">
+            <div class="top">
+                <div class="left" @click="back">
+                    <img :src="backImg" alt="" class="back">
+                    <span class="title">{{title}}</span>
+                </div>
+                <div class="release-button" @click="release">{{buttonText}}</div>
             </div>
-            <div class="release-button" @click="release">{{buttonText}}</div>
+            <div class="edit-area">
+                <div class="wish-area">
+                    <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content" @blur="blur"></textarea>
+                </div>
+            </div>
+            <div class="more-choose">
+                <div class="campus" @click="showCampus">
+                    <img :src="icon.campus" alt="">
+                    <span>{{chooseText[0]}}</span>
+                </div>
+                <van-popup v-model="showCampusPicker" position="bottom">
+                    <van-picker 
+                    show-toolbar
+                    :columns="campus" 
+                    @change="changeCampus" 
+                    style="width:100%"
+                    @cancel="CancelPickCampus"
+                    @confirm="ConfirmPickCampus"
+                    />
+                </van-popup>
+            
+                <div class="wish-type" @click="showType">
+                    <img :src="icon.wishType" alt="">
+                    <span>{{chooseText[1]}}</span>
+                </div>
+                <van-popup v-model="showTypePicker" position="bottom">
+                    <van-picker 
+                    show-toolbar
+                    :columns="wishType" 
+                    @change="changeType" 
+                    style="width:100%"
+                    @cancel="CancelPickType"
+                    @confirm="ConfirmPickType"
+                    />
+                </van-popup>
+                <div class="anonymous" @click="checkclick">
+                    <div class="check-box"  ref="check"></div>
+                    <span class="anonymous-text">{{chooseText[2]}}</span>
+                </div>
+            </div>
+            <div class="contact" >
+                <div>
+                    <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"  v-model="sendData.contact" @blur="blur"></textarea>
+                </div>
+                <div class="tips">
+                    <p>TIPS: {{contactText[1]}}</p>
+                    <p class="p2">{{contactText[2]}}</p>
+                    <p class="p3">{{contactText[3]}}</p>
+                </div>
+            </div>
         </div>
-        <div class="edit-area">
-            <div class="wish-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content" @blur="blur"></textarea>
-            </div>
-        </div>
-        <div class="more-choose">
-            <div class="campus" @click="showCampus">
-                <img :src="icon.campus" alt="">
-                <span>{{chooseText[0]}}</span>
-            </div>
-            <van-popup v-model="showCampusPicker" position="bottom">
-                 <van-picker 
-                 show-toolbar
-                 :columns="campus" 
-                 @change="changeCampus" 
-                 style="width:100%"
-                 @cancel="CancelPickCampus"
-                @confirm="ConfirmPickCampus"
-                 />
-            </van-popup>
-           
-            <div class="wish-type" @click="showType">
-                <img :src="icon.wishType" alt="">
-                <span>{{chooseText[1]}}</span>
-            </div>
-            <van-popup v-model="showTypePicker" position="bottom">
-                 <van-picker 
-                 show-toolbar
-                 :columns="wishType" 
-                 @change="changeType" 
-                 style="width:100%"
-                 @cancel="CancelPickType"
-                @confirm="ConfirmPickType"
-                 />
-            </van-popup>
-            <div class="anonymous" @click="checkclick">
-                <div class="check-box"  ref="check"></div>
-                <span class="anonymous-text">{{chooseText[2]}}</span>
-            </div>
-        </div>
-        <div class="contact" >
-            <div>
-                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"  v-model="sendData.contact" @blur="blur"></textarea>
-            </div>
-            <div class="tips">
-                <p>TIPS: {{contactText[1]}}</p>
-                <p class="p2">{{contactText[2]}}</p>
-                <p class="p3">{{contactText[3]}}</p>
-            </div>
-        </div>
+        
         <!-- <van-dialog
         v-model="showContact"
         title="填写联系方式"
@@ -242,7 +245,12 @@ export default {
     *{
         font-family: "微软雅黑"
     }
-    
+    .wish-release{
+        height:100vh;
+    }
+    .wrap{
+        background: white;
+    }
     /* 顶部栏的样式 */
     .top{
         width:100%;
