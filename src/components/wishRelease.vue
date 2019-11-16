@@ -96,7 +96,7 @@ export default {
             showCampusPicker:false,//是否显示校区选项
             campus:["大学城校区","龙洞校区","东风路校区"],//选择校区的选项
             showTypePicker:false,//是否显示心愿类型选项
-            wishType:["事务","委托","其他"],//选择心愿类型的选项
+            wishType:["实物","委托","其他"],//选择心愿类型的选项
 
 
             //联系栏
