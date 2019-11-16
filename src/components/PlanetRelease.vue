@@ -9,10 +9,10 @@
         </div>
         <div class="edit-area">
             <div class="topic-area">
-                <input type="text" placeholder="#发布话题" maxlength="18" v-model="sendData.title">
+                <input type="text" placeholder="#发布话题" maxlength="18" v-model="sendData.title" @blur="blur">
             </div>
             <div class="message-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment" @blur="blur"></textarea>
             </div>    
         </div>
         <div class="upload">
@@ -54,6 +54,9 @@ export default {
     methods:{
         back(){//退回上一页
             this.$router.go(-1);
+        },
+        blur(){//文本框失焦后复位
+            window.scrollTo(0,0)
         },
          afterRead(file) {
             // 此时可以自行将文件上传至服务器
