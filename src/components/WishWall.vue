@@ -364,8 +364,12 @@ li{
 .taken-button{
   background: #D2D2D2 !important; 
 }
+.wish{
+  background-color: #fff;
+}
 .wish-content{
   padding-left: 24px;
+
 }
 .wish-content,
 .wish-avatar,
