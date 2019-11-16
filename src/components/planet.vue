@@ -2,7 +2,9 @@
   <div class="planet">
       <div class="background"></div>
       <div class="search">
-          <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keydown="search($event)">
+          <form action="#">
+              <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keypress="search($event)">
+          </form>
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
@@ -177,9 +179,9 @@ export default {
             //     this.loadState = 2;
             // } 
         },
-        search(event){//搜索功能
+        async search(event){//搜索功能
             console.log(event)
-            if(event.code == "Enter"){
+            if(event.keyCode == "13"){
                 this.$axios.post("/star/search",{
                     title:this.searchText
                 }).then(res=>{
@@ -193,6 +195,7 @@ export default {
                 }).catch(err=>{
                     console.log("搜索失败")
                 })
+                // return false;
             }
         },
         toTopic(item,event){
