@@ -87,6 +87,7 @@ export default {
         .then(res => {
           this.titles = res.data.result;
           let times = [];
+          console.log(this.titles);
           this.titles.forEach((value, index) => {
             this.topics[index] = value.fc.fs.title;
             this.opinions[index] = value.comment;

@@ -96,7 +96,7 @@ export default {
       let judge = () => {
         return new Promise((resolve, reject) => {
           this.$axios
-            .get(`/star/removeStar?uuid=${this.deleteTopic}`)
+            .get(`/star/removeComment?commentid=${this.deleteTopic}`)
             .then(res => {
               resolve();
             });
@@ -126,7 +126,7 @@ export default {
             this.likes[index] = value.likes;
             this.comments[index] = value.many;
             this.photoUrl[index] = value.headimgurl;
-            this.uids[index] = value.uuid;
+            this.uids[index] = value.commentid;
             times[index] = value.createdAt;
             times.forEach((value, index) => {
               this.times[index] =
