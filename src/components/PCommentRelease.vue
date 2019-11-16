@@ -63,7 +63,7 @@ export default {
                 console.log(err)
                 this.$toast.success('发布失败');
             })
-        },400),
+        },1000),
         refreshTopic(){
             console.log(JSON.parse(localStorage.planet))
             this.topic = JSON.parse(localStorage.planet).title
