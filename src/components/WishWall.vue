@@ -82,10 +82,10 @@
           </h5>
           <p>一个女生许愿，男生实现的线上平台。</p>
           <p>※女生可以自定义许愿的内容，选择是否留下联系方式，联系方式仅会展示给领取愿望的人，不会出现在首页。</p>
-          <p>※愿望可以被多人领取，一旦被领取，将在四个小时后从首页消失，所以请谨慎领取，不要辜负每一个心愿~</p>
+          <p>※愿望可以被多人领取，一旦被领取，将在十二个小时后从首页消失，所以请谨慎领取，不要辜负每一个心愿~</p>
           <p>※女生可以在“我的心愿”界面查看心愿的领取详情，心愿被完成之后请及时点击“确认完成”，提醒其他领取你心愿的小伙伴哟</p>
           <p>同理，男生可以在“我的心愿”界面查看你领取心愿的完成情况噢~</p>
-          <p>※11月25日男女反转，男生许愿，女生实现，男孩子们也应该拥有节日~</p>
+          <p>※11月23日男女反转，男生许愿，女生实现，男孩子们也应该拥有节日~</p>
           <h5>
             <img src="@/assets/nav/4.png" alt="">
             树洞
@@ -115,7 +115,7 @@ export default {
         autoplay:3000,
         speed:1000,
         loop:true,
-        pagination:'.swiper-pagination'
+        // pagination:'.swiper-pagination'
       },
       schools:[
         "全部",
@@ -259,16 +259,26 @@ export default {
     return arr;
     },
     checkTips(){
+      //解决滚动穿透，反正就是红莲nb
       this.readTips = true;
-      document.body.style.overflow = 'hidden'
+      const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+      document.body.style.cssText +='position:fixed;width:100%;top:-'+scrollTop+'px;'
     },
     closeTip(){
       this.readTips = false;
-      document.body.style.overflow = '';
+      const body = document.body;
+      body.style.position = '';
+      const top = body.style.top;
+      document.body.scrollTop = document.documentElement.scrollTop = -parseInt(top);
+      body.style.top='';
     }
   },
   async mounted(){
     this.wishes = await this.getData();
+    // (function(arr){
+    //   let wishMany = arr.map(item=>item.wish_many);
+    //   console.log(wishMany);
+    // })(this.wishes)
     window.addEventListener("scroll", this.onLoadList)
   },
   //离开该页面时移除，否则会一直监听
@@ -339,9 +349,9 @@ li{
   left: 50%;
   transform: translateX(-50%) translateY(-50%); */
 }
-.banner >>> .swiper-pagination-bullet-active{
+/* .banner >>> .swiper-pagination-bullet-active{
   background:  #FF9D9D;
-}
+} */
 
 .scroll-wrap{
   position: relative;

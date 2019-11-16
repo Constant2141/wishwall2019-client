@@ -52,7 +52,7 @@ export default {
             // 此时可以自行将文件上传至服务器
             console.log(file);
         },
-        release:debounce(()=>{
+        release:debounce(function(){
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
@@ -63,7 +63,7 @@ export default {
                 console.log(err)
                 this.$toast.success('发布失败');
             })
-        },400),
+        },1000),
         refreshTopic(){
             console.log(JSON.parse(localStorage.planet))
             this.topic = JSON.parse(localStorage.planet).title
@@ -89,6 +89,8 @@ export default {
     .plantRelease{
         background: #F5F5F5;
         height: 100vh;
+        width: 100vw;
+        overflow-x: hidden;
     }
 
 

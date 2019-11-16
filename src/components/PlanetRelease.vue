@@ -30,6 +30,7 @@
 
 <script>
 import { debounce } from "@/utils/debounce.js"
+import { compress } from "@/utils/compress.js"
 export default {
     data(){  
         return {
@@ -59,8 +60,8 @@ export default {
             console.log(file);
             console.log(this.sendData.bgPic);
         },
-        release:debounce(()=>{
-            // this.$toast.success('发布成功');
+        release:debounce(async function(){
+            // console.log(this.sendData)
             if(this.sendData.title == ""){
                 this.$dialog.alert({
                     message:"话题不可为空"
@@ -75,24 +76,29 @@ export default {
                 let data = new FormData();
                 data.append("title",this.sendData.title);
                 data.append("comment",this.sendData.comment);
-                // console.log(this.sendData.bgPic)
+                console.log(this.sendData.bgPic)
                 if(this.sendData.bgPic.length != 0){
-                    console.log(this.sendData.bgPic[0].file)
-                    data.append("bgPic",this.sendData.bgPic[0].file)
+                    await compress(this.sendData.bgPic[0].file,(file)=>{
+                        console.log(file)
+                        data.append("bgPic",file)
+                        this.$axios.post("/star/create",data).then(res=>{
+                        // console.log(1)
+                        this.sendData.title = "";
+                        this.sendData.comment = "";
+                        this.$toast.success('发布成功');
+                        this.$router.go(-1);
+                        // console.log(res);
+                        }).catch(err=>{
+                            console.log(err);
+                            this.$toast.success('发布失败');
+                        })
+                    }); 
+                    // data.append("bgPic",this.sendData.bgPic[0].file)   
+
                 };
-                this.$axios.post("/star/create",data).then(res=>{
-                    // console.log(1)
-                    this.sendData.title = "";
-                    this.sendData.comment = "";
-                    this.$toast.success('发布成功');
-                    this.$router.go(-1);
-                    // console.log(res);
-                }).catch(err=>{
-                    console.log(err);
-                    this.$toast.success('发布失败');
-                })
+                
             }
-        },400)
+        },1000)
     }
 }
 </script>

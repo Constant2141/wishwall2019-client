@@ -24,18 +24,15 @@ export function throttle(fn,delay){
       } 
 export function debounce(fn, delay) {
 
-  var delay = delay || 200;
-  var timer;
+  let timer = null
   return function () {
-      var th = this;
-      var args = arguments;
-      if (timer) {
-          clearTimeout(timer);
-      }
-      timer = setTimeout(function () {
-          timer = null;
-          fn.apply(th, args);
-      }, delay);
-  };
+      let arg = arguments
+      
+      clearTimeout(timer)
+      
+      timer = setTimeout(() => {
+          fn.apply(this, arg)
+      }, delay)
+    }
 }
   

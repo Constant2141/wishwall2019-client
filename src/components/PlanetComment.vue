@@ -79,7 +79,7 @@ export default {
       comment:[
         
       ],
-      nocomment:false,//是否展示暂无评论信息
+      nocomment:true,//是否展示暂无评论信息
 
       input:"",//发表内容
 
@@ -170,7 +170,7 @@ export default {
                 }) 
             }
             
-        },400),
+        },1000),
     release(){
       if(this.input != ""){
         let data = {
@@ -191,16 +191,21 @@ export default {
     refresh(){
       // console.log(localStorage)
       this.user = this.handleTopicData(JSON.parse(localStorage.comment));
-      this.commentCount = this.user.many;
-      if(this.commentCount <= 0)this.nocomment = true;
-      else this.nocomment = false;
       // console.log(this.user)
+      // this.commentCount = this.user.many;
+      // console.log(this.commentCount)
       // console.log(JSON.parse(localStorage.comment).commentid)
       this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
         this.comment = this.handleTopicData(res.data.result);
         this.commentCount = this.comment.length;
         console.log(this.comment)
         console.log(res);
+        if(this.commentCount <= 0){
+          this.nocomment = true;
+        }
+        else {
+          this.nocomment = false;
+        }
       }).catch(err=>{
         console.log(err);
       })

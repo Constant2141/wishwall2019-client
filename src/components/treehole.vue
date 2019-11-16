@@ -1,8 +1,6 @@
 <template>
   <div class="tree-hole" ref="treeHole">
-    <div class="right-arrow"></div>
-    <!-- <div class="title">树洞</div> -->
-    <swiper :options="swiperOption">
+    <swiper :options="swiperOption" ref="mySwiper">
       <swiper-slide v-for="(item,index) in cards" :key="index">
         <div class="holes">
           <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="">
@@ -26,13 +24,11 @@
           </div>
         </div>
       </swiper-slide>
-      <!-- <div class="swiper-pagination" slot="pagination">123</div> -->
-      <!-- <div class="swiper-button-next" slot="button-next"></div> -->
     </swiper>
     <!-- 底下的输入款 -->
     <div class="comment" :class="{'comment-active':moveBottom}">
-      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="scoll" />
-      <div @click="post">发表</div>
+      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="inputBlur" />
+      <div @mousedown="post">发表</div>
     </div>
   </div>
 </template>
@@ -57,7 +53,15 @@ export default {
         //   likes: 110,
         //   isLike:false,
         //   isBoy:false,
-        //   comments: [{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'},{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
+        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
+        // },
+        // {
+        //   text:
+        //     "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
+        //   likes: 110,
+        //   isLike:false,
+        //   isBoy:false,
+        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
         // }
       ],
       swiperOption: {
@@ -89,7 +93,7 @@ export default {
     };
   },
   methods: {
-    scoll() {
+    inputBlur() {
       this.$emit('changeNavShow',true);
       window.scrollTo(0, 0);
       this.moveBottom = false;
@@ -141,7 +145,8 @@ export default {
       })
     },
     next(){
-      // alert('next')
+      let index = this.realIndex + 1;
+      this.$refs.mySwiper.swiper.slideTo(index, 500, true);
     }
   },
   created() {
@@ -245,6 +250,8 @@ export default {
   background-color: white;
   border-radius: 10px;
   margin-top: 20px;
+  /* 服务器 */
+  /* margin-left:45px;   */
   /* overflow: scroll; */
 }
 .holes > img {
@@ -280,7 +287,7 @@ export default {
 .love-cover {
   font-size: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 216px;
   margin: 15px 0;
@@ -311,12 +318,16 @@ export default {
 /* 多人评论 */
 .comment-title{
   margin-left:26px;
+  /* 服务器 */
+  /* margin-left: 35px; */
   line-height: 48px;
   font-size: 14px;
 }
 .holes-comment{
   font-size: 10px;
   margin:0 26px;
+  /* 服务器 */
+  /* margin:0 35px; */
   /* background-color:yellow; */
   height:225px;
   overflow: scroll;
@@ -346,17 +357,17 @@ export default {
 
 </style>
 <style>
-.swiper-slide {
+.tree-hole .swiper-slide {
   z-index: 1;
   touch-action: none;
   width: 285px;
   /* height: 430px; */
   /* overflow: scroll; */
 }
-.swiper-button-next {
+.tree-hole .swiper-button-next {
   z-index: 1000;
 }
-.swiper-pagination {
+.tree-hole .swiper-pagination {
   z-index: 100 !important;
 }
 </style>

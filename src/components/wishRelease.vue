@@ -42,9 +42,9 @@
                 @confirm="ConfirmPickType"
                  />
             </van-popup>
-            <div class="anonymous">
-                <div class="check-box" @click="checkclick" ref="check"></div>
-                <span>{{chooseText[2]}}</span>
+            <div class="anonymous" @click="checkclick">
+                <div class="check-box"  ref="check"></div>
+                <span class="anonymous-text">{{chooseText[2]}}</span>
             </div>
         </div>
         <div class="contact" >
@@ -96,7 +96,7 @@ export default {
             showCampusPicker:false,//是否显示校区选项
             campus:["大学城校区","龙洞校区","东风路校区"],//选择校区的选项
             showTypePicker:false,//是否显示心愿类型选项
-            wishType:["事务","委托","其他"],//选择心愿类型的选项
+            wishType:["实物","委托","其他"],//选择心愿类型的选项
 
 
             //联系栏
@@ -325,6 +325,10 @@ export default {
         content: "✔";
         position: absolute;
         left:2px;
+    }
+    .anonymous-text{
+        display: inline-block;
+        vertical-align: middle !important;
     }
     .anonymous span{
         /* display: inline-block; */

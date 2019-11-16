@@ -15,47 +15,51 @@
                     </van-dropdown-menu>
             </div>
         </div>
+        <div class="sceoll-wrap">
         <van-pull-refresh
-        v-model="isDownLoading"
-        @refresh="onRefresh">
-            <div class="content">
-                <div class="col" ref="col1">
-                    <div 
-                    :style="{backgroundImage: item.bgPic}"
-                    v-for="(item,index) in topicLeft" 
-                    :key="index" 
-                    ref="colLeft"
-                    @click="toTopic(item,$event)" >
-                        <div  class="blur" ></div>
-                        <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
-                        <!-- <img :src="item.bgPic" alt=""> -->
-                        <div class="TopicText">{{item.title}}</div>
-                        <div class="heat">
-                            <img src="../assets/hot.png" alt="" width="20" height="20">
-                            <span>{{item.hot}}</span>
+            v-model="isDownLoading"
+            @refresh="onRefresh"
+            ref="refreshWrap">
+                <div class="content">
+                    <div class="col" ref="col1">
+                        <div 
+                        :style="{backgroundImage: item.bgPic}"
+                        v-for="(item,index) in topicLeft" 
+                        :key="index" 
+                        ref="colLeft"
+                        @click="toTopic(item,$event)" >
+                            <div  class="blur" ref="blurLeft"></div>
+                            <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
+                            <!-- <img :src="item.bgPic" alt=""> -->
+                            <div class="TopicText" ref="titleLeft"># {{item.title}}</div>
+                            <div class="heat">
+                                <img src="../assets/hot.png" alt="" width="20" height="20">
+                                <span ref="hotLeft">{{item.hot}}</span>
+                            </div>
                         </div>
+                    
                     </div>
-                
-                </div>
-                <div class="col" ref="col2">
-                    <div 
-                    :style="{backgroundImage: item.bgPic}"
-                    v-for="(item,index) in topicRight" 
-                    :key="index" 
-                    @click="toTopic(item,$event)" 
-                    ref="colRight">
-                        <div  class="blur" ></div>
-                        <!-- <img :src="item.bgPic" alt=""> -->
-                        <div class="TopicText">{{item.title}}</div>
-                        <div class="heat">
-                            <img src="../assets/hot.png" alt="" width="20" height="20">
-                            <span>{{item.hot}}</span>
+                    <div class="col" ref="col2">
+                        <div 
+                        :style="{backgroundImage: item.bgPic}"
+                        v-for="(item,index) in topicRight" 
+                        :key="index" 
+                        @click="toTopic(item,$event)" 
+                        ref="colRight">
+                            <div  class="blur" ref="blurRight"></div>
+                            <!-- <img :src="item.bgPic" alt=""> -->
+                            <div class="TopicText" ref="titleRight"># {{item.title}}</div>
+                            <div class="heat">
+                                <img src="../assets/hot.png" alt="" width="20" height="20">
+                                <span ref="hotRight">{{item.hot}}</span>
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
         </van-pull-refresh>
+        </div>
+        
       </div>
       
       <div class="SearchArea" v-show="showSearch" ref="Search" >
@@ -118,11 +122,18 @@ export default {
     },
     methods:{
         onRefresh(){
-            this.page = 1;
-            setTimeout(async()=>{
-                await this.getData()
-                this.isDownLoading = false; 
-            },500)
+            console.log("refresh")
+            // if(document.documentElement.scrollTop == 0){
+                this.page = 1;
+                setTimeout(async()=>{
+                    await this.getData()
+                    this.isDownLoading = false; 
+                },500)
+            // }
+            // else{
+            //      this.isDownLoading = false;  
+            // }
+            
         },
         //判断滚动条是否在底部
         checkBottom(){
@@ -148,7 +159,7 @@ export default {
         onLoadList(){
         //滚动条是否到达底部
             this.checkBottom();
-            console.log(this.isBottom)
+            // console.log(this.isBottom)
             if(this.isBottom){
                 this.getData(true)
             }
@@ -200,7 +211,7 @@ export default {
                 if(!load){
                     this.topicLeft = [],this.topicRight = [];
                 }
-                console.log(res);
+                // console.log(res);
                 this.insertTopic(res.data.result);
             }).catch(err=>{
                 console.log(err)
@@ -230,7 +241,7 @@ export default {
                         // console.log(item.bgPic)
                     }
                     else{
-                        item.bgPic = "linear-gradient(to bottom right,#FD9CBF,#FFF8C9)";
+                        item.bgPic = "linear-gradient(to bottom right,#FDFFC4,#FDFFC4)";
                     }
                     // console.log(item.bgPic)
                     if(index % 2 == 0){
@@ -250,6 +261,12 @@ export default {
                     else{
                         this.$refs.colLeft[index].classList.add("item1");
                     }
+                    console.log(this.$refs.colLeft[index].style.backgroundImage.slice(0,2))
+                    if(this.$refs.colLeft[index].style.backgroundImage.slice(0,3) != "url"){//修改默认样式
+                        this.$refs.blurLeft[index].style.background = "none";
+                        this.$refs.titleLeft[index].style.color = "black";
+                        this.$refs.hotLeft[index].style.color = "black";
+                    }
                 })
             })
             this.topicRight.map((item,index)=>{
@@ -260,8 +277,15 @@ export default {
                     else{
                         this.$refs.colRight[index].classList.add("item2");
                     }
+                    if(this.$refs.colRight[index].style.backgroundImage.slice(0,3) != "url"){//修改默认样式
+                        this.$refs.blurRight[index].style.background = "none";
+                        this.$refs.titleRight[index].style.color = "black";
+                        this.$refs.hotRight[index].style.color = "black";
+                    }
                 })
             })
+
+            
         }
     },
     mounted(){
@@ -300,7 +324,8 @@ export default {
     }
     .planet{
         width:100vw;
-        overflow-x: hidden;
+        /* height: 90vh; */
+        overflow: hidden;
         /* background:linear-gradient(to bottom right,#FD9CBF,#FFF8C9); */
     }
     .background{
@@ -308,7 +333,7 @@ export default {
         height:95vh;
         position: fixed;
         z-index:-100;
-        background:linear-gradient(to bottom right,#FD9CBF,#FFF8C9);
+        background:#ffc4c4;
     }
 
 
@@ -391,6 +416,7 @@ export default {
         width :75%;
         margin-left:12.5%;
         min-height:100px;
+        overflow: scroll;
         /* background: grey; */
         font-size:0;
         /* display: table; */
