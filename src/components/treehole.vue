@@ -53,7 +53,7 @@ export default {
         //   likes: 110,
         //   isLike:false,
         //   isBoy:false,
-        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
+        //   comments: [{isBoy:false,comment:'111111'}, {isBoy:true,comment:'222222'}]
         // },
         // {
         //   text:
@@ -109,6 +109,17 @@ export default {
         })
         return ;
       }
+
+
+      // this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:2,comment:this.postWord}]
+      // this.$nextTick(() => {
+      //   var container = this.$refs.container;
+      //   console.log('container',container);
+      //   container.scrollTop = container.scrollHeight;
+      // });
+
+
+      // return;
       let data = {
         comment:this.postWord,
         treeholeId:this.cards[this.realIndex].treeholeId,
@@ -120,8 +131,10 @@ export default {
         let user = JSON.parse(localStorage.getItem('userInfo'));
         this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
         this.postWord = '';
+        this.$toast.success('发表成功');
       })
       .catch(err=>{
+        this.$toast.fail('发表失败');
         console.log('评论树洞失败',err);
       })
       // 跳到最底部
@@ -348,6 +361,7 @@ export default {
   border-radius: 50%;
 }
 .commentList span{
+  padding-right: 4px;
   display: block;
   /* float: right; */
   word-break: break-all;
