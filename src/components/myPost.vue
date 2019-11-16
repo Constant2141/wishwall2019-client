@@ -32,7 +32,13 @@
         </div>
         <div class="wish-info">
           <div class="little-info">
-            <div class="icon" @click="showMore(index)"></div>
+            <div
+              class="icon"
+              @click="showMore(index)"
+              v-show="smallUrl[index]"
+              :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[0]})`}"
+            ></div>
+            <div class="icon" v-show="!smallUrl[index]"></div>
             <p class="getted">{{getInfo[index]}}</p>
             <div class="isGetted" :class="{hasGetted:hasGet[index]}" @click="finished(index)">
               <p>{{finish[index]}}</p>
@@ -92,7 +98,8 @@ export default {
       pickName: [],
       pickTime: [],
       hasGet: [],
-      deleteWish: ""
+      deleteWish: "",
+      smallUrl: []
     };
   },
   methods: {
@@ -210,6 +217,11 @@ export default {
           people.forEach((value, index) => {
             this.many[index] = value;
             this.getInfo[index] = `已被${this.many[index]}人领取`;
+            if (value > 0) {
+              this.smallUrl[index] = true;
+            } else {
+              this.smallUrl[index] = false;
+            }
           });
           status.forEach((value, index) => {
             if (value == 0) {
@@ -399,7 +411,8 @@ export default {
   max-width: 75px;
   margin-right: 8px;
   margin-left: 14px;
-  margin-top: 6px;
+  margin-top: 8px;
+  border-radius: 50%;
 }
 .getted {
   width: 70px;
