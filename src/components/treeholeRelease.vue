@@ -36,7 +36,7 @@ export default {
       // 向后台发送数据
       if (this.content == "") {
         this.$dialog.alert({
-          message: "愿望内容不可为空"
+          message: "树洞内容不可为空"
         });
       } else {
         console.log("要发请求了");
