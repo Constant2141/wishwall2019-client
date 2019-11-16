@@ -28,13 +28,13 @@
                         :key="index" 
                         ref="colLeft"
                         @click="toTopic(item,$event)" >
-                            <div  class="blur" ></div>
+                            <div  class="blur" ref="blurLeft"></div>
                             <!-- <div  class="pic" :style="{backgroundImage: 'url(' + item.bgPic + ')'}"></div> -->
                             <!-- <img :src="item.bgPic" alt=""> -->
-                            <div class="TopicText">{{item.title}}</div>
+                            <div class="TopicText" ref="titleLeft"># {{item.title}}</div>
                             <div class="heat">
                                 <img src="../assets/hot.png" alt="" width="20" height="20">
-                                <span>{{item.hot}}</span>
+                                <span ref="hotLeft">{{item.hot}}</span>
                             </div>
                         </div>
                     
@@ -46,12 +46,12 @@
                         :key="index" 
                         @click="toTopic(item,$event)" 
                         ref="colRight">
-                            <div  class="blur" ></div>
+                            <div  class="blur" ref="blurRight"></div>
                             <!-- <img :src="item.bgPic" alt=""> -->
-                            <div class="TopicText">{{item.title}}</div>
+                            <div class="TopicText" ref="titleRight"># {{item.title}}</div>
                             <div class="heat">
                                 <img src="../assets/hot.png" alt="" width="20" height="20">
-                                <span>{{item.hot}}</span>
+                                <span ref="hotRight">{{item.hot}}</span>
                             </div>
                         </div>
 
@@ -241,7 +241,7 @@ export default {
                         // console.log(item.bgPic)
                     }
                     else{
-                        item.bgPic = "linear-gradient(to bottom right,#FFDB9C,#FF9797)";
+                        item.bgPic = "linear-gradient(to bottom right,#FDFFC4,#FDFFC4)";
                     }
                     // console.log(item.bgPic)
                     if(index % 2 == 0){
@@ -261,6 +261,12 @@ export default {
                     else{
                         this.$refs.colLeft[index].classList.add("item1");
                     }
+                    console.log(this.$refs.colLeft[index].style.backgroundImage.slice(0,2))
+                    if(this.$refs.colLeft[index].style.backgroundImage.slice(0,3) != "url"){//修改默认样式
+                        this.$refs.blurLeft[index].style.background = "none";
+                        this.$refs.titleLeft[index].style.color = "black";
+                        this.$refs.hotLeft[index].style.color = "black";
+                    }
                 })
             })
             this.topicRight.map((item,index)=>{
@@ -271,8 +277,15 @@ export default {
                     else{
                         this.$refs.colRight[index].classList.add("item2");
                     }
+                    if(this.$refs.colRight[index].style.backgroundImage.slice(0,3) != "url"){//修改默认样式
+                        this.$refs.blurRight[index].style.background = "none";
+                        this.$refs.titleRight[index].style.color = "black";
+                        this.$refs.hotRight[index].style.color = "black";
+                    }
                 })
             })
+
+            
         }
     },
     mounted(){

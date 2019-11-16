@@ -170,7 +170,7 @@ export default {
                 }) 
             }
             
-        },400),
+        },1000),
     release(){
       if(this.input != ""){
         let data = {
