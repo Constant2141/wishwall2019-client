@@ -176,7 +176,7 @@ export default {
         let data = {
           comment:this.input,
           commentid:this.user.commentid,
-          openid:JSON.parse(localStorage.userInfo).openid
+          openid:JSON.parse(localStorage.comment).openid
         }
         console.log(data)
         this.$axios.post("/star/addComment",data).then(res=>{
