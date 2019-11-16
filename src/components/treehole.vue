@@ -27,7 +27,7 @@
     </swiper>
     <!-- 底下的输入款 -->
     <div class="comment" :class="{'comment-active':moveBottom}">
-      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="inputBlur" />
+      <input type="text" v-model="postWord" placeholder="你想对他/她说些什么吗..." @focus="inputFocus" @blur="inputBlur" />
       <div @mousedown="post">发表</div>
     </div>
   </div>
