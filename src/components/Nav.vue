@@ -100,6 +100,19 @@ export default {
         return false;
       }
     }
+  },
+  watch:{
+    '$route':{
+      immediate:true,
+      handler(val){
+        let name = val.name
+        let arr = ["wishwall", "treehole", "center", "planet", "mine"];
+        if(arr.indexOf(name) !=  -1){
+          this.activeNavIndex = arr.indexOf(name) + 1;
+          console.log('route变化了',name);
+        }
+      }
+    }
   }
 };
 </script>
