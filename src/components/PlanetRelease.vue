@@ -98,7 +98,20 @@ export default {
                     }); 
                     // data.append("bgPic",this.sendData.bgPic[0].file)   
 
-                };
+                }
+                else{
+                     this.$axios.post("/star/create",data).then(res=>{
+                        // console.log(1)
+                        this.sendData.title = "";
+                        this.sendData.comment = "";
+                        this.$toast.success('发布成功');
+                        this.$router.go(-1);
+                        // console.log(res);
+                        }).catch(err=>{
+                            console.log(err);
+                            this.$toast.success('发布失败');
+                        })
+                }
                 
             }
         },1000)

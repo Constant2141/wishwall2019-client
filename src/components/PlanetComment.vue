@@ -393,6 +393,8 @@ export default {
     .comment-list{
       width:84%;
       min-height:20px;
+      max-height:320px;
+      overflow: scroll;
       margin-left:7%;
       /* background: blue; */
     }
