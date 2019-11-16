@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="comment-title" v-if="item.comments.length > 0">评论：</div>
-        <div class="holes-comment">
+        <div class="holes-comment" :ref="index">
           <div v-for="(item,index) in cards[index].comments" :key="index" class="commentList">
             <div><img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt=""></div>
             <span>{{item.comment}}</span>
@@ -46,24 +46,7 @@ export default {
       postWord:"",//要评论的话
       boyImgUrl:require('../assets/Avatar/BoyAvatar.png'),
       girlImgUrl:require('../assets/Avatar/GirlAvatar.png'),
-      cards: [
-        // {
-        //   text:
-        //     "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
-        //   likes: 110,
-        //   isLike:false,
-        //   isBoy:false,
-        //   comments: [{isBoy:false,comment:'111111'}, {isBoy:true,comment:'222222'}]
-        // },
-        // {
-        //   text:
-        //     "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
-        //   likes: 110,
-        //   isLike:false,
-        //   isBoy:false,
-        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
-        // }
-      ],
+      cards: [],
       swiperOption: {
         slidesPerView: "auto",
         centeredSlides: true,
@@ -109,17 +92,6 @@ export default {
         })
         return ;
       }
-
-
-      // this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:2,comment:this.postWord}]
-      // this.$nextTick(() => {
-      //   var container = this.$refs.container;
-      //   console.log('container',container);
-      //   container.scrollTop = container.scrollHeight;
-      // });
-
-
-      // return;
       let data = {
         comment:this.postWord,
         treeholeId:this.cards[this.realIndex].treeholeId,
@@ -138,10 +110,11 @@ export default {
         console.log('评论树洞失败',err);
       })
       // 跳到最底部
-      // this.$nextTick(() => {
-      //   var container = this.$el.querySelector("#new_message");
-      //   container.scrollTop = container.scrollHeight;
-      // });
+      this.$nextTick(() => {
+        var container = this.$refs[this.realIndex][0];
+        console.log('container',container);
+        container.scrollTop = container.scrollHeight;
+      });
     },
     changeLove() {
       if(this.cards[this.realIndex].isLike == true)return;
