@@ -57,8 +57,8 @@ export default {
         //   likes: 110,
         //   isLike:false,
         //   isBoy:false,
-        //   comments: [{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'},{isBoy:false,text:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,text:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,text:'123'}]
-        // }
+        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
+        // },
       ],
       swiperOption: {
         slidesPerView: "auto",
@@ -245,6 +245,8 @@ export default {
   background-color: white;
   border-radius: 10px;
   margin-top: 20px;
+  /* 服务器 */
+  /* margin-left:45px;   */
   /* overflow: scroll; */
 }
 .holes > img {
@@ -311,12 +313,16 @@ export default {
 /* 多人评论 */
 .comment-title{
   margin-left:26px;
+  /* 服务器 */
+  /* margin-left: 35px; */
   line-height: 48px;
   font-size: 14px;
 }
 .holes-comment{
   font-size: 10px;
   margin:0 26px;
+  /* 服务器 */
+  /* margin:0 35px; */
   /* background-color:yellow; */
   height:225px;
   overflow: scroll;
@@ -346,17 +352,17 @@ export default {
 
 </style>
 <style>
-.swiper-slide {
+.tree-hole .swiper-slide {
   z-index: 1;
   touch-action: none;
   width: 285px;
   /* height: 430px; */
   /* overflow: scroll; */
 }
-.swiper-button-next {
+.tree-hole .swiper-button-next {
   z-index: 1000;
 }
-.swiper-pagination {
+.tree-hole .swiper-pagination {
   z-index: 100 !important;
 }
 </style>
