@@ -56,7 +56,7 @@ export default {
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
-                this.sendData.conmment = "";
+                this.sendData.comment = "";
                 this.$toast.success('发布成功');
                 this.$router.go(-1);
             }).catch(err=>{
