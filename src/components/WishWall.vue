@@ -374,6 +374,9 @@ li{
   display: flex;
   background-color:#fff; 
 }
+.wish-body{
+  background-color: #fff;
+}
 .wish-tag {
   justify-content: space-between;
   align-items: flex-end;
