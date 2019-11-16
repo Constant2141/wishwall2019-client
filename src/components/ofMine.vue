@@ -93,7 +93,7 @@ export default {
             this.opinions[index] = value.comment;
             this.names[index] = value.nickname;
             this.photoUrl[index] = value.headimgurl;
-            times[index] = value.comment_time;
+            times[index] = value.createdAt;
             times.forEach((value, index) => {
               this.times[index] =
                 value.slice(0, 10) + " " + value.slice(11, 19);

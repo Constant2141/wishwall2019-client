@@ -100,22 +100,22 @@ export default {
         let status = [];
         let people = [];
         this.wishes.forEach((value, index) => {
-          this.wid[index] = value.uuid;
-          this.theWish[index] = value.wish_content;
-          this.level[index] = value.wish_type;
-          this.school[index] = value.wish_where;
-          if (value.contact.length == 0) {
+          this.wid[index] = value.w.uuid;
+          this.theWish[index] = value.w.wish_content;
+          this.level[index] = value.w.wish_type;
+          this.school[index] = value.w.wish_where;
+          if (value.w.contact.length == 0) {
             this.tel[index] = "这个小姐姐没有填写联系方式噢";
           } else {
             this.tel[index] = value.contact;
           }
-          this.photoUrl[index] = value.headimgurl;
-          this.nickName[index] = value.nickname;
+          this.photoUrl[index] = value.w.headimgurl;
+          this.nickName[index] = value.w.nickname;
           method[index] = value.anonymous;
           // this.time[index] = value.createdAt;
-          times[index] = value.createdAt;
-          people[index] = value.wish_many;
-          status[index] = value.wish_status;
+          times[index] = value.w.createdAt;
+          people[index] = value.w.wish_many;
+          status[index] = value.w.wish_status;
         });
         times.forEach((value, index) => {
           this.time[index] = value.slice(0, 10) + " " + value.slice(11, 19);

@@ -118,9 +118,10 @@ export default {
         .get(url)
         .then(res => {
           this.titles = res.data.result;
+          console.log(this.titles);
           let times = [];
           this.titles.forEach((value, index) => {
-            this.topics[index] = value.title;
+            this.topics[index] = value.fs.title;
             this.opinions[index] = value.comment;
             this.names[index] = value.nickname;
             this.likes[index] = value.likes;
