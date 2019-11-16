@@ -1,8 +1,6 @@
 <template>
   <div class="tree-hole" ref="treeHole">
-    <!-- <div class="right-arrow"></div> -->
-    <!-- <div class="title">树洞</div> -->
-    <swiper :options="swiperOption">
+    <swiper :options="swiperOption" ref="mySwiper">
       <swiper-slide v-for="(item,index) in cards" :key="index">
         <div class="holes">
           <img :src="item.sex == 1?boyImgUrl:girlImgUrl" alt="">
@@ -15,7 +13,7 @@
               ></div>
               <span>{{item.likes}}人觉得很赞</span>
             </div>
-            <!-- <div class="next" @click="next">next</div> -->
+            <div class="next" @click="next">next</div>
           </div>
         </div>
         <div class="comment-title" v-if="item.comments.length > 0">评论：</div>
@@ -26,8 +24,6 @@
           </div>
         </div>
       </swiper-slide>
-      <!-- <div class="swiper-pagination" slot="pagination">123</div> -->
-      <!-- <div class="swiper-button-next" slot="button-next"></div> -->
     </swiper>
     <!-- 底下的输入款 -->
     <div class="comment" :class="{'comment-active':moveBottom}">
@@ -59,6 +55,14 @@ export default {
         //   isBoy:false,
         //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
         // },
+        // {
+        //   text:
+        //     "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
+        //   likes: 110,
+        //   isLike:false,
+        //   isBoy:false,
+        //   comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
+        // }
       ],
       swiperOption: {
         slidesPerView: "auto",
@@ -141,7 +145,8 @@ export default {
       })
     },
     next(){
-      // alert('next')
+      let index = this.realIndex + 1;
+      this.$refs.mySwiper.swiper.slideTo(index, 500, true);
     }
   },
   created() {
@@ -282,7 +287,7 @@ export default {
 .love-cover {
   font-size: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 216px;
   margin: 15px 0;
