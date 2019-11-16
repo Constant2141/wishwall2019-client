@@ -163,16 +163,6 @@ export default {
       // console.log(parseInt(scrollHeight)-winHeight)
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
-    //防抖函数
-    debounce(fn,wait){
-      let timeout = null;
-      return ()=>{
-        if(timeout!==null){
-          clearTimeout(timeout);
-          timeout = setTimeout(fn,wait);
-        }
-      }
-    },
     
     async onLoadList(){
       //滚动条是否到达底部
@@ -382,6 +372,7 @@ li{
 .wish-txt,
 .wish-tag{
   display: flex;
+  background-color:#fff; 
 }
 .wish-tag {
   justify-content: space-between;
