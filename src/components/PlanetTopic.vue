@@ -82,49 +82,56 @@ export default {
         },
         like(item,event){
             event.stopPropagation();
-            // if(this.banLike == true){
-            //     return ;
-            // }
             if(item.likeOrNot == 0){
-                this.likepost(item,1,this)
-            }
-            else{
-                this.likepost(item,0,this)
-                    
-            }
-        },
-        likepost:debounce((item,flag,th)=>{
-            console.log(2222)
-            if(flag){
-                th.$axios.post("/star/handleLike",{
+                item.likes++;
+                item.likeOrNot = 1;
+                // this.likepost(item,1,this)
+                this.$axios.post("/star/handleLike",{
                         commentid:item.commentid,
                         upDown:1
                     }).then(async res=>{
-                        console.log("+")
-                        item.likes++;
-                        item.likeOrNot = 1;
-                        // this.cancelLike();
-                        await th.refresh();
+                        this.$toast.success('点赞成功');
+                        await this.refresh();
                     }).catch(err=>{
                         console.log(err)
+                        this.$toast.fail('点赞失败');
                 })
+            }
+            else return ;
+
+        },
+        // likepost:debounce((item,flag,th)=>{
+        //     console.log(2222)
+        //     if(flag){
+        //         th.$axios.post("/star/handleLike",{
+        //                 commentid:item.commentid,
+        //                 upDown:1
+        //             }).then(async res=>{
+        //                 console.log("+")
+        //                 item.likes++;
+        //                 item.likeOrNot = 1;
+        //                 // this.cancelLike();
+        //                 await th.refresh();
+        //             }).catch(err=>{
+        //                 console.log(err)
+        //         })
                
-            }
-            else{
-                th.$axios.post("/star/handleLike",{
-                        commentid:item.commentid,
-                        upDown:0
-                    }).then(async res=>{
-                        item.likes--; 
-                        item.likeOrNot = 0;
-                        // this.cancelLike();
-                        await th.refresh();
-                    }).catch(err=>{
-                        console.log(err)
-                    }) 
-            }
+        //     }
+        //     else{
+        //         th.$axios.post("/star/handleLike",{
+        //                 commentid:item.commentid,
+        //                 upDown:0
+        //             }).then(async res=>{
+        //                 item.likes--; 
+        //                 item.likeOrNot = 0;
+        //                 // this.cancelLike();
+        //                 await th.refresh();
+        //             }).catch(err=>{
+        //                 console.log(err)
+        //             }) 
+        //     }
             
-        },400),
+        // },400),
         refresh(){
             this.topic = JSON.parse(localStorage.planet);
             // console.log(this.topic.bgPic.slice(0,3))

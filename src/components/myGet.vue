@@ -21,7 +21,7 @@
               <div class="anonymous-name">{{nickName[index]}}</div>
             </div>
             <p class="method" v-show="!isAnonymous[index]">{{methods[index]}}</p>
-            <div class="delete" @click="alertDelete(index)"></div>
+            <!-- <div class="delete" @click="alertDelete(index)"></div> -->
           </div>
           <div class="middle-wish">
             <p>{{theWish[index]}}</p>

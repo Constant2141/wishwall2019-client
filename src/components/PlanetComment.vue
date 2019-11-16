@@ -66,12 +66,6 @@ export default {
   data(){
     return {
       user:{
-        image:require("../assets/NWlogo.png"),
-        name:"jio",
-        date:"7/22",
-        time:"17:30",
-        message:"喜欢巨辣汤呢，你们呢",
-        likeCount:115
       },
 
 
@@ -126,54 +120,59 @@ export default {
         },
         async like(item,event){//点赞
             event.stopPropagation();//点赞时不需要路由跳转
-            
-            // if(this.banLike == true){
-            //     return ;
-            // }
             if(item.likeOrNot == 0){
-                this.likepost(item,1,this)
+              item.likes++;
+              item.likeOrNot = 1;
+              // this.likepost(item,1,this)
+              this.$axios.post("/star/handleLike",{
+                      commentid:item.commentid,
+                      upDown:1
+                  }).then(async res=>{
+                      this.$toast.success('点赞成功');
+                      await this.refresh(true);
+                  }).catch(err=>{
+                      console.log(err)
+                      this.$toast.fail('点赞失败');
+              })
             }
-            else{
-                this.likepost(item,0,this)
-                    
-            }
+            else return ;
             
         },
-      likepost:debounce((item,flag,th)=>{
-            console.log(2222)
-            if(flag){
-                th.$axios.post("/star/handleLike",{
-                    commentid:item.commentid,
-                    upDown:1
-                }).then(res=>{
-                    // console.log(res)
-                    item.likes++;
-                    console.log(item.likes)
-                    item.likeOrNot = 1;
-                    localStorage.setItem("comment",JSON.stringify(item))
-                }).catch(err=>{
-                    console.log(err)
-                })   
-            }
+      // likepost:debounce((item,flag,th)=>{
+      //       console.log(2222)
+      //       if(flag){
+      //           th.$axios.post("/star/handleLike",{
+      //               commentid:item.commentid,
+      //               upDown:1
+      //           }).then(res=>{
+      //               // console.log(res)
+      //               item.likes++;
+      //               console.log(item.likes)
+      //               item.likeOrNot = 1;
+      //               localStorage.setItem("comment",JSON.stringify(item))
+      //           }).catch(err=>{
+      //               console.log(err)
+      //           })   
+      //       }
                
-            else{
-             th.$axios.post("/star/handleLike",{
-                    commentid:item.commentid,
-                    upDown:0
-                }).then(res=>{
-                    console.log(res)
-                    item.likes--; 
-                    item.likeOrNot = 0;
-                    localStorage.setItem("comment",JSON.stringify(item))
-                    // this.cancelLike();
-                    console.log(localStorage)
-                    // this.refresh();
-                }).catch(err=>{
-                    console.log(err)
-                }) 
-            }
+      //       else{
+      //        th.$axios.post("/star/handleLike",{
+      //               commentid:item.commentid,
+      //               upDown:0
+      //           }).then(res=>{
+      //               console.log(res)
+      //               item.likes--; 
+      //               item.likeOrNot = 0;
+      //               localStorage.setItem("comment",JSON.stringify(item))
+      //               // this.cancelLike();
+      //               console.log(localStorage)
+      //               // this.refresh();
+      //           }).catch(err=>{
+      //               console.log(err)
+      //           }) 
+      //       }
             
-        },1000),
+      //   },1000),
     release(){
       if(this.input != ""){
         let data = {
@@ -191,13 +190,12 @@ export default {
         })
       }
     },
-    refresh(){
+    refresh(flag = false){
       // console.log(localStorage)
-      this.user = this.handleTopicData(JSON.parse(localStorage.comment));
-      // console.log(this.user)
-      // this.commentCount = this.user.many;
-      // console.log(this.commentCount)
-      // console.log(JSON.parse(localStorage.comment).commentid)
+      if(!flag){
+        this.user = this.handleTopicData(JSON.parse(localStorage.comment)
+        )};
+      console.log(this.user)
       this.$axios.get(`/star/showComment?commentid=${JSON.parse(localStorage.comment).commentid}`).then(res=>{
         this.comment = this.handleTopicData(res.data.result);
         this.commentCount = this.comment.length;
@@ -222,6 +220,7 @@ export default {
   watch:{
     $route(to,from){
       console.log(to)
+      this.comment = [];
       if(to.name == "planetcomment"){
           console.log(1)
          this.refresh();
