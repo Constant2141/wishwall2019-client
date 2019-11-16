@@ -9,7 +9,7 @@
         </div>
         <div class="edit-area">
             <div class="wish-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.wish_content" @blur="blur"></textarea>
             </div>
         </div>
         <div class="more-choose">
@@ -49,7 +49,7 @@
         </div>
         <div class="contact" >
             <div>
-                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"  v-model="sendData.contact"></textarea>
+                <textarea type="text" class="contact-edit" @click="editContact" placeholder="填写联系方式（选填）" cols="3" rows="3"  v-model="sendData.contact" @blur="blur"></textarea>
             </div>
             <div class="tips">
                 <p>TIPS: {{contactText[1]}}</p>
@@ -128,6 +128,9 @@ export default {
         back(){//退回上一页
             this.$router.go(-1);
         },
+        blur(){//文本框失焦后复位
+            window.scrollTo(0,0)
+        },
         release(){
             // 向后台发送数据
             // console.log(localStorage.getItem('token'))
@@ -150,6 +153,11 @@ export default {
                 this.$axios.post('wish/create',this.sendData).then(res =>{
                     console.log(res)
                     this.$toast.success('发布成功');
+                    this.sendData.wish_content = "";//心愿内容
+                    this.sendData.wish_where = "",//校区
+                    this.sendData.wish_type = "",//心愿类型
+                    this.sendData.anonymous = false,//是否匿名
+                    this.sendData.contact = "",//地址
                     this.$router.go(-1);
                 }).catch(err =>{
                     console.log(err)

@@ -12,7 +12,7 @@
                 <div class="topic"># {{topic}}</div>
             </div>
             <div class="message-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment" @blur="blur"></textarea>
             </div>    
         </div>
   </div>
@@ -48,6 +48,9 @@ export default {
         back(){//退回上一页
             this.$router.go(-1);
         },
+        blur(){//文本框失焦后复位
+            window.scrollTo(0,0)
+        },
          afterRead(file) {
             // 此时可以自行将文件上传至服务器
             console.log(file);
@@ -56,7 +59,7 @@ export default {
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
-                this.sendData.conmment = "";
+                this.sendData.comment = "";
                 this.$toast.success('发布成功');
                 this.$router.go(-1);
             }).catch(err=>{

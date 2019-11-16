@@ -53,7 +53,7 @@
 
 
     <div class="publish">
-      <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input">
+      <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input" @blur="blur">
       <div class="publish-button" @click="release">发表</div>
     </div>
   </div>
@@ -95,6 +95,9 @@ export default {
   methods:{
     back(){
       this.$router.go(-1);
+    },
+    blur(){//文本框失焦后复位
+        window.scrollTo(0,0)
     },
     handleTopicData(i){
       if(i instanceof Array){
@@ -176,7 +179,7 @@ export default {
         let data = {
           comment:this.input,
           commentid:this.user.commentid,
-          openid:JSON.parse(localStorage.userInfo).openid
+          openid:JSON.parse(localStorage.comment).openid
         }
         console.log(data)
         this.$axios.post("/star/addComment",data).then(res=>{
