@@ -77,7 +77,21 @@ export default {
         // window.open(href,'_self')
         window.location.href =href;
       }else {
-        this.$router.replace({path:'/wishwall'})
+        this.$axios.get('/login').then(res => {
+          let user = res.data;
+          localStorage.setItem('token',user.token);
+          localStorage.setItem('sex',user.sex);
+          localStorage.setItem('token_exp',new Date().getTime());
+          localStorage.setItem('userInfo',JSON.stringify(user));
+          this.$store.commit("initSex",user.sex);
+          if(user.isNewUser){
+            console.log('welcome');
+            this.$router.replace({path:'/welcome'})
+          }else{
+            console.log('wishwall');
+            this.$router.replace({path:'/wishwall'})
+          }
+        }).catch(e => console.log(e))
       }
     }
 

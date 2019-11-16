@@ -20,7 +20,7 @@ function getShareData(){
   const title = `2019 Night's Watch 许愿墙`
   const desc = getWord()
   const link = `http://wx.1bin.top?`
-  const imgUrl = `http://1bin.top/logo.jpg`
+  const imgUrl = `http://wx.1bin.top/logo.jpg`
   const success = function() { console.log('success') }
 
   return { title, desc, link, imgUrl, success }

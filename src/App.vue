@@ -37,7 +37,7 @@ export default {
     };
   },
   mounted(){
-    share()
+      share()
   },
   methods: {
     // 盖锅盖
