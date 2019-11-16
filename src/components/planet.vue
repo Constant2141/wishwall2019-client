@@ -241,7 +241,7 @@ export default {
                         // console.log(item.bgPic)
                     }
                     else{
-                        item.bgPic = "linear-gradient(to bottom right,#FDFFC4,#FDFFC4)";
+                        item.bgPic = "linear-gradient(to bottom right,#ffd9d9,#FDFFC4)";
                     }
                     // console.log(item.bgPic)
                     if(index % 2 == 0){
