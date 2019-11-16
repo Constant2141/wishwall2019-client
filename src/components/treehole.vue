@@ -1,6 +1,6 @@
 <template>
   <div class="tree-hole" ref="treeHole">
-    <div class="right-arrow"></div>
+    <!-- <div class="right-arrow"></div> -->
     <!-- <div class="title">树洞</div> -->
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item,index) in cards" :key="index">
@@ -15,7 +15,7 @@
               ></div>
               <span>{{item.likes}}人觉得很赞</span>
             </div>
-            <div class="next" @click="next">next</div>
+            <!-- <div class="next" @click="next">next</div> -->
           </div>
         </div>
         <div class="comment-title" v-if="item.comments.length > 0">评论：</div>
@@ -31,8 +31,8 @@
     </swiper>
     <!-- 底下的输入款 -->
     <div class="comment" :class="{'comment-active':moveBottom}">
-      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="scoll" />
-      <div @click="post">发表</div>
+      <input type="text" v-model="postWord" placeholder="您想对怹说些什么吗..." @focus="inputFocus" @blur="inputBlur" />
+      <div @mousedown="post">发表</div>
     </div>
   </div>
 </template>
@@ -89,7 +89,7 @@ export default {
     };
   },
   methods: {
-    scoll() {
+    inputBlur() {
       this.$emit('changeNavShow',true);
       window.scrollTo(0, 0);
       this.moveBottom = false;
@@ -280,7 +280,7 @@ export default {
 .love-cover {
   font-size: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 216px;
   margin: 15px 0;
