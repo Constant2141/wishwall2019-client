@@ -43,16 +43,16 @@ export default {
   },
   methods: {
     toMyPost() {
-      this.$router.replace(`/mypost`);
+      this.$router.push(`/mypost`);
       //本来做了条数限制不请求的
       //可是万一条数不变，可是其他数据变了也不刷新这样也不对的
     },
     toMyTreeHole() {
       //根据条数看看是不是需要更新
-      this.$router.replace(`/mytreehole?count=${this.num2}`);
+      this.$router.push(`/mytreehole`);
     },
     toMyPlant() {
-      this.$router.replace(`/mytopic`);
+      this.$router.push(`/mytopic`);
     }
   },
   mounted() {
