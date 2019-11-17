@@ -71,7 +71,10 @@
     </div>
 </template>
 
+
 <script>
+import { debounce } from "@/utils/debounce.js"
+
 export default {
     name: "wish-release",//发布心愿的编辑页
     data(){
@@ -134,7 +137,7 @@ export default {
         blur(){//文本框失焦后复位
             window.scrollTo(0,0)
         },
-        release(){
+        release:debounce(function(){
             // 向后台发送数据
             // console.log(localStorage.getItem('token'))
             if(this.sendData.wish_content == ''){
@@ -170,7 +173,7 @@ export default {
                 })
             }
             
-        },
+        },1000),
         confirm(){
             // 确认联系方式
             if(this.sendData.contact != ''){
