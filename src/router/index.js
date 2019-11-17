@@ -26,11 +26,7 @@ const router = new Router({
   routes: [
     {
       path: "/",
-<<<<<<< HEAD
-      redirect:'/login' //告诉我为什么改这个
-=======
       redirect:'/login'
->>>>>>> 202e1c5cdaefc3589d3a2ca635cb7bee659f011e
     },
     {
       path:'/test',
