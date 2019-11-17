@@ -15,8 +15,11 @@ import store from './vuex/store'
 import { PullRefresh } from 'vant';
 import { Uploader } from 'vant';
 import { Toast } from 'vant';
+import { Loading } from 'vant';
+import { Overlay } from 'vant';
 
-
+Vue.use(Overlay);
+Vue.use(Loading);
 Vue.use(DropdownMenu).use(DropdownItem);
 Vue.use(Popup);
 Vue.use(Picker);
