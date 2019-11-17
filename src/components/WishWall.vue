@@ -108,6 +108,8 @@
 </template>
 
 <script>
+import { checkBottom } from '../utils/the-scroll-utils';
+
 export default {
   data(){
     return{
@@ -129,7 +131,7 @@ export default {
       wishTotal:'', //心愿的总条数
       curCampus:'全部', //当前所在学校，默认为全部
       isDownLoading:false,
-      isBottom:false, //是否是页面最底端
+      // isBottom:false, //是否是页面最底端 不需要
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
       finished: false, //全部数据是否加载完
       readTips:false,
@@ -143,66 +145,44 @@ export default {
         this.isDownLoading = false; 
       },500)
     },
-    //判断滚动条是否在底部
-    checkBottom(){
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;// 获取滚动条的高度
-      const winHeight = document.documentElement.clientHeight || document.body.clientHeight; // 一屏的高度
-      const scrollHeight = (()=>{
-        let bodyScrollHeight = 0
-        let documentScrollHeight = 0
-        if (document.body) {
-          bodyScrollHeight = document.body.scrollHeight
-        }
-        if (document.documentElement) {
-          documentScrollHeight = document.documentElement.scrollHeight
-        }
-        // 当页面内容超出浏览器可视窗口大小时，Html的高度包含body高度+margin+padding+border所以html高度可能会大于body高度
-        return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
-      })()
-      // console.log(scrollTop)
-      // console.log(parseInt(scrollHeight)-winHeight)
-      this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
-    },
     
-    onLoadList(){
+    async onLoadList(){
       //滚动条是否到达底部
-      this.checkBottom();
-      if(this.isBottom && !this.finished){
-      this.loadState = 1;
-      let tempList = this.wishes;
-      this.page++;
-      let campus = this.curCampus;
-      //在需要返回的值前加await
-      this.$axios.get('/wish/list',{
-        params:{
-          curPage:this.page,
-          wish_where:campus=='全部'?'':`${campus}校区`
-        }
-      })
-      .then(async res=>{
-        if(res.status == 200){
-          let temp = await res.data.result.wishList.rows;
-          this.handleAnonymous(temp);
-          this.handleTime(temp);
-          // this.wishes = temp;
-          this.wishTotal = res.data.result.wishList.count;
-          this.wishes =  tempList.concat(temp);
-        }
-      })
-      .catch(err =>console.log(err))
+      const IS_BOTTOM = checkBottom();
+
+      // for debug
+      // this.$axios.get(`/?IS_BOTTOM=${IS_BOTTOM}`, {});
+
+      // 加锁判断
+      if(IS_BOTTOM && !this.finished && this.loadState === 0){
+        // 设置 loadState 锁
+        this.loadState = 1;
+
+        const tempList = this.wishes;
+        this.page = this.page + 1;
+        const temp = await this.getData();
+        console.log('新的数据');
+        console.log(temp);
+        this.wishes =  tempList.concat(temp);
+        console.log('所有数据');
+        console.log(this.wishes);
+
+        // all done 的时候重置 loadState 解锁
+        this.loadState = 0;
       }
+
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
         this.loadState = 2;
       } 
     },
-    async getData(){
+    async getData() {
       let campus = this.curCampus;
       //在需要返回的值前加await
       let result  = await this.$axios.get('/wish/list',{
         params:{
-          curPage:this.page,
-          wish_where:campus=='全部'?'':`${campus}校区`
+          curPage: this.page,
+          wish_where: campus=='全部'?'':`${campus}校区`
         }
       })
       .then(async res=>{
@@ -240,9 +220,9 @@ export default {
       arr.map(item=>{
         if(item.anonymous == true){
           item.nickname = item.nickname.slice(0,1)+'**'
-        }  
+        }
+        return arr;
       })
-      return arr;
     },
     handleTime(arr){
       arr.map(item=>{
@@ -279,7 +259,8 @@ export default {
       body.style.top='';
     }
   },
-  async mounted(){
+   async mounted(){
+    console.log('许愿添加');
     this.wishes = await this.getData();
     // (function(arr){
     //   let wishMany = arr.map(item=>item.wish_many);
@@ -289,6 +270,7 @@ export default {
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
+      console.log('许愿销毁');
     window.removeEventListener("scroll", this.onLoadList,false)
   }
 }
