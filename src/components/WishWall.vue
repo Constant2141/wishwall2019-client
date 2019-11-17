@@ -133,6 +133,7 @@ export default {
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
       finished: false, //全部数据是否加载完
       readTips:false,
+      loadingFlag:true
     }
   },
   methods:{
@@ -163,7 +164,10 @@ export default {
       // console.log(parseInt(scrollHeight)-winHeight)
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
-    
+    handleScroll(){
+      if(!this.loadingFlag) return;
+      this.onLoadList();
+    },
     onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
@@ -173,6 +177,7 @@ export default {
       this.page++;
       let campus = this.curCampus;
       //在需要返回的值前加await
+      this.loadingFlag = false;
       this.$axios.get('/wish/list',{
         params:{
           curPage:this.page,
@@ -187,6 +192,7 @@ export default {
           // this.wishes = temp;
           this.wishTotal = res.data.result.wishList.count;
           this.wishes =  tempList.concat(temp);
+          this.loadingFlag = true;
         }
       })
       .catch(err =>console.log(err))
@@ -285,11 +291,11 @@ export default {
     //   let wishMany = arr.map(item=>item.wish_many);
     //   console.log(wishMany);
     // })(this.wishes)
-    window.addEventListener("scroll", this.onLoadList,false)
+    window.addEventListener("scroll", this.handleScroll,false)
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
-    window.removeEventListener("scroll", this.onLoadList,false)
+    window.removeEventListener("scroll", this.handleScroll,false)
   }
 }
 </script>
