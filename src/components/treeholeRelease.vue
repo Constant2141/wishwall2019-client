@@ -26,7 +26,7 @@ export default {
       buttonText: "发布", //发布按钮
 
       //编辑栏变量
-      wishPHold: "快来发布你的树洞吧 ~", //编写心愿处的placeholder
+      wishPHold: "快来发布你的树洞吧 ~（尽量不要多于35个字哦）", //编写心愿处的placeholder
       //要发布的树洞
       content: ""
     };
