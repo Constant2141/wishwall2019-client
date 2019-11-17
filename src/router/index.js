@@ -18,14 +18,23 @@ import Mytopic from "@/components/myTopic";
 import Mycomment from "@/components/myComment";
 import ofMine from "@/components/ofMine";
 import Login from '@/components/Login';
+import Test from '@/components/Test'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/",
-      redirect: "/login"
+      redirect:'/wishwall'
+    },
+    {
+      path:'/test',
+      name:'test',
+      component:Test,
+      meta: {
+        keepAlive: false,
+      }
     },
     {
       path: "/treehole",
@@ -181,3 +190,16 @@ export default new Router({
     }
   ]
 });
+
+
+// 服务器炸了
+// router.beforeEach((to, from, next) => {
+//   if(to.path == '/test'){
+//     console.log(to)
+//     next()
+//   }
+//   next({ path: '/test' });
+// })
+
+
+export default router
