@@ -26,7 +26,7 @@ const router = new Router({
   routes: [
     {
       path: "/",
-      redirect:'/wishwall'
+      redirect:'/login' //告诉我为什么改这个
     },
     {
       path:'/test',
