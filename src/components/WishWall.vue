@@ -164,48 +164,43 @@ export default {
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
     
-    onLoadList(){
+    async onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
       this.loadState = 1;
       let tempList = this.wishes;
       this.page++;
-      // let temp = await this.getData();
-      // this.wishes =  [...tempList,...temp];
-      new Promise((resolve,reject)=>{
-        this.getData(resolve);
-      })
-      .then(res=>{
-        this.wishes = [...tempList,...this.wishes]
-        });
+      let temp = await this.getData();
+      this.wishes =  tempList.concat(temp);
+      
       }
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
         this.loadState = 2;
       } 
     },
-    getData(resolve){
+    async getData(){
       let campus = this.curCampus;
       //在需要返回的值前加await
-      this.$axios.get('/wish/list',{
+      let result  = await this.$axios.get('/wish/list',{
         params:{
           curPage:this.page,
           wish_where:campus=='全部'?'':`${campus}校区`
         }
       })
-      .then(res=>{
+      .then(async res=>{
         if(res.status == 200){
-          let temp = res.data.result.wishList.rows;
+          let temp = await res.data.result.wishList.rows;
           this.handleAnonymous(temp);
           this.handleTime(temp);
           // this.wishes = temp;
           this.wishTotal = res.data.result.wishList.count;
-          this.wishes = temp;
-          resolve();
+          return temp;
         }
       })
       .catch(err =>console.log(err))
+      return result;
     },
     takeWish(index){
       this.wishes[index].gainOrNot = true;
@@ -217,12 +212,12 @@ export default {
         }
       })
     },
-    changeCampus(index){
+    async changeCampus(index){
       this.isActive = index;
       this.curCampus = event.currentTarget.innerHTML;
       this.page = 1;
       window.scrollTo(0,0);
-      this.getData();
+      this.wishes = await this.getData();
       
     },
     handleAnonymous(arr){
@@ -268,8 +263,8 @@ export default {
       body.style.top='';
     }
   },
-  mounted(){
-    this.getData();
+  async mounted(){
+    this.wishes = await this.getData();
     // (function(arr){
     //   let wishMany = arr.map(item=>item.wish_many);
     //   console.log(wishMany);
@@ -461,7 +456,7 @@ b{
   padding: 12px 24px 12px 24px;
   margin:10px 0 0 0;
   word-break: break-all;
-  /* margin-bottom: 16px; */
+  margin-bottom: 16px;
   border-radius: 0 0 0px 0px;
 }
 .separate{
