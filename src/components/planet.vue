@@ -291,7 +291,6 @@ export default {
         }
     },
     mounted(){
-        console.log('星球添加');
         window.addEventListener("scroll", this.onLoadList,false)
         this.$axios.get("/star/topChart").then(res=>{
             console.log(res)
@@ -307,7 +306,6 @@ export default {
         })
     },
     beforeDestroy(){
-        console.log('销毁星球');
         window.removeEventListener("scroll", this.onLoadList,false)
     },
     created(){

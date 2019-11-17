@@ -26,7 +26,11 @@ const router = new Router({
   routes: [
     {
       path: "/",
+<<<<<<< HEAD
       redirect:'/login' //告诉我为什么改这个
+=======
+      redirect:'/login'
+>>>>>>> 202e1c5cdaefc3589d3a2ca635cb7bee659f011e
     },
     {
       path:'/test',
@@ -86,7 +90,8 @@ const router = new Router({
       name: 'planet',
       component: Planet,
       meta: {
-        keepAlive: true  //底部栏显示
+        keepAlive: true , //底部栏显示
+        trueKeepAlive: false
       }
     },
     {
@@ -103,7 +108,7 @@ const router = new Router({
       component: PlanetRelease,
       meta: {
         keepAlive: false, //底部栏不显示
-        title: '星球'
+        title: '星球',
       }
     },
     {
@@ -169,7 +174,8 @@ const router = new Router({
       component: WishWall,
       meta: {
         keepAlive: true,
-        title: '许愿墙'
+        title: '许愿墙',
+        trueKeepAlive: false
       }
     },
     {
