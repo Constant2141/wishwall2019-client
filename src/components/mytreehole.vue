@@ -12,7 +12,7 @@
             <div class="love"></div>
             <span>{{item.likes}}人觉得很赞</span>
           </div>
-          <div class="love-cover-right" @click="toggle(index)"></div>
+          <div class="love-cover-right" @click="toggle(index)"><p>{{item.comments.length}}</p></div>
         </div>
         <transition name="toggleComment">
           <div class="holes-comment" v-show="item.hide?true:false">
@@ -69,25 +69,18 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    let count = to.query.count;
     next(vm => {
-      if (count == vm.holesData.length) {
-        console.log("不需要更新");
-      } else {
-        //更新
-        console.log("需要更新");
-        vm.$axios
-          .get("/treehole/getMyTreeHoles")
-          .then(({ data }) => {
-            console.log("获取我的树洞成功", data.result);
-            let holesData = data.result;
-            holesData.map(item => item.hide = false);
-            vm.holesData = holesData;
-          })
-          .catch(err => {
-            console.log("获取我的树洞错误", err);
-          });
-      }
+      vm.$axios
+        .get("/treehole/getMyTreeHoles")
+        .then(({ data }) => {
+          console.log("获取我的树洞成功", data.result);
+          let holesData = data.result;
+          holesData.map(item => item.hide = false);
+          vm.holesData = holesData;
+        })
+        .catch(err => {
+          console.log("获取我的树洞错误", err);
+        });
     });
   }
 };
@@ -154,7 +147,7 @@ export default {
   margin: 30px 0 20px;
   text-align: center;
 }
-.holes p {
+.holes > p {
   box-sizing: border-box;
   padding: 0 20px;
   width: 300px;
@@ -184,6 +177,13 @@ export default {
   height: 22px;
   background: url("../assets/hole/comment.png") no-repeat center center;
   background-size: contain;
+  position: relative;
+}
+.love-cover-right > p{
+  display: inline-block;
+  position: absolute;
+  right:-2px;
+  top:-2px;
 }
 .love {
   margin-right: 8px;

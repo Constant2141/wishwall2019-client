@@ -49,7 +49,7 @@ export default {
     },
     toMyTreeHole() {
       //根据条数看看是不是需要更新
-      this.$router.replace(`/mytreehole?count=${this.num2}`);
+      this.$router.replace(`/mytreehole`);
     },
     toMyPlant() {
       this.$router.replace(`/mytopic`);
