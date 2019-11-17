@@ -21,57 +21,61 @@
         </swiper>
       </div>
     </div>
-      <div class="scroll-wrap">
-        <van-pull-refresh
-          v-model="isDownLoading"
-          @refresh="onRefresh">
-            <div>
-                <div class="wish"
-                  v-for="(wish,index) in wishes"
-                  :key="index">
-                  <div class="wish-body">
-                    <div class="take-button"
-                      @click="wishes[index].gainOrNot == false? takeWish(index): null"
-                      :class="{'taken-button':wishes[index].gainOrNot}">
-                      <span v-if="!wishes[index].gainOrNot">领取心愿</span>
-                      <span v-if="wishes[index].gainOrNot">您已领取</span>
-                    </div>
-                    <div class="wish-content">
-                      <div class="wish-avatar">
-                        <div class="yellow-left"></div>
-                        <div class="avatar-wrapper">
-                          <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
-                          <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
-                        </div>
-                        <div class="yellow-right"></div>
-                      </div>
-                      <div class="wish-txt">
-                        <b class="name">{{wish.nickname}}</b>
-                        <div class="content">{{wish.wish_content}}</div>
-                        <div class="wish-tag">
-                          <span class="tag">#{{wish.wish_type}}</span>
-                          <span class="tag">#{{wish.wish_where}}</span>
-                          <span class="tag take">
-                            <span v-show="wish.wish_many">{{wish.wish_many}}人领取</span>
-                            <span v-show="!wish.wish_many">未被领取</span>
-                          </span>
-                          <span class="tag time">{{wish.createdAt}}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="contact-way"
-                      v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
+      <div class="scroll-wrap"
+        :style="{top:refreshTop+'vh'}"
+        @touchstart='touchStart($event)'
+        @touchmove='touchMove($event)'
+        @touchend='touchEnd($event)'>
+        <div class="refresh">
+            <p v-show="refreshState == 1">上拉刷新</p>
+            <p v-show="refreshState == 2">正在加载...</p>
+          </div>
+          <div>
+              <div class="wish"
+                v-for="(wish,index) in wishes"
+                :key="index">
+                <div class="wish-body">
+                  <div class="take-button"
+                    @click="wishes[index].gainOrNot == false? takeWish(index): null"
+                    :class="{'taken-button':wishes[index].gainOrNot}">
+                    <span v-if="!wishes[index].gainOrNot">领取心愿</span>
+                    <span v-if="wishes[index].gainOrNot">您已领取</span>
                   </div>
-                  <div class="separate" v-show="!wishes[index].gainOrNot"></div>
+                  <div class="wish-content">
+                    <div class="wish-avatar">
+                      <div class="yellow-left"></div>
+                      <div class="avatar-wrapper">
+                        <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
+                        <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
+                      </div>
+                      <div class="yellow-right"></div>
+                    </div>
+                    <div class="wish-txt">
+                      <b class="name">{{wish.nickname}}</b>
+                      <div class="content">{{wish.wish_content}}</div>
+                      <div class="wish-tag">
+                        <span class="tag">#{{wish.wish_type}}</span>
+                        <span class="tag">#{{wish.wish_where}}</span>
+                        <span class="tag take">
+                          <span v-show="wish.wish_many">{{wish.wish_many}}人领取</span>
+                          <span v-show="!wish.wish_many">未被领取</span>
+                        </span>
+                        <span class="tag time">{{wish.createdAt}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="contact-way"
+                    v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
                 </div>
-            </div>
-            <div class="loading-more">
-              <p v-show='loadState==0'>下拉加载更多</p>
-              <p v-show='loadState==1'>正在加载...</p>
-              <p v-show='loadState==2'>我是有底线的</p>
-              <p v-show='loadState==3' >加载失败，请刷新重试</p>
-            </div>
-        </van-pull-refresh>
+                <!-- <div class="separate" v-show="!wishes[index].gainOrNot"></div>   -->
+              </div>
+          </div>
+          <div class="loading-more">
+            <p v-show='loadState==0'>下拉加载更多</p>
+            <p v-show='loadState==1'>正在加载...</p>
+            <p v-show='loadState==2'>我是有底线的</p>
+            <p v-show='loadState==3' >加载失败，请刷新重试</p>
+          </div>
       </div>
       <div class="cover" v-show="readTips">
         <div class="tips">
@@ -128,20 +132,38 @@ export default {
       page:1,
       wishTotal:'', //心愿的总条数
       curCampus:'全部', //当前所在学校，默认为全部
-      isDownLoading:false,
+      // isDownLoading:false,
       isBottom:false, //是否是页面最底端
       loadState: 0,//定义0是不加载(浏览)状态，1为正在加载，2全部数据加载完,3加载失败
       finished: false, //全部数据是否加载完
       readTips:false,
+      refreshState:1,
+      startY:0,
+      scrollTop:0,
+      ifRefresh:false,
+      refreshTop:24,
     }
   },
   methods:{
-    onRefresh(){
-      this.page = 1;
-      setTimeout(async()=>{
-        this.wishes = await this.getData()
-        this.isDownLoading = false;
-      },500)
+    touchStart(event){
+      this.startY = event.targetTouches[0].pageY;
+    },
+    touchMove(event){
+      let dy = event.targetTouches[0].pageY - this.startY;
+      let pullLimit = 30;
+      //几个条件：向下拉，滚动条在顶部，有个拖动高度限制
+      if(dy>0 && this.scrollTop == 0 && this.refreshTop<=pullLimit){
+        this.ifRefresh = true;
+        this.refreshTop+=0.4;
+      }
+    },
+    async touchEnd(event){
+      if(this.ifRefresh == true){
+        this.refreshTop -= 6;
+        this.page = 1;
+        this.wishes = await this.getData();
+      }
+      console.log(this.wishes);
     },
     //判断滚动条是否在底部
     checkBottom(){
@@ -159,11 +181,9 @@ export default {
         // 当页面内容超出浏览器可视窗口大小时，Html的高度包含body高度+margin+padding+border所以html高度可能会大于body高度
         return (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight
       })()
-      // console.log(scrollTop)
-      // console.log(parseInt(scrollHeight)-winHeight)
+      this.scrollTop = scrollTop;
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
-
     async onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
@@ -218,6 +238,7 @@ export default {
       this.page = 1;
       window.scrollTo(0,0);
       this.wishes = await this.getData();
+      console.log(`${this.curCampus}${this.wishes}`)
 
     },
     handleAnonymous(arr){
@@ -283,9 +304,6 @@ export default {
   margin:0;
   padding:0;
 }
-.wish-wall{
-  background-color: #fff !important;
-}
 .header{
   position:fixed;
   background-color:#fff;
@@ -345,11 +363,23 @@ li{
 /* .banner >>> .swiper-pagination-bullet-active{
   background:  #FF9D9D;
 } */
-
+.refresh{
+  position: relative;
+  text-align: center;
+  width:100vw ;
+  line-height: 6vh;
+  background-color:#fff;
+  height: 6vh;
+  margin-bottom: 2vh;
+  color: #989898;
+  font-size: 14px;
+  text-align: center;
+}
 .scroll-wrap{
   position: relative;
-  top:220px;
+  top:26vh;
   height:100vh;
+
 }
 .take-button{
   font-size: 10px;
@@ -369,20 +399,18 @@ li{
 }
 .wish{
   background-color: #fff;
+  padding-top:16px;
+  border-bottom: 1px solid #f1f1f1;
 }
 .wish-content{
   padding-left: 24px;
-
+  padding-bottom: 16px;
 }
 .wish-content,
 .wish-avatar,
 .wish-txt,
 .wish-tag{
   display: flex;
-  background-color:#fff;
-}
-.wish-body{
-  background-color: #fff;
 }
 .wish-tag {
   justify-content: space-between;
@@ -453,7 +481,6 @@ b{
   padding: 12px 24px 12px 24px;
   margin:10px 0 0 0;
   word-break: break-all;
-  margin-bottom: 16px;
   border-radius: 0 0 0px 0px;
 }
 .separate{

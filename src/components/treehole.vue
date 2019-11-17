@@ -50,7 +50,7 @@ export default {
       swiperOption: {
         slidesPerView: "auto",
         centeredSlides: true,
-        spaceBetween: 20,
+        spaceBetween: 28,
         pagination: {
           el: ".swiper-pagination",
           clickable: true
@@ -104,17 +104,17 @@ export default {
         this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
         this.postWord = '';
         this.$toast.success('发表成功');
+        // 跳到最底部
+        this.$nextTick(() => {
+          var container = this.$refs[this.realIndex][0];
+          console.log('container',container);
+          container.scrollTop = container.scrollHeight;
+        });
       })
       .catch(err=>{
         this.$toast.fail('发表失败');
         console.log('评论树洞失败',err);
       })
-      // 跳到最底部
-      this.$nextTick(() => {
-        var container = this.$refs[this.realIndex][0];
-        console.log('container',container);
-        container.scrollTop = container.scrollHeight;
-      });
     },
     changeLove() {
       if(this.cards[this.realIndex].isLike == true)return;
@@ -304,18 +304,13 @@ export default {
 /* 多人评论 */
 .comment-title{
   margin-left:26px;
-  /* 服务器 */
-  /* margin-left: 35px; */
   line-height: 48px;
   font-size: 14px;
 }
 .holes-comment{
   font-size: 10px;
   margin:0 26px;
-  /* 服务器 */
-  /* margin:0 35px; */
-  /* background-color:yellow; */
-  height:225px;
+  height:calc(100vh - 360px);
   overflow: scroll;
 }
 
@@ -347,7 +342,7 @@ export default {
 .tree-hole .swiper-slide {
   z-index: 1;
   touch-action: none;
-  width: 285px;
+  width: 285.3px;
   /* height: 430px; */
   /* overflow: scroll; */
 }
