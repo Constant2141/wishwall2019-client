@@ -114,7 +114,7 @@ export default {
       // this.getUserInfo();
 
       // 这是线上版本，打包的话注释掉上面的用下面这个方法
-      this.getMyInfo()
+      this.getMyInfo();
   }
 }
 </script>
