@@ -228,6 +228,7 @@ export default {
       this.page = 1;
       window.scrollTo(0,0);
       this.wishes = await this.getData();
+      console.log(`${this.curCampus}${this.wishes}`)
       
     },
     handleAnonymous(arr){
