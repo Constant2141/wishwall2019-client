@@ -74,7 +74,7 @@ export default {
     this.$axios.get("/star/myCreated").then(res => {
       this.num3 = res.data.result.length;
     });
-  }
+  },
 };
 </script>
 
