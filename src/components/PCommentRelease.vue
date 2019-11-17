@@ -56,6 +56,10 @@ export default {
             console.log(file);
         },
         release:debounce(function(){
+            if(!this.sendData.comment){
+              this.$toast.fail('发布内容不能为空');
+              return ;
+            }
             this.sendData.uuid = localStorage.planetUid;
             this.$axios.post("/star/addComment",this.sendData).then(res=>{
                 console.log(res);
