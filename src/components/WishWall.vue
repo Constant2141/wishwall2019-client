@@ -67,7 +67,7 @@
                   <div class="contact-way"
                     v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
                 </div>
-                <div class="separate" v-show="!wishes[index].gainOrNot"></div>  
+                <!-- <div class="separate" v-show="!wishes[index].gainOrNot"></div>   -->
               </div>
           </div>
           <div class="loading-more">
