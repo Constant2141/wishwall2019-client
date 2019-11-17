@@ -126,6 +126,7 @@ export default {
         .get(url)
         .then(res => {
           this.titles = res.data.result;
+          console.log(this.titles);
           this.titles.forEach((value, index) => {
             this.times[index] = value.createdAt;
             this.photoUrl[index] = value.headimgurl;

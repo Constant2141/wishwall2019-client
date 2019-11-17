@@ -177,7 +177,6 @@ export default {
         .get(url)
         .then(res => {
           this.wishes = res.data.result;
-          console.log(this.wishes);
           let method = [];
           let times = [];
           let status = [];
