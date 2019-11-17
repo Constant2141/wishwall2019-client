@@ -168,14 +168,21 @@ export default {
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
-      this.loadState = 1;
+      this.loadState = 1; //正在加载
       let tempList = this.wishes;
       this.page++;
       let temp = await this.getData();
+      console.log('新的数据');
+      console.log(temp);
       this.wishes =  tempList.concat(temp);
+       this.loadState = 0; //上拉加载更多
+      console.log('所有数据');
+      console.log(this.wishes);
+      
       
       }
       if(this.wishes.length == this.wishTotal){
+        console.log("底部");
         this.finished = true;
         this.loadState = 2;
       } 
@@ -191,7 +198,7 @@ export default {
       })
       .then(async res=>{
         if(res.status == 200){
-          let temp = await res.data.result.wishList.rows;
+          let temp =  res.data.result.wishList.rows;
           this.handleAnonymous(temp);
           this.handleTime(temp);
           // this.wishes = temp;
@@ -221,11 +228,11 @@ export default {
       
     },
     handleAnonymous(arr){
-      arr.map(item=>{
+       arr.map(item=>{
         if(item.anonymous == true){
           item.nickname = item.nickname.slice(0,1)+'**'
         }
-        return arr;
+        // return arr;
       })
     },
     handleTime(arr){
@@ -263,17 +270,20 @@ export default {
       body.style.top='';
     }
   },
-  async mounted(){
+   async mounted(){
+    console.log('许愿添加');
     this.wishes = await this.getData();
     // (function(arr){
     //   let wishMany = arr.map(item=>item.wish_many);
     //   console.log(wishMany);
     // })(this.wishes)
-    window.addEventListener("scroll", this.onLoadList)
+    var that = this;
+    window.addEventListener("scroll", that.onLoadList,false)
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
-    window.removeEventListener("scroll", this.onLoadList)
+      console.log('许愿销毁');
+    window.removeEventListener("scroll", that.onLoadList,false)
   }
 }
 </script>

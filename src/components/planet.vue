@@ -99,7 +99,7 @@ export default {
                 "#庆义肾透支真相",
                 "艹骏为何如此之骚"
             ],
-
+ 
             
             testTopic:{//仅测试用
                     topicName:"今天吃什么呀，不如酸菜魚",
@@ -291,7 +291,8 @@ export default {
         }
     },
     mounted(){
-        window.addEventListener("scroll", this.onLoadList)
+        console.log('星球添加');
+        window.addEventListener("scroll", this.onLoadList,false)
         this.$axios.get("/star/topChart").then(res=>{
             console.log(res)
             this.searchLabel = res.data.result;
@@ -306,7 +307,8 @@ export default {
         })
     },
     beforeDestroy(){
-        window.removeEventListener("scroll", this.onLoadList)
+        console.log('销毁星球');
+        window.removeEventListener("scroll", this.onLoadList,false)
     },
     created(){
         this.getData();
