@@ -46,7 +46,24 @@ export default {
       postWord:"",//要评论的话
       boyImgUrl:require('../assets/Avatar/BoyAvatar.png'),
       girlImgUrl:require('../assets/Avatar/GirlAvatar.png'),
-      cards: [],
+      cards: [
+        {
+          text:
+            "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
+          likes: 110,
+          isLike:false,
+          isBoy:false,
+          comments: [{isBoy:false,comment:'111111'}, {isBoy:true,comment:'222222'}]
+        },
+        {
+          text:
+            "我是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天夏天悄悄过去留下小秘密，摆心底摆心底，不愿告诉你~",
+          likes: 110,
+          isLike:false,
+          isBoy:false,
+          comments: [{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'},{isBoy:false,comment:'12是一条小青龙小青龙，我有一个小秘密小秘密。我就不告诉你就不告诉你。夏天3'}, {isBoy:true,comment:'我告诉你。我告诉你。夏天夏天我告诉你。夏天夏天我告诉你。夏天夏天夏天夏天'}, {isBoy:false,comment:'123'}]
+        }
+      ],
       swiperOption: {
         slidesPerView: "auto",
         centeredSlides: true,
@@ -304,18 +321,13 @@ export default {
 /* 多人评论 */
 .comment-title{
   margin-left:26px;
-  /* 服务器 */
-  /* margin-left: 35px; */
   line-height: 48px;
   font-size: 14px;
 }
 .holes-comment{
   font-size: 10px;
   margin:0 26px;
-  /* 服务器 */
-  /* margin:0 35px; */
-  /* background-color:yellow; */
-  height:225px;
+  height:calc(100vh - 355px);
   overflow: scroll;
 }
 

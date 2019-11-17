@@ -111,10 +111,10 @@ export default {
   },
   mounted(){
       // 这是本地测试使用的
-      // this.getUserInfo();
+      this.getUserInfo();
 
       // 这是线上版本，打包的话注释掉上面的用下面这个方法
-      this.getMyInfo()
+      // this.getMyInfo()
   }
 }
 </script>
