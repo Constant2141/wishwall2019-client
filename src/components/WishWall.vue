@@ -164,16 +164,32 @@ export default {
       this.isBottom = scrollTop >=parseInt(scrollHeight)-winHeight-1;
     },
     
-    async onLoadList(){
+    onLoadList(){
       //滚动条是否到达底部
       this.checkBottom();
       if(this.isBottom && !this.finished){
       this.loadState = 1;
       let tempList = this.wishes;
       this.page++;
-      let temp = await this.getData();
-      this.wishes =  tempList.concat(temp);
-      
+      let campus = this.curCampus;
+      //在需要返回的值前加await
+      this.$axios.get('/wish/list',{
+        params:{
+          curPage:this.page,
+          wish_where:campus=='全部'?'':`${campus}校区`
+        }
+      })
+      .then(async res=>{
+        if(res.status == 200){
+          let temp = await res.data.result.wishList.rows;
+          this.handleAnonymous(temp);
+          this.handleTime(temp);
+          // this.wishes = temp;
+          this.wishTotal = res.data.result.wishList.count;
+          this.wishes =  tempList.concat(temp);
+        }
+      })
+      .catch(err =>console.log(err))
       }
       if(this.wishes.length == this.wishTotal){
         this.finished = true;
@@ -224,9 +240,9 @@ export default {
       arr.map(item=>{
         if(item.anonymous == true){
           item.nickname = item.nickname.slice(0,1)+'**'
-        }
-        return arr;
+        }  
       })
+      return arr;
     },
     handleTime(arr){
       arr.map(item=>{
@@ -269,11 +285,11 @@ export default {
     //   let wishMany = arr.map(item=>item.wish_many);
     //   console.log(wishMany);
     // })(this.wishes)
-    window.addEventListener("scroll", this.onLoadList)
+    window.addEventListener("scroll", this.onLoadList,false)
   },
   //离开该页面时移除，否则会一直监听
   beforeDestroy(){
-    window.removeEventListener("scroll", this.onLoadList)
+    window.removeEventListener("scroll", this.onLoadList,false)
   }
 }
 </script>
