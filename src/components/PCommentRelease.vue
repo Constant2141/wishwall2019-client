@@ -39,7 +39,7 @@ export default {
 
             //要发送的数据
             sendData:{
-                conmment:"",//发布的评论内容
+                comment:"",//发布的评论内容
                 uuid:"",//星球话题的uuid
             }
         }
