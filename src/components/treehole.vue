@@ -104,17 +104,17 @@ export default {
         this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
         this.postWord = '';
         this.$toast.success('发表成功');
+        // 跳到最底部
+        this.$nextTick(() => {
+          var container = this.$refs[this.realIndex][0];
+          console.log('container',container);
+          container.scrollTop = container.scrollHeight;
+        });
       })
       .catch(err=>{
         this.$toast.fail('发表失败');
         console.log('评论树洞失败',err);
       })
-      // 跳到最底部
-      this.$nextTick(() => {
-        var container = this.$refs[this.realIndex][0];
-        console.log('container',container);
-        container.scrollTop = container.scrollHeight;
-      });
     },
     changeLove() {
       if(this.cards[this.realIndex].isLike == true)return;
