@@ -283,13 +283,9 @@ export default {
   margin:0;
   padding:0;
 }
-<<<<<<< HEAD
-
-=======
 .wish-wall{
   background-color: #fff !important;
 }
->>>>>>> 7140f44e39e116f23afd742321eca50507db6fe4
 .header{
   position:fixed;
   background-color:#fff; 

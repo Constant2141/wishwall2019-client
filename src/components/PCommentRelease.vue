@@ -56,7 +56,7 @@ export default {
             console.log(file);
         },
         release:debounce(function(){
-            if(!this.sendData.comment){
+            if((this.sendData.comment=='')||(this.sendData.comment.replace(/(^s*)|(s*$)/g, "").length ==0)){
               this.$toast.fail('发布内容不能为空');
               return ;
             }
