@@ -18,7 +18,7 @@ import Mytopic from "@/components/myTopic";
 import Mycomment from "@/components/myComment";
 import ofMine from "@/components/ofMine";
 import Login from '@/components/Login';
-import Test from '@/components/Test'
+import Test from '@/components/test'
 
 Vue.use(Router);
 

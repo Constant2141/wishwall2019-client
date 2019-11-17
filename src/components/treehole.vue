@@ -310,7 +310,7 @@ export default {
 .holes-comment{
   font-size: 10px;
   margin:0 26px;
-  height:calc(100vh - 355px);
+  height:calc(100vh - 360px);
   overflow: scroll;
 }
 
