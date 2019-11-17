@@ -50,7 +50,7 @@ export default {
       swiperOption: {
         slidesPerView: "auto",
         centeredSlides: true,
-        spaceBetween: 20,
+        spaceBetween: 28,
         pagination: {
           el: ".swiper-pagination",
           clickable: true
@@ -342,7 +342,7 @@ export default {
 .tree-hole .swiper-slide {
   z-index: 1;
   touch-action: none;
-  width: 285px;
+  width: 285.3px;
   /* height: 430px; */
   /* overflow: scroll; */
 }
