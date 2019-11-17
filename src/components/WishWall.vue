@@ -371,12 +371,11 @@ li{
 .wish{
   background-color: #fff;
   padding-top: 16px;
-  padding-bottom:16px;
   border-bottom:1px solid #F1F1F1;
 }
 .wish-content{
   padding-left: 24px;
-
+  padding-bottom:16px;
 }
 .wish-content,
 .wish-avatar,
@@ -457,7 +456,7 @@ b{
   padding: 12px 24px 12px 24px;
   margin:10px 0 0 0;
   word-break: break-all;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
   border-radius: 0 0 0px 0px;
 }
 .separate{
