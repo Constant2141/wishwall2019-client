@@ -283,6 +283,7 @@ export default {
   margin:0;
   padding:0;
 }
+
 .header{
   position:fixed;
   background-color:#fff; 
