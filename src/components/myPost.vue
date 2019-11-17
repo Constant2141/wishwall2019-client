@@ -36,7 +36,7 @@
               class="icon"
               @click="showMore(index)"
               v-show="smallUrl[index]"
-              :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[0]})`}"
+              :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index][0]})`}"
             ></div>
             <div class="icon" v-show="!smallUrl[index]"></div>
             <p class="getted">{{getInfo[index]}}</p>
@@ -45,15 +45,19 @@
             </div>
           </div>
           <div class="much-info">
-            <div class="which-person" v-for="(gainPerson,index) in gainPeople[index]" :key="index">
+            <div
+              class="which-person"
+              v-for="(gainPerson,index2) in gainPeople[index]"
+              :key="index2"
+            >
               <div
                 class="single-icon"
-                :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index]})`}"
+                :style="{backgroundSize:`cover`,backgroundImage:`url(${photoUrl[index][index2]})`}"
               ></div>
               <div class="isWho">
-                <p>{{pickName[index]}}领取了您的心愿</p>
+                <p>{{pickName[index][index2]}}领取了您的心愿</p>
               </div>
-              <div class="pickTime">{{pickTime[index]}}</div>
+              <div class="pickTime">{{pickTime[index][index2]}}</div>
             </div>
           </div>
         </div>
@@ -177,6 +181,7 @@ export default {
         .get(url)
         .then(res => {
           this.wishes = res.data.result;
+          console.log(this.wishes);
           let method = [];
           let times = [];
           let status = [];
@@ -233,18 +238,27 @@ export default {
             }
           });
           this.gainPeople.forEach((value, index) => {
+            this.photoUrl[index] = [];
+            this.pickName[index] = [];
+            this.pickTime[index] = [];
+            pickTimes[index] = [];
             if (value.length > 0) {
-              this.photoUrl[index] = value[0].headimgurl;
-              this.pickName[index] = value[0].nickname;
-              pickTimes[index] = value[0].pick_time;
-              pickTimes.forEach((value, index) => {
-                let nowTime = `${new Date().getDate()}`;
-                if (nowTime == value.slice(8, 10)) {
-                  this.pickTime[index] = value.slice(11, 19);
-                } else {
-                  this.pickTime[index] = `${nowTime - value.slice(8, 10)}天前`;
-                }
-              });
+              for (let i = 0; i < value.length; i++) {
+                this.photoUrl[index].push(value[i].headimgurl);
+                this.pickName[index].push(value[i].nickname);
+                pickTimes[index].push(value[i].createdAt);
+              }
+            }
+          });
+          pickTimes.forEach((value, index) => {
+            for (let i = 0; i < value.length; i++) {
+              let nowTime = `${new Date().getDate()}`;
+              if (nowTime == value[i].slice(8, 10)) {
+                this.pickTime[index][i] = value[i].slice(11, 19);
+              } else {
+                this.pickTime[index][i] = `${nowTime -
+                  value[i].slice(8, 10)}天前`;
+              }
             }
           });
         })
