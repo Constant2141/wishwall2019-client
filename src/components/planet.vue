@@ -2,9 +2,9 @@
   <div class="planet">
       <div class="background"></div>
       <div class="search">
-          <form action="#">
+          <!-- <form action="#" @submit="()=>{return false}"> -->
               <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keypress="search($event)">
-          </form>
+          <!-- </form> -->
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
@@ -195,7 +195,6 @@ export default {
                 }).catch(err=>{
                     console.log("搜索失败")
                 })
-                // return false;
             }
         },
         toTopic(item,event){

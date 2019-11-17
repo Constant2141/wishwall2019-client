@@ -107,11 +107,11 @@ export default {
           if (value.w.contact.length == 0) {
             this.tel[index] = "这个小姐姐没有填写联系方式噢";
           } else {
-            this.tel[index] = value.contact;
+            this.tel[index] = value.w.contact;
           }
           this.photoUrl[index] = value.w.headimgurl;
           this.nickName[index] = value.w.nickname;
-          method[index] = value.anonymous;
+          method[index] = value.w.anonymous;
           // this.time[index] = value.createdAt;
           times[index] = value.w.createdAt;
           people[index] = value.w.wish_many;
