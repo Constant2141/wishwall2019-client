@@ -1,5 +1,11 @@
 <template>
   <div class="planet-comment">
+    <!-- <van-overlay :show="show" :z-index="100" >
+      <template>
+        <van-loading size="24px" vertical>加载中...</van-loading>
+      </template>
+      
+    </van-overlay> -->
     <div class="topic">
       <div class="back" @click="back"></div>
       <div class="content-area">
@@ -56,6 +62,8 @@
       <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input" @blur="blur">
       <div class="publish-button" @click="release">发表</div>
     </div>
+
+    
   </div>
 </template>
 
@@ -82,7 +90,9 @@ export default {
       girlImg:require("../assets/girl.png"),
       boyImg:require("../assets/boy.png"),
 
-      banLike:false
+      banLike:false,
+
+      show : true,
     }
   },
 
