@@ -270,7 +270,6 @@ export default {
                     else{
                         this.$refs.colLeft[index].classList.add("item1");
                     }
-                    console.log(this.$refs.colLeft[index].style.backgroundImage.slice(0,2))
                     if(this.$refs.colLeft[index].style.backgroundImage.slice(0,3) != "url"){//修改默认样式
                         this.$refs.blurLeft[index].style.background = "none";
                         this.$refs.titleLeft[index].style.color = "black";

@@ -60,6 +60,7 @@ export default {
             girlImg:require("../assets/girl.png"),
             boyImg:require("../assets/boy.png"),
             
+            // backgroundedImage:require("../assets/background.png"),//默认背景图
             show:true,//是否在加载中
         }
     },
@@ -141,12 +142,15 @@ export default {
         refresh(){
             this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
+            console.log(this.topic)
             if(this.topic.bgPic.slice(0,3) == "url"){
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
             else{
-                this.$refs.background.style.backgroundImage = `url(${this.topic.bgPic})`
+                // console.log(this.$refs.background.style.backgroundImage)
+                this.$refs.background.style.backgroundImage = "linear-gradient(to bottom right,#ffd9d9,#FDFFC4)";
             }
+            // console.log(this.$refs.background.style.backgroundImage)
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 // console.log(res)
@@ -167,10 +171,9 @@ export default {
         $route(to,from){
             // console.log(to,from)
             if(to.path == "/planetTopic" && from.path != "/planetComment"){
-                // console.log("刷新")
+                console.log("刷新")
                 this.refresh();
             }
-            
         }
     }
 }
@@ -211,7 +214,6 @@ export default {
     .topicBackground{
         width: 100%;
         height: 28vh;
-        background: url(../assets/background.png);
         background-size:  100% auto;
         background-repeat: no-repeat;
         background-position: 22% 20%;
