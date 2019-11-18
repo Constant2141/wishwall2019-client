@@ -276,6 +276,11 @@ export default {
                         this.$refs.titleLeft[index].style.color = "black";
                         this.$refs.hotLeft[index].style.color = "black";
                     }
+                    else{
+                        this.$refs.blurLeft[index].style.background = "#00000033";
+                        this.$refs.titleLeft[index].style.color = "white";
+                        this.$refs.hotLeft[index].style.color = "white";
+                    }
                 })
             })
             this.topicRight.map((item,index)=>{
@@ -290,6 +295,11 @@ export default {
                         this.$refs.blurRight[index].style.background = "none";
                         this.$refs.titleRight[index].style.color = "black";
                         this.$refs.hotRight[index].style.color = "black";
+                    }
+                    else{
+                        this.$refs.blurRight[index].style.background = "#00000033";
+                        this.$refs.titleRight[index].style.color = "white";
+                        this.$refs.hotRight[index].style.color = "white";
                     }
                 })
             })
@@ -321,9 +331,17 @@ export default {
         
     },
     watch:{
-        // value1(val){
-        //     this.getData();
-        // }
+        $route(to,from){
+            if(from.path == "/planetTopic"){
+                window.removeEventListener("scroll", this.onLoadList,false)
+            }
+            if(to.path == "/planet"){
+                window.addEventListener("scroll", this.onLoadList,false)
+            }
+        },
+        value1(val){
+            this.getData();
+        }
     }
 }
 </script>

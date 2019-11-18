@@ -87,7 +87,7 @@ const router = new Router({
       component: Planet,
       meta: {
         keepAlive: true , //底部栏显示
-        trueKeepAlive: false
+        // trueKeepAlive: false  //星球暂不需要，监听事件将会监听路由跳转销毁
       }
     },
     {

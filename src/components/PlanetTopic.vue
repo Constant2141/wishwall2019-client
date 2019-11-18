@@ -65,13 +65,15 @@ export default {
     },
     methods:{
         back(){
+            // console.log(222)
             this.$router.go(-1);
+            
         },
         release(){
             this.$router.push("/pCommentRelease");
         },
         toComment(item,event){
-            console.log(item)
+            // console.log(item)
             localStorage.setItem("comment",JSON.stringify(item));
             this.$router.push("/planetComment")
         },
@@ -147,6 +149,7 @@ export default {
             }
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
+                // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
                 this.show = false;
             }).catch(err=>{
@@ -162,7 +165,9 @@ export default {
     },
     watch:{
         $route(to,from){
-            if(to.name == "planetTopic"){
+            // console.log(to,from)
+            if(to.path == "/planetTopic" && from.path != "/planetComment"){
+                // console.log("刷新")
                 this.refresh();
             }
             
