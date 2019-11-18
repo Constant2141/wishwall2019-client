@@ -291,7 +291,7 @@ export default {
         }
     },
     mounted(){
-        window.addEventListener("scroll", this.onLoadList)
+        window.addEventListener("scroll", this.onLoadList,false)
         this.$axios.get("/star/topChart").then(res=>{
             console.log(res)
             this.searchLabel = res.data.result;
@@ -306,7 +306,7 @@ export default {
         })
     },
     beforeDestroy(){
-        window.removeEventListener("scroll", this.onLoadList)
+        window.removeEventListener("scroll", this.onLoadList,false)
     },
     created(){
         this.getData();
