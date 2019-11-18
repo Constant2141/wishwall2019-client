@@ -1,5 +1,9 @@
 <template>
   <div class="topic">
+        <div class="loading" v-if="show">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+
       <div class="topicBackground" ref="background">
           <div class="blur"></div>
           <div class="back" @click="back"></div>
@@ -56,7 +60,7 @@ export default {
             girlImg:require("../assets/girl.png"),
             boyImg:require("../assets/boy.png"),
             
-            banLike:false
+            show:true,//是否在加载中
         }
     },
     methods:{
@@ -133,10 +137,8 @@ export default {
             
         // },400),
         refresh(){
+            this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
-            // console.log(this.topic.bgPic.slice(0,3))
-            // console.log(this.topic.bgPic)
-             
             if(this.topic.bgPic.slice(0,3) == "url"){
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
@@ -145,9 +147,10 @@ export default {
             }
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
-                console.log(res)
+                // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
-                console.log(this.comment)
+                // console.log(this.comment)
+                this.show = false;
             }).catch(err=>{
                 console.log(err)
             })
@@ -180,6 +183,20 @@ export default {
         height: 100vh;
         overflow: hidden;
     }
+
+       /* loading */
+  .loading{
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width:100vw;
+      background: #5c5757ba;
+      z-index: 100;
+    }
+
+
     .blur{
         position: absolute;
         width: 100%;

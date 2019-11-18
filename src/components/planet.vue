@@ -1,10 +1,14 @@
 <template>
   <div class="planet">
+        <!-- loading -->
+        <div class="loading" v-if="show">
+                <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+
+
       <div class="background"></div>
       <div class="search">
-          <!-- <form action="#" @submit="()=>{return false}"> -->
               <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keypress="search($event)">
-          <!-- </form> -->
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
@@ -119,6 +123,8 @@ export default {
             readTips:false,
             searchText:"",
 
+
+            show:true,
             
 
         }
@@ -203,7 +209,10 @@ export default {
             })
         },
         getData(load = false){
-            if(!load)this.page = 1;
+            if(!load){
+                this.page = 1;
+                this.show = true;//下拉加载不loading，刷新时loading
+            }
             else this.page++;
             this.$axios.get(`/star/list?flag=${this.value1=="最热"?0:1}&curPage=${this.page}`).then(res=>{
                 this.topic = res.data.result;
@@ -212,6 +221,7 @@ export default {
                 }
                 // console.log(res);
                 this.insertTopic(res.data.result);
+                this.show = false;//加载完成
             }).catch(err=>{
                 console.log(err)
             })
@@ -327,6 +337,19 @@ export default {
         overflow: hidden;
         /* background:linear-gradient(to bottom right,#FD9CBF,#FFF8C9); */
     }
+
+    /* loading */
+    .loading{
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width:100vw;
+        background: #5c5757ba;
+        z-index: 100;
+    }
+    
     .background{
         width:100%;
         height:95vh;

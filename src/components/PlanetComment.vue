@@ -1,10 +1,10 @@
 <template>
   <div class="planet-comment">
-    <!-- <van-overlay :show="show" >
-        <div class="wrapper" @click.stop>
-          <van-loading size="24px" vertical>加载中...</van-loading>
-        </div>   
-    </van-overlay> -->
+    <div class="loading" v-if="show">
+      <van-loading size="24px" vertical>加载中...</van-loading>
+    </div>
+          
+
 
     <div class="topic">
       <div class="back" @click="back"></div>
@@ -63,11 +63,6 @@
       <div class="publish-button" @mousedown="release">发表</div>
     </div>
 
-    <!-- <van-overlay :show="show" @click="show = false">
-      <div class="wrapper" @click.stop>
-        <div class="block" />
-      </div>
-    </van-overlay> -->
     
   </div>
 </template>
@@ -169,6 +164,7 @@ export default {
     },
     refresh(flag = false){
       // 更新数据
+      this.show = true;
       if(!flag){
         //重新赋值要评论的评论
         this.user = this.handleTopicData(JSON.parse(localStorage.comment)
@@ -185,6 +181,7 @@ export default {
         else {
           this.nocomment = false;
         }
+        this.show = false;
       }).catch(err=>{
         console.log(err);
       })
@@ -207,19 +204,7 @@ export default {
   }
 }
 </script>
-<style>
-    /* .wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-    .block {
-      width: 120px;
-      height: 120px;
-      background-color: #fff;
-    } */
-</style>
+
 <style scoped>
     *{
         margin: 0;
@@ -234,13 +219,22 @@ export default {
 
 
     /* loading */
-
+  .loading{
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width:100vw;
+      background: #5c5757ba;
+      z-index: 100;
+    }
 
     /* 话题 */
     .topic{
       width: 330px;
       min-height: 111px;
-      max-height:140px;
+      max-height:150px;
       background: #ffffff;
       box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
       border-radius: 7px;
