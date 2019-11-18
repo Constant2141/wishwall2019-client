@@ -1,11 +1,11 @@
 <template>
   <div class="planet-comment">
-    <!-- <van-overlay :show="show" :z-index="100" >
-      <template>
-        <van-loading size="24px" vertical>加载中...</van-loading>
-      </template>
-      
-    </van-overlay> -->
+    <div class="loading" v-if="show">
+      <van-loading size="24px" vertical>加载中...</van-loading>
+    </div>
+          
+
+
     <div class="topic">
       <div class="back" @click="back"></div>
       <div class="content-area">
@@ -60,7 +60,7 @@
 
     <div class="publish">
       <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input" @blur="blur">
-      <div class="publish-button" @click="release">发表</div>
+      <div class="publish-button" @mousedown="release">发表</div>
     </div>
 
     
@@ -92,7 +92,7 @@ export default {
 
       banLike:false,
 
-      show : true,
+      show : true,//loading界面是否展示
     }
   },
 
@@ -104,6 +104,7 @@ export default {
         window.scrollTo(0,0)
     },
     handleTopicData(i){
+      //处理日期
       if(i instanceof Array){
         return i.map(item=>{
                 return i = {
@@ -122,12 +123,6 @@ export default {
       }
         
     },
-            cancelLike(){
-            this.banLike = true;
-            setTimeout(()=>{
-                this.banLike = false;
-            },500)
-        },
         async like(item,event){//点赞
             event.stopPropagation();//点赞时不需要路由跳转
             if(item.likeOrNot == 0){
@@ -148,42 +143,9 @@ export default {
             else return ;
             
         },
-      // likepost:debounce((item,flag,th)=>{
-      //       console.log(2222)
-      //       if(flag){
-      //           th.$axios.post("/star/handleLike",{
-      //               commentid:item.commentid,
-      //               upDown:1
-      //           }).then(res=>{
-      //               // console.log(res)
-      //               item.likes++;
-      //               console.log(item.likes)
-      //               item.likeOrNot = 1;
-      //               localStorage.setItem("comment",JSON.stringify(item))
-      //           }).catch(err=>{
-      //               console.log(err)
-      //           })   
-      //       }
-               
-      //       else{
-      //        th.$axios.post("/star/handleLike",{
-      //               commentid:item.commentid,
-      //               upDown:0
-      //           }).then(res=>{
-      //               console.log(res)
-      //               item.likes--; 
-      //               item.likeOrNot = 0;
-      //               localStorage.setItem("comment",JSON.stringify(item))
-      //               // this.cancelLike();
-      //               console.log(localStorage)
-      //               // this.refresh();
-      //           }).catch(err=>{
-      //               console.log(err)
-      //           }) 
-      //       }
-            
-      //   },1000),
-    release(){
+
+    release(){//发表评论
+      console.log(1)
       if(this.input != ""){
         let data = {
           comment:this.input,
@@ -201,8 +163,10 @@ export default {
       }
     },
     refresh(flag = false){
-      // console.log(localStorage)
+      // 更新数据
+      this.show = true;
       if(!flag){
+        //重新赋值要评论的评论
         this.user = this.handleTopicData(JSON.parse(localStorage.comment)
         )};
       console.log(this.user)
@@ -217,6 +181,7 @@ export default {
         else {
           this.nocomment = false;
         }
+        this.show = false;
       }).catch(err=>{
         console.log(err);
       })
@@ -252,10 +217,24 @@ export default {
         background: #F8F8F8;
     }
 
+
+    /* loading */
+  .loading{
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width:100vw;
+      background: #5c5757ba;
+      z-index: 100;
+    }
+
     /* 话题 */
     .topic{
       width: 330px;
-      height: 111px;
+      min-height: 111px;
+      max-height:150px;
       background: #ffffff;
       box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
       border-radius: 7px;
@@ -311,6 +290,7 @@ export default {
         display: inline-block;
         /* background: blue; */
         margin-left: 25px;
+        margin-right:5px;
         margin-top: 15px;
     }
     .avator img{

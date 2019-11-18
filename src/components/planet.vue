@@ -1,10 +1,14 @@
 <template>
   <div class="planet">
+        <!-- loading -->
+        <div class="loading" v-if="show">
+                <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+
+
       <div class="background"></div>
       <div class="search">
-          <!-- <form action="#" @submit="()=>{return false}"> -->
               <input type="text" class="search-bar" placeholder="点击搜索" @focus="changePage(true)" v-model="searchText" @keypress="search($event)">
-          <!-- </form> -->
       </div>
       <div class="TopicArea" v-show="!showSearch" ref="Topic">
           <div class="message-bar">
@@ -84,11 +88,12 @@ export default {
             // 通知栏
             msgCount:0,
             msgAfter:"条更新！",
-            value1:"最热",
+            value1:"最新",
             page:1,
             option1: [
-                { text: '最热', value: "最热" },
-                { text: '最新', value: "最新" }
+                { text: '最新', value: "最新" },
+                { text: '最热', value: "最热" }
+                
             ],
 
             showSearch:false,//是否显示搜索区域
@@ -118,6 +123,8 @@ export default {
             readTips:false,
             searchText:"",
 
+
+            show:true,
             
 
         }
@@ -125,16 +132,12 @@ export default {
     methods:{
         onRefresh(){
             console.log("refresh")
-            // if(document.documentElement.scrollTop == 0){
                 this.page = 1;
                 setTimeout(async()=>{
                     await this.getData()
                     this.isDownLoading = false; 
                 },500)
-            // }
-            // else{
-            //      this.isDownLoading = false;  
-            // }
+    
             
         },
         //判断滚动条是否在底部
@@ -206,7 +209,10 @@ export default {
             })
         },
         getData(load = false){
-            if(!load)this.page = 1;
+            if(!load){
+                this.page = 1;
+                this.show = true;//下拉加载不loading，刷新时loading
+            }
             else this.page++;
             this.$axios.get(`/star/list?flag=${this.value1=="最热"?0:1}&curPage=${this.page}`).then(res=>{
                 this.topic = res.data.result;
@@ -215,6 +221,7 @@ export default {
                 }
                 // console.log(res);
                 this.insertTopic(res.data.result);
+                this.show = false;//加载完成
             }).catch(err=>{
                 console.log(err)
             })
@@ -269,6 +276,11 @@ export default {
                         this.$refs.titleLeft[index].style.color = "black";
                         this.$refs.hotLeft[index].style.color = "black";
                     }
+                    else{
+                        this.$refs.blurLeft[index].style.background = "#00000033";
+                        this.$refs.titleLeft[index].style.color = "white";
+                        this.$refs.hotLeft[index].style.color = "white";
+                    }
                 })
             })
             this.topicRight.map((item,index)=>{
@@ -284,6 +296,11 @@ export default {
                         this.$refs.titleRight[index].style.color = "black";
                         this.$refs.hotRight[index].style.color = "black";
                     }
+                    else{
+                        this.$refs.blurRight[index].style.background = "#00000033";
+                        this.$refs.titleRight[index].style.color = "white";
+                        this.$refs.hotRight[index].style.color = "white";
+                    }
                 })
             })
 
@@ -291,6 +308,8 @@ export default {
         }
     },
     mounted(){
+        this.getData();
+        console.log(1212)
         window.addEventListener("scroll", this.onLoadList,false)
         this.$axios.get("/star/topChart").then(res=>{
             console.log(res)
@@ -309,9 +328,17 @@ export default {
         window.removeEventListener("scroll", this.onLoadList,false)
     },
     created(){
-        this.getData();
+        
     },
     watch:{
+        $route(to,from){
+            if(from.path == "/planetTopic"){
+                window.removeEventListener("scroll", this.onLoadList,false)
+            }
+            if(to.path == "/planet"){
+                window.addEventListener("scroll", this.onLoadList,false)
+            }
+        },
         value1(val){
             this.getData();
         }
@@ -330,6 +357,19 @@ export default {
         overflow: hidden;
         /* background:linear-gradient(to bottom right,#FD9CBF,#FFF8C9); */
     }
+
+    /* loading */
+    .loading{
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width:100vw;
+        background: #5c5757ba;
+        z-index: 100;
+    }
+    
     .background{
         width:100%;
         height:95vh;

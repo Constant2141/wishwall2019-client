@@ -1,5 +1,9 @@
 <template>
   <div class="topic">
+        <div class="loading" v-if="show">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+
       <div class="topicBackground" ref="background">
           <div class="blur"></div>
           <div class="back" @click="back"></div>
@@ -47,7 +51,7 @@ export default {
             topic:{},
             topicName:"#海底捞最喜欢什么火锅底料",
 
-            comment:[//评论表
+            comment:[//评论表s
 
             ],
 
@@ -56,18 +60,20 @@ export default {
             girlImg:require("../assets/girl.png"),
             boyImg:require("../assets/boy.png"),
             
-            banLike:false
+            show:true,//是否在加载中
         }
     },
     methods:{
         back(){
-            this.$router.push("/planet");
+            // console.log(222)
+            this.$router.go(-1);
+            
         },
         release(){
             this.$router.push("/pCommentRelease");
         },
         toComment(item,event){
-            console.log(item)
+            // console.log(item)
             localStorage.setItem("comment",JSON.stringify(item));
             this.$router.push("/planetComment")
         },
@@ -133,10 +139,8 @@ export default {
             
         // },400),
         refresh(){
+            this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
-            // console.log(this.topic.bgPic.slice(0,3))
-            // console.log(this.topic.bgPic)
-             
             if(this.topic.bgPic.slice(0,3) == "url"){
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
@@ -145,9 +149,9 @@ export default {
             }
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
-                console.log(res)
+                // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
-                console.log(this.comment)
+                this.show = false;
             }).catch(err=>{
                 console.log(err)
             })
@@ -161,7 +165,9 @@ export default {
     },
     watch:{
         $route(to,from){
-            if(to.name == "planetTopic"){
+            // console.log(to,from)
+            if(to.path == "/planetTopic" && from.path != "/planetComment"){
+                // console.log("刷新")
                 this.refresh();
             }
             
@@ -180,6 +186,20 @@ export default {
         height: 100vh;
         overflow: hidden;
     }
+
+       /* loading */
+  .loading{
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width:100vw;
+      background: #5c5757ba;
+      z-index: 100;
+    }
+
+
     .blur{
         position: absolute;
         width: 100%;
