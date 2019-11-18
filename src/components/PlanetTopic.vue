@@ -137,6 +137,7 @@ export default {
             
         // },400),
         refresh(){
+            
             this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
             if(this.topic.bgPic.slice(0,3) == "url"){
