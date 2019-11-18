@@ -208,7 +208,7 @@ export default {
 }
 </script>
 <style>
-    .wrapper {
+    /* .wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -218,7 +218,7 @@ export default {
       width: 120px;
       height: 120px;
       background-color: #fff;
-    }
+    } */
 </style>
 <style scoped>
     *{
