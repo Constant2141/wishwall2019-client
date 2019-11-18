@@ -125,16 +125,12 @@ export default {
     methods:{
         onRefresh(){
             console.log("refresh")
-            // if(document.documentElement.scrollTop == 0){
                 this.page = 1;
                 setTimeout(async()=>{
                     await this.getData()
                     this.isDownLoading = false; 
                 },500)
-            // }
-            // else{
-            //      this.isDownLoading = false;  
-            // }
+    
             
         },
         //判断滚动条是否在底部
