@@ -453,6 +453,7 @@ b{
   padding: 12px 24px 12px 24px;
   margin:10px 0 0 0;
   word-break: break-all;
+  user-select: text;
   /* margin-bottom: 16px; */
   border-radius: 0 0 0px 0px;
 }
