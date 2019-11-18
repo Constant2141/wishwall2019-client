@@ -513,7 +513,7 @@ h3{
 .cover img{
   width: 35px;
 }
-h4{
+.tips h4{
   margin-top: 2vh;
 }
 </style>
