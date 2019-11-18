@@ -60,7 +60,7 @@
 
     <div class="publish">
       <input type="text" name="" id="" placeholder="你想对ta说些什么吗..." v-model="input" @blur="blur">
-      <div class="publish-button" @click="release">发表</div>
+      <div class="publish-button" @mousedown="release">发表</div>
     </div>
 
     
@@ -184,6 +184,7 @@ export default {
             
       //   },1000),
     release(){
+      console.log(1)
       if(this.input != ""){
         let data = {
           comment:this.input,
@@ -255,7 +256,8 @@ export default {
     /* 话题 */
     .topic{
       width: 330px;
-      height: 111px;
+      min-height: 111px;
+      max-height:130px;
       background: #ffffff;
       box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
       border-radius: 7px;

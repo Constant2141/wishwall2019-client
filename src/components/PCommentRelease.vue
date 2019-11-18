@@ -12,7 +12,7 @@
                 <div class="topic"># {{topic}}</div>
             </div>
             <div class="message-area">
-                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment" @blur="blur"></textarea>
+                <textarea name="" id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="sendData.comment" @blur="blur" maxlength="40"></textarea>
             </div>    
         </div>
   </div>
@@ -34,7 +34,7 @@ export default {
 
 
             //编辑栏变量
-            wishPHold:"话题内容",//编写话题内容处的placeholder
+            wishPHold:"话题内容(限制为40个字)",//编写话题内容处的placeholder
 
 
             //要发送的数据

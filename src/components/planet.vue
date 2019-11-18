@@ -84,11 +84,12 @@ export default {
             // 通知栏
             msgCount:0,
             msgAfter:"条更新！",
-            value1:"最热",
+            value1:"最新",
             page:1,
             option1: [
-                { text: '最热', value: "最热" },
-                { text: '最新', value: "最新" }
+                { text: '最新', value: "最新" },
+                { text: '最热', value: "最热" }
+                
             ],
 
             showSearch:false,//是否显示搜索区域
