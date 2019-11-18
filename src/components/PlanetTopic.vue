@@ -51,7 +51,7 @@ export default {
             topic:{},
             topicName:"#海底捞最喜欢什么火锅底料",
 
-            comment:[//评论表
+            comment:[//评论表s
 
             ],
 
@@ -65,7 +65,7 @@ export default {
     },
     methods:{
         back(){
-            this.$router.push("/planet");
+            this.$router.go(-1);
         },
         release(){
             this.$router.push("/pCommentRelease");
@@ -137,7 +137,6 @@ export default {
             
         // },400),
         refresh(){
-            
             this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
             if(this.topic.bgPic.slice(0,3) == "url"){
@@ -148,9 +147,7 @@ export default {
             }
             // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
-                // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
-                // console.log(this.comment)
                 this.show = false;
             }).catch(err=>{
                 console.log(err)

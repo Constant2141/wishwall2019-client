@@ -290,6 +290,7 @@ export default {
         display: inline-block;
         /* background: blue; */
         margin-left: 25px;
+        margin-right:5px;
         margin-top: 15px;
     }
     .avator img{

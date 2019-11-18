@@ -298,6 +298,8 @@ export default {
         }
     },
     mounted(){
+        this.getData();
+        console.log(1212)
         window.addEventListener("scroll", this.onLoadList,false)
         this.$axios.get("/star/topChart").then(res=>{
             console.log(res)
@@ -316,12 +318,12 @@ export default {
         window.removeEventListener("scroll", this.onLoadList,false)
     },
     created(){
-        this.getData();
+        
     },
     watch:{
-        value1(val){
-            this.getData();
-        }
+        // value1(val){
+        //     this.getData();
+        // }
     }
 }
 </script>
