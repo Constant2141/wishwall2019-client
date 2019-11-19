@@ -211,7 +211,11 @@ export default {
             let list = res.data.result;
             if(list.length > 0){
               list.sort(()=>Math.random() - 0.5);
-              this.cards = [...cards,...list];
+              if(cards.length > 15){
+                cards = cards.slice(-10);
+              }
+              this.cards = cards.concat(list);
+              this.$refs.mySwiper.swiper.slideTo(9, 0, true);
               this.lastSlide = false;
               console.log('this.lastSlide',this.lastSlide);
             }
