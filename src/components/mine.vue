@@ -186,7 +186,7 @@ export default {
   width: 30px;
   height: 20px;
   margin-top: 16px;
-  background: url("../assets/nav/9.png");
+  background: url("../assets/nav/2.png");
   background-size: 100% 100%;
   margin-left: 20px;
 }

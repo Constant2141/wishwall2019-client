@@ -145,7 +145,7 @@ export default {
       return res.data.result;
     })
     .then(res => {
-      let pages = Math.ceil(res / 10);
+      let pages = Math.ceil(res / this.countPerPage);
       console.log('whole',res);
       console.log('pages',pages);
       //初始化数组列表
@@ -211,7 +211,7 @@ export default {
             let list = res.data.result;
             if(list.length > 0){
               list.sort(()=>Math.random() - 0.5);
-              if(cards.length > 15){
+              if(cards.length > 10){
                 cards = cards.slice(-10);
               }
               this.cards = cards.concat(list);
