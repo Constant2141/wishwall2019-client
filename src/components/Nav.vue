@@ -95,7 +95,7 @@ export default {
   computed: {
     isGirl() {
       if (this.$store.state.sex) {
-        return this.$store.state.sex == 2;
+        return this.$store.state.sex == 1;
       } else {
         return false;
       }
@@ -229,11 +229,12 @@ export default {
 }
 /* 中心区域 */
 #main-box {
-  width: 13vw;
-  height: 13vw;
-  margin: 1vw 0;
-  background: url("~@/assets/nav/center.png") no-repeat center center;
-  background-size: 140% 140%;
+  width: 12vw;
+  height: 12vw;
+  margin: 1vw 0 2vw;
+  /* background: url("~@/assets/nav/center.png") no-repeat center center;
+  background-size: 140% 140%; */
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   border-radius: 50%;
 }
 </style>

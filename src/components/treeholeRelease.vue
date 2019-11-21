@@ -9,7 +9,7 @@
     </div>
     <div class="edit-area">
       <div class="wish-area">
-        <textarea name id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="content" maxlength="35"></textarea>
+        <textarea name id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="content" maxlength="50"></textarea>
       </div>
     </div>
   </div>
