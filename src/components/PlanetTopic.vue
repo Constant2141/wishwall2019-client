@@ -31,7 +31,7 @@
                         <div>{{item.likes}}</div>
                   </div>
                   <div class="commentCount">
-                        <img src="../assets/comment2.png" alt="">
+                        <img src="../assets/comment.png" alt="">
                         <div>{{item.many}}</div>
                   </div>
               </div>
@@ -55,8 +55,8 @@ export default {
 
             ],
 
-            likeImg:require("../assets/like.png"),
-            likedImg:require("../assets/liked.png"),
+            likeImg:require("../assets/BeforeLike.png"),
+            likedImg:require("../assets/AfterLike.png"),
             girlImg:require("../assets/girl.png"),
             boyImg:require("../assets/boy.png"),
             
@@ -147,7 +147,7 @@ export default {
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
             else{
-                this.$refs.background.style.backgroundImage = "linear-gradient(to bottom right,#ffd9d9,#FDFFC4)";
+                this.$refs.background.style.backgroundImage = "linear-gradient(to bottom right,#FEFEFE,#CDF8FF)";
             }
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 // console.log(res)
@@ -325,12 +325,17 @@ export default {
         width:15px;
         height: 15px;
     }
+    .commentCount img{
+        width:17px;
+        height: 17px;
+    }
     .likeCount{
         margin-left: 243px;
         margin-right:4px;
     }
     .likeCount,.commentCount{
         margin-top: 3px;
+        vertical-align: super;
     }
 
 
@@ -342,7 +347,7 @@ export default {
         bottom: 35px;
         right: 45px;
         border-radius: 100%;
-        background: #FFCBCB;
+        background: #BFE1FF;
         color: white;
         font-size: 50px;
         font-weight: 100;

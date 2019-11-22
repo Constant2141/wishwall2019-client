@@ -347,7 +347,7 @@ export default {
         position: absolute;
         top:3px;
         margin-left:2px;
-        background: #FFC4C4;
+        background: #9BC5FD;
         
     }
     .checked-box::after{
@@ -357,7 +357,7 @@ export default {
     }
     .anonymous-text{
         display: inline-block;
-        vertical-align: middle !important;
+        /* vertical-align: middle !important; */
     }
     .anonymous span{
         /* display: inline-block; */

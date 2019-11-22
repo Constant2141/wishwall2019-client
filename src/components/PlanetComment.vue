@@ -23,7 +23,7 @@
       </div>
       <div class="function-area">
           <div class="likeCount" @click="like(user,$event)">
-                <img :src="user.likeOrNot?likedImg:likeImg" alt="">
+                <img :src="user.likeOrNot?likedImg:likeImg" alt="" width="30" height="26">
                 <div>{{user.likes}}</div>
           </div>
       </div>
@@ -32,7 +32,7 @@
       <div class="comment-top">
         <div class="top-name">评论</div>
         <div class="comment-count">
-          <img src="../assets/comment2.png" alt="">
+          <img src="../assets/comment.png" alt="">
           <div>{{commentCount}}</div>
         </div>
       </div>
@@ -85,8 +85,8 @@ export default {
 
       input:"",//发表内容
 
-      likeImg:require("../assets/like.png"),
-      likedImg:require("../assets/liked.png"),
+      likeImg:require("../assets/BeforeLike.png"),
+      likedImg:require("../assets/AfterLike.png"),
       girlImg:require("../assets/girl.png"),
       boyImg:require("../assets/boy.png"),
 
@@ -248,7 +248,7 @@ export default {
       height: 27px;
       border-radius: 100%;
       position: absolute;
-      background: #FFCBCB no-repeat;
+      background: #BFE1FF no-repeat;
       box-shadow: rgba(0,0,0,0.16) 0 3px 6px;
       left: -13px;
       top: -13px;
@@ -375,6 +375,10 @@ export default {
       right:27px;
       margin:0 !important;
     }
+    .comment-count img{
+      width:15px;
+      width:15px;
+    }
     .comment-count div{
       font-size: 12px;
       transform: scale(0.9);
@@ -478,6 +482,6 @@ export default {
       text-align: center;
       font-size: 12px;
       margin-left: 7px;
-      background: linear-gradient(to right bottom,#FD9BBF,#FDE8B7)
+      background: linear-gradient(to right bottom,#9BC5FD,#FAB7FD)
     }
 </style>
