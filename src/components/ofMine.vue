@@ -166,8 +166,8 @@ export default {
   margin-top: 15px;
 }
 .active {
-  border-bottom: 3px solid #ffc4c4;
-  color: #ffc4c4;
+  border-bottom: 3px solid #bfe1ff;
+  color: #bfe1ff;
 }
 .top-select:nth-child(2) {
   margin-left: 34px;

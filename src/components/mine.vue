@@ -92,7 +92,7 @@ export default {
 .myInfo {
   width: 375px;
   height: 190px;
-  background: #ffc4c4;
+  background: #BFE1FF;
   border-bottom-left-radius: 100% 55%;
   padding-top: 0.1px;
   display: flex;
