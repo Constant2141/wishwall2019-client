@@ -60,7 +60,7 @@
                       </div>
                     </div>
                     <div class="contact-way"
-                      v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小姐姐没有填写联系方式噢'}}</div>
+                      v-show="wishes[index].gainOrNot">联系方式 : {{wish.contact?wish.contact:'这个小哥哥没有填写联系方式噢'}}</div>
                   </div>
                   <!-- <div class="separate" v-show="!wishes[index].gainOrNot"></div>   -->
                 </div>
@@ -449,7 +449,7 @@ b{
   color: #90CBFF;
 }
 .contact-way{
-  background-color: #FFEBEB;
+  background-color: rgb(191, 224, 255);
   color: #000;
   font-size: 10px;
   padding: 12px 24px 12px 24px;
