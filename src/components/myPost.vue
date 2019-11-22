@@ -317,8 +317,8 @@ export default {
   margin-top: 15px;
 }
 .active {
-  border-bottom: 3px solid #ffc4c4;
-  color: #ffc4c4;
+  border-bottom: 3px solid #bfe1ff;
+  color: #bfe1ff;
 }
 .top-select:nth-child(3) {
   margin-left: 119px;
@@ -348,7 +348,7 @@ export default {
 .wish-info {
   width: 329px;
   height: 39px;
-  background-color: #ffebeb;
+  background-color: #bfe1ff;
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16);
   border-radius: 0px 0px 15px 15px;
   margin: 0 auto;
@@ -429,25 +429,25 @@ export default {
   border-radius: 50%;
 }
 .getted {
-  width: 70px;
+  width: 82px;
   color: black;
   margin-top: 13px;
 }
 .isGetted {
   width: 13vw;
   height: 20px;
-  background-image: linear-gradient(325deg, #fd9bbf 0%, #fde8b7 100%);
+  background: #bfe1ff;
   border-radius: 15px;
-  margin-left: 40vw;
+  margin-left: 37vw;
   margin-top: 9px;
   color: white;
 }
 .hasGetted {
   width: 13vw;
   height: 20px;
-  background: #ffebeb;
+  background: #bfe1ff;
   border-radius: 0;
-  margin-left: 40vw;
+  margin-left: 37vw;
   margin-top: 9px;
   color: #000000;
 }

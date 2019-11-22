@@ -31,7 +31,7 @@
                         <div>{{item.likes}}</div>
                   </div>
                   <div class="commentCount">
-                        <img src="../assets/comment2.png" alt="">
+                        <img src="../assets/comment.png" alt="">
                         <div>{{item.many}}</div>
                   </div>
               </div>
@@ -55,11 +55,12 @@ export default {
 
             ],
 
-            likeImg:require("../assets/like.png"),
-            likedImg:require("../assets/liked.png"),
+            likeImg:require("../assets/BeforeLike.png"),
+            likedImg:require("../assets/AfterLike.png"),
             girlImg:require("../assets/girl.png"),
             boyImg:require("../assets/boy.png"),
             
+            // backgroundedImage:require("../assets/background.png"),//默认背景图
             show:true,//是否在加载中
         }
     },
@@ -141,13 +142,13 @@ export default {
         refresh(){
             this.show = true;//数据加载中
             this.topic = JSON.parse(localStorage.planet);
+            console.log(this.topic)
             if(this.topic.bgPic.slice(0,3) == "url"){
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
             else{
-                this.$refs.background.style.backgroundImage = `url(${this.topic.bgPic})`
+                this.$refs.background.style.backgroundImage = "linear-gradient(to bottom right,#FEFEFE,#CDF8FF)";
             }
-            // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);
@@ -167,10 +168,9 @@ export default {
         $route(to,from){
             // console.log(to,from)
             if(to.path == "/planetTopic" && from.path != "/planetComment"){
-                // console.log("刷新")
+                console.log("刷新")
                 this.refresh();
             }
-            
         }
     }
 }
@@ -211,7 +211,6 @@ export default {
     .topicBackground{
         width: 100%;
         height: 28vh;
-        background: url(../assets/background.png);
         background-size:  100% auto;
         background-repeat: no-repeat;
         background-position: 22% 20%;
@@ -326,12 +325,17 @@ export default {
         width:15px;
         height: 15px;
     }
+    .commentCount img{
+        width:17px;
+        height: 17px;
+    }
     .likeCount{
         margin-left: 243px;
         margin-right:4px;
     }
     .likeCount,.commentCount{
         margin-top: 3px;
+        vertical-align: super;
     }
 
 
@@ -343,7 +347,7 @@ export default {
         bottom: 35px;
         right: 45px;
         border-radius: 100%;
-        background: #FFCBCB;
+        background: #BFE1FF;
         color: white;
         font-size: 50px;
         font-weight: 100;

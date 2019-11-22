@@ -137,6 +137,20 @@ export default {
         blur(){//文本框失焦后复位
             window.scrollTo(0,0)
         },
+        reset(){//将选项复位
+            this.sendData.wish_content = "";//心愿内容
+            this.sendData.wish_where = "",//校区
+            this.sendData.wish_type = "",//心愿类型
+            this.$refs.check.classList.remove("checked-box");//匿名选项复位
+            this.sendData.anonymous = false,//是否匿名
+            this.sendData.contact = "",//地址
+            this.chooseText = [//选项复原
+                "选择校区",
+                "选择心愿类型",
+                "匿名（可选）"
+            ];
+
+        },
         release:debounce(function(){
             // 向后台发送数据
             // console.log(localStorage.getItem('token'))
@@ -159,11 +173,7 @@ export default {
                 this.$axios.post('wish/create',this.sendData).then(res =>{
                     console.log(res)
                     this.$toast.success('发布成功');
-                    this.sendData.wish_content = "";//心愿内容
-                    this.sendData.wish_where = "",//校区
-                    this.sendData.wish_type = "",//心愿类型
-                    this.sendData.anonymous = false,//是否匿名
-                    this.sendData.contact = "",//地址
+                    this.reset();//将选项等东西复位
                     this.$router.go(-1);
                 }).catch(err =>{
                     console.log(err)
@@ -337,7 +347,7 @@ export default {
         position: absolute;
         top:3px;
         margin-left:2px;
-        background: #FFC4C4;
+        background: #9BC5FD;
         
     }
     .checked-box::after{
@@ -347,7 +357,7 @@ export default {
     }
     .anonymous-text{
         display: inline-block;
-        vertical-align: middle !important;
+        /* vertical-align: middle !important; */
     }
     .anonymous span{
         /* display: inline-block; */

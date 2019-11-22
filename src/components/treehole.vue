@@ -27,19 +27,21 @@
     </swiper>
     <!-- 底下的输入款 -->
     <div class="comment" :class="{'comment-active':moveBottom}">
-      <input type="text" v-model="postWord" placeholder="你想对他/她说些什么吗..." @focus="inputFocus" @blur="inputBlur" />
-      <div @mousedown="post">发表</div>
+      <input type="text" v-model="postWord" placeholder="你想对他/她说些什么吗..." @focus="inputFocus" @blur="inputBlur"/>
+      <div @mousedown="post">评论</div>
     </div>
   </div>
 </template>
 
 <script>
+import {throttle} from '../utils/debounce'
 export default {
   name: "treehole",
   data() {
     const self = this;
     return {
-      countPerPage:8,
+      lengthArr:[],
+      countPerPage:10,
       currentPage:1,
       lastSlide:false,
       realIndex:0,//对后台返回的那一条进行评论
@@ -85,37 +87,38 @@ export default {
       this.$emit('changeNavShow',false);
       this.moveBottom = true;
     },
-    post() {
-      if(this.postWord == ''){
-        this.$dialog.alert({
-          message:"评论不可为空"
+    post:throttle(function(){
+        if(this.postWord == ''){
+          this.$dialog.alert({
+            message:"评论不可为空"
+          })
+          return ;
+        }
+        let data = {
+          comment:this.postWord,
+          treeholeId:this.cards[this.realIndex].treeholeId,
+          text:this.cards[this.realIndex].text
+        };
+        this.$axios.post('/treehole/addTreeHoleComment',data)
+        .then(res=>{
+          console.log('评论树洞成功',res);
+          let user = JSON.parse(localStorage.getItem('userInfo'));
+          this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
+          this.postWord = '';
+          this.$toast.success('评论成功');
+          // 跳到最底部
+          this.$nextTick(() => {
+            var container = this.$refs[this.realIndex][0];
+            console.log('container',container);
+            container.scrollTop = container.scrollHeight;
+          });
         })
-        return ;
-      }
-      let data = {
-        comment:this.postWord,
-        treeholeId:this.cards[this.realIndex].treeholeId,
-        text:this.cards[this.realIndex].text
-      };
-      this.$axios.post('/treehole/addTreeHoleComment',data)
-      .then(res=>{
-        console.log('评论树洞成功',res);
-        let user = JSON.parse(localStorage.getItem('userInfo'));
-        this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
-        this.postWord = '';
-        this.$toast.success('发表成功');
-        // 跳到最底部
-        this.$nextTick(() => {
-          var container = this.$refs[this.realIndex][0];
-          console.log('container',container);
-          container.scrollTop = container.scrollHeight;
-        });
-      })
-      .catch(err=>{
-        this.$toast.fail('发表失败');
-        console.log('评论树洞失败',err);
-      })
-    },
+        .catch(err=>{
+          this.$toast.fail('评论失败');
+          console.log('评论树洞失败',err);
+        })
+      },3000)
+    ,
     changeLove() {
       if(this.cards[this.realIndex].isLike == true)return;
       this.$axios.post('/treehole/addLikes',{
@@ -133,45 +136,94 @@ export default {
     next(){
       let index = this.realIndex + 1;
       this.$refs.mySwiper.swiper.slideTo(index, 500, true);
-    }
+    },
   },
   created() {
     console.log('treehole created')
 
-    // window.onresize = function(e){
-    //   // console.log("检测到resize事件!",e);
-    //   alert("检测到resize事件!",e);
-    // }
+    this.$axios.get('/treehole/countAllTreeHoles').then(res=>{
+      return res.data.result;
+    })
+    .then(res => {
+      let pages = Math.ceil(res / this.countPerPage);
+      console.log('whole',res);
+      console.log('pages',pages);
+      //初始化数组列表
+      for(let i = 1; i <= pages; ++i){
+        this.lengthArr.push(i)
+      }
+      console.log('lengthArr',this.lengthArr);
 
-    this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${this.currentPage}`).then(res=>{
-      let list = res.data.result;
-      list.sort(()=>Math.random() - 0.5);
-      console.log('获得所有树洞成功',list);
-      this.currentPage = this.currentPage + 1;
-      this.cards = list;
+      //要查第几页
+      let searchPage = Math.ceil(Math.random() * pages);
+      console.log('首次搜索的页数，searchPage',searchPage);
+      return searchPage
+    })
+    .then(data=>{
+      this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${data}`).then(res=>{
+        let list = res.data.result;
+        list.sort(()=>Math.random() - 0.5);
+        console.log('获得所有树洞成功',list);
+        let index = this.lengthArr.indexOf(data);
+        this.cards = list;
+        //删掉这个页
+        this.lengthArr.splice(index,1);
+        console.log('lengthArr',this.lengthArr);
+
+
+        //如果只有一条，那么 需要再加载的
+        if(list.length == 1){
+          this.lastSlide = true;
+        }
+      }).catch(err=>{
+        console.log('获得所有树洞错误',err);
+      })
     }).catch(err=>{
-      console.log('获得所有树洞错误',err);
+      console.log('err',err);
     })
   },
   watch:{
-    lastSlide(value){
-      if(value){
-        if(this.cards.length < this.countPerPage)return;
-        console.log('是最后一张了');
-        let cards = this.cards;
-        // 要push多点数据，慢慢push
-        this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${this.currentPage}`).then(res=>{
-          console.log('获得树洞成功',res.data.result);
-          let list = res.data.result;
-          if(list.length > 0){
-            list.sort(()=>Math.random() - 0.5);
-            this.currentPage = this.currentPage + 1;
-            this.cards = [...cards,...list];
+    lastSlide:{
+      immediate:true,
+      handler(value){
+        if(value){
+          if(this.lengthArr.length == 0){
+            this.$toast('树洞兜完了哦')
           }
-        }).catch(err=>{
-          console.log('获得树洞错误',err);
-        })
-        this.cards = cards;
+          console.log('是最后一张了');
+          let cards = this.cards;
+
+          //获得随机的现有还未点过的随机页数
+          let length = this.lengthArr.length;
+          let index = Math.floor(Math.random() * length)
+          let page = this.lengthArr[index];
+          console.log('随机page',page);
+
+          //写在成功里面
+          this.lengthArr.splice(index,1);
+
+          console.log('this.lengthArr',this.lengthArr);
+          
+
+          // 要push多点数据，慢慢push
+          this.$axios.get(`/treehole/getAllTreeHoles?countPerPage=${this.countPerPage}&currentPage=${page}`).then(res=>{
+            console.log('获得树洞成功',res.data.result);
+            let list = res.data.result;
+            if(list.length > 0){
+              list.sort(()=>Math.random() - 0.5);
+              if(cards.length > 10){
+                cards = cards.slice(-10);
+              }
+              this.cards = cards.concat(list);
+              this.$refs.mySwiper.swiper.slideTo(9, 0, true);
+              this.lastSlide = false;
+              console.log('this.lastSlide',this.lastSlide);
+            }
+          }).catch(err=>{
+            console.log('获得树洞错误',err);
+          })
+          this.cards = cards;
+        }
       }
     }
   }
@@ -184,7 +236,7 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   /* overflow: scroll; */
 }
 /* .title {
@@ -221,7 +273,7 @@ export default {
 .comment > div {
   width: 66px;
   height: 25.27px;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -258,7 +310,7 @@ export default {
   position:relative;
   line-height:1.4em;
   height:4.2em;
-  overflow:hidden;
+  overflow:scroll;
 }
 /* .holes p::after {
   content:"...";
@@ -282,6 +334,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color:#A6D5FF;
 }
 .love {
   margin-right: 8px;
@@ -295,7 +348,7 @@ export default {
   background-image: url("../assets/hole/AfterLike.png");
 }
 .next{
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   padding: 2px 12px;
   border-radius: 10px;
   color:white;

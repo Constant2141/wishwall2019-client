@@ -200,7 +200,7 @@ export default {
         border: none;
     }
     .van-uploader >>> .van-uploader__upload-icon{
-        color: #FFC4C4;
+        color: #9BC5FD;
     }
     .upload-prompt{
         display: inline-block;

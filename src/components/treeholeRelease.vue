@@ -9,13 +9,14 @@
     </div>
     <div class="edit-area">
       <div class="wish-area">
-        <textarea name id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="content"></textarea>
+        <textarea name id="wish" cols="30" rows="10" :placeholder="wishPHold" v-model="content" maxlength="50"></textarea>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {throttle} from '../utils/debounce'
 export default {
   name: "treehole-release",
   data() {
@@ -32,7 +33,7 @@ export default {
     };
   },
   methods: {
-    release() {
+    release:throttle(function(){
       // 向后台发送数据
       if (this.content == "") {
         this.$dialog.alert({
@@ -54,7 +55,7 @@ export default {
             this.content = "";
           });
       }
-    },
+    },5000),
     back() {
       this.$router.go(-1);
       this.content = "";

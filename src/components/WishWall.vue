@@ -8,7 +8,7 @@
           :class="{'toggle-bg':index == isActive}"
           @click="changeCampus(index)">{{school}}</li>
         <li class="tip-wrapper">
-          <img src="@/assets/tips.png" style="width:20px" @click="checkTips()">
+          <img src="@/assets/tips_boy.png" style="width:20px" @click="checkTips()">
         </li>
       </ul> 
       <div class="banner">
@@ -40,7 +40,7 @@
                       <div class="wish-avatar">
                         <div class="yellow-left"></div>
                         <div class="avatar-wrapper">
-                          <span v-if="wish.anonymous"><img src="../assets/Avatar/GirlAvatar.png" alt=""></span>
+                          <span v-if="wish.anonymous"><img src="../assets/Avatar/BoyAvatar.png" alt=""></span>
                           <span v-if="!wish.anonymous"><img :src="wish.headimgurl" alt=""></span>
                         </div>
                         <div class="yellow-right"></div>
@@ -99,6 +99,7 @@
           <p>一个校内学生畅谈混脸熟的日常社区。</p>
           <p>※带上你想讨论的话题，在星球社区和身边的同学互相交流。</p>
           <p>※浏览周围人对日常生活的吐槽，用点赞评论表达你的态度。</p>
+          <h4><b>※免责声明：我们只提供平台，但用户之间的交流我们无法控制，请大家珍爱自己，与陌生人的交友需谨慎。我们用爱发电，也无力解决平台上出现的纠纷，交流中出现的矛盾我们平台概不负责，谢谢大家支持</b></h4>
         </div>
         <div @click="closeTip()">
           <img src="@/assets/closetips.png" alt=""> 
@@ -319,7 +320,7 @@ li{
 }
 .toggle-bg{
   font-size: 20px;
-  color: #FF9D9D;
+  color: #A6D5FF;
   font-weight: bold;
 }
 .banner{
@@ -355,7 +356,7 @@ li{
   width: 52px;
   height: 20px;
   position: absolute;
-  background: linear-gradient(135deg,#fd9cbf,#fff8c9);
+  background: linear-gradient(135deg,#FAB7FD,#9BC5FD);
   border-radius: 15px;
   right: 24px;
   line-height: 20px;
@@ -408,7 +409,7 @@ li{
   width: 46px;
   height: 46px;
   background-color: #fff8c9;
-  border: 3.6px solid #FEBCC2;
+  border: 3.6px solid #A6D5FF;
   border-radius: 50px;
   left: -12px;
   overflow: hidden;
@@ -426,7 +427,7 @@ li{
   left: -16px;
   width:11px;
   height: 11px;
-  background-color: rgb(255, 252, 164);
+  background-color: #FDD3FF;
   border-radius: 11px;
 }
 .wish-txt{
@@ -445,7 +446,7 @@ b{
   color: #989898;
 }
 .take{
-  color: #FF94B4;
+  color: #90CBFF;
 }
 .contact-way{
   background-color: #FFEBEB;
@@ -512,5 +513,8 @@ h3{
 }
 .cover img{
   width: 35px;
+}
+.tips h4{
+  margin-top: 2vh;
 }
 </style>
