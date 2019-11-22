@@ -171,6 +171,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color:#A6D5FF;
 }
 .love-cover-right {
   width: 22px;
@@ -203,7 +204,7 @@ export default {
   width: 300px;
   padding: 0 37.5px;
   font-size: 10px;
-  background-color: rgb(248, 248, 248);
+  background-color: #DDEFFF;
 }
 /* 过渡 */
 .toggleComment-leave-active,

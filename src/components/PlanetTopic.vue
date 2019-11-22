@@ -147,11 +147,8 @@ export default {
                 this.$refs.background.style.backgroundImage = `${this.topic.bgPic}` 
             }
             else{
-                // console.log(this.$refs.background.style.backgroundImage)
                 this.$refs.background.style.backgroundImage = "linear-gradient(to bottom right,#ffd9d9,#FDFFC4)";
             }
-            // console.log(this.$refs.background.style.backgroundImage)
-            // console.log(this.$refs.background.style.backgroundImage)
             this.$axios.get(`star/showStar?uuid=${localStorage.planetUid}`).then(res=>{
                 // console.log(res)
                 this.comment = this.handleTopicData(res.data.result);

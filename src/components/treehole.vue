@@ -105,7 +105,7 @@ export default {
           let user = JSON.parse(localStorage.getItem('userInfo'));
           this.cards[this.realIndex].comments = [...this.cards[this.realIndex].comments,{sex:user.sex,comment:this.postWord}]
           this.postWord = '';
-          this.$toast.success('发表成功');
+          this.$toast.success('评论成功');
           // 跳到最底部
           this.$nextTick(() => {
             var container = this.$refs[this.realIndex][0];
@@ -114,7 +114,7 @@ export default {
           });
         })
         .catch(err=>{
-          this.$toast.fail('发表失败');
+          this.$toast.fail('评论失败');
           console.log('评论树洞失败',err);
         })
       },3000)
@@ -145,7 +145,7 @@ export default {
       return res.data.result;
     })
     .then(res => {
-      let pages = Math.ceil(res / 10);
+      let pages = Math.ceil(res / this.countPerPage);
       console.log('whole',res);
       console.log('pages',pages);
       //初始化数组列表
@@ -211,7 +211,11 @@ export default {
             let list = res.data.result;
             if(list.length > 0){
               list.sort(()=>Math.random() - 0.5);
-              this.cards = [...cards,...list];
+              if(cards.length > 10){
+                cards = cards.slice(-10);
+              }
+              this.cards = cards.concat(list);
+              this.$refs.mySwiper.swiper.slideTo(9, 0, true);
               this.lastSlide = false;
               console.log('this.lastSlide',this.lastSlide);
             }
@@ -232,7 +236,7 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   /* overflow: scroll; */
 }
 /* .title {
@@ -269,7 +273,7 @@ export default {
 .comment > div {
   width: 66px;
   height: 25.27px;
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -330,6 +334,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color:#A6D5FF;
 }
 .love {
   margin-right: 8px;
@@ -343,7 +348,7 @@ export default {
   background-image: url("../assets/hole/AfterLike.png");
 }
 .next{
-  background: linear-gradient(to bottom right, #fd9bbf, #fde8b7);
+  background: linear-gradient(to bottom right, #9BC5FD, #FAB7FD);
   padding: 2px 12px;
   border-radius: 10px;
   color:white;
