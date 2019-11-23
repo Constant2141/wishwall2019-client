@@ -192,7 +192,7 @@ export default {
             this.level[index] = value.wish_type;
             this.school[index] = value.wish_where;
             if (value.contact.length == 0) {
-              this.tel[index] = "这个小姐姐没有填写联系方式噢";
+              this.tel[index] = "这个小哥哥没有填写联系方式噢";
             } else {
               this.tel[index] = value.contact;
             }
@@ -436,7 +436,9 @@ export default {
 .isGetted {
   width: 13vw;
   height: 20px;
-  background: #bfe1ff;
+	background-image: linear-gradient(325deg, 
+		#9bc5fd 0%, 
+		#fab7fd 100%);
   border-radius: 15px;
   margin-left: 37vw;
   margin-top: 9px;

@@ -105,7 +105,7 @@ export default {
           this.level[index] = value.w.wish_type;
           this.school[index] = value.w.wish_where;
           if (value.w.contact.length == 0) {
-            this.tel[index] = "这个小姐姐没有填写联系方式噢";
+            this.tel[index] = "这个小哥哥没有填写联系方式噢";
           } else {
             this.tel[index] = value.w.contact;
           }
